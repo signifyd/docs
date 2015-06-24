@@ -1,0 +1,2 @@
+# docs
+Signifyd API Blueprint
