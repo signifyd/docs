@@ -3,23 +3,23 @@ HOST: http://api.signifyd.com/v2
 
 # SIGNIFYD API
 
-Welcome to the Signifyd API. These docs will show you how to authenticate, make requests and view your data that the API will process and create.
+Welcome to the SIGNIFYD API. These docs will show you how to authenticate, make requests and view your data that the API will process and create.
 
-The Signifyd API provides a REST interface for creating cases for your orders. Each request you make to the API must be an authenticated call using Basic Authentication. Currently all responses to and from the API will be in JSON.
+The SIGNIFYD API provides a REST interface for creating cases for your orders. Each request you make to the API must be an authenticated call using Basic Authentication. Currently all responses to and from the API will be in JSON.
 
 [Learn more about JSON DataTypes.](http://www.tutorialspoint.com/json/json_data_types.htm)
 
 You will be provided with an API token that you can use to make authenticated calls. Be responsible with your key, for it gives full access to your account and data we collect and process.
 
 ## Authentication
-You authenticate to the Signifyd API by providing your API key in the request. 
+You authenticate to the SIGNIFYD API by providing your API key in the request. 
 You can find your API key in your account page.
 
 Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side). 
 Provide your API key as the basic auth username. You do not need to provide a password, but you do need to append a colon ":" on the end of your token.
 Examples through this documentation are given as the API key is `abcdefghijklmnopqrstuvwxyz`.
 
-Be sure all API calls to Signifyd are made over HTTPS. Otherwise they will fail.
+Be sure all API calls to SIGNIFYD are made over HTTPS. Otherwise they will fail.
 
 ## Status Codes
 We'll respond with one of the following status codes.
@@ -36,12 +36,12 @@ We'll respond with one of the following status codes.
 |`500`| Server error. |
 
 ## Errors
-Signifyd uses conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with Signifyd's servers.
+SIGNIFYD uses conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with SIGNIFYD's servers.
 
 Not all errors map cleanly onto HTTP response codes, however. When a request is valid but does not complete successfully, we return a 402 error code.
 
 ## Dates
-The Signifyd API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for 
+The SIGNIFYD API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for 
 Complete date plus hours, minutes and seconds.
 
 ```
@@ -131,7 +131,7 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                     "fullName": "Bob Smith",
                     "confirmationEmail": "bob@gmail.com",
                     "confirmationPhone": "5047130000",
-                    "organization": "Signifyd",
+                    "organization": "SIGNIFYD",
                     "deliveryAddress": {
                         "streetAddress": "123 State Street",
                         "unit": "2A",
@@ -376,12 +376,12 @@ to leave a field blank rather than fill it in with data that does not quite fit 
 
 ## Group Webhooks
 
-Webhooks are messages sent by Signifyd via HTTP POST to a url you configure on your settings page in the Notifications section. 
+Webhooks are messages sent by SIGNIFYD via HTTP POST to a url you configure on your settings page in the Notifications section. 
 Webhook messages are sent when certain events occur in the life of an investigation. They allow your application to 
-receive "pushed" updates about a case, rather than poll Signifyd for status changes.
+receive "pushed" updates about a case, rather than poll SIGNIFYD for status changes.
 
 ### Supported Events
-You can create webhooks in Signifyd for the following events.  Each event has a corresponding topic identifier
+You can create webhooks in SIGNIFYD for the following events.  Each event has a corresponding topic identifier
 which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
 
 Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion events can trigger a webhook.
@@ -396,7 +396,7 @@ Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion 
 
 ### Verification
 
-To allow a client to verify a webhook message has in fact come from Signifyd, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
+To allow a client to verify a webhook message has in fact come from SIGNIFYD, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
 
 See this example code snippet for an idea of how to compute the value in Java.
 
@@ -463,9 +463,9 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 ## CaseEntry (object)
 
 + uuid (string) - A universally unique id for the entry.
-+ entityName (string) - A name for the entity generated by Signifyd from the case data.
++ entityName (string) - A name for the entity generated by SIGNIFYD from the case data.
 + role (string) - The entry's role in the case.
-+ seeder (boolean) - True if this data was provided at case creation. False if this data was obtained by Signifyd from an external datasource.
++ seeder (boolean) - True if this data was provided at case creation. False if this data was obtained by SIGNIFYD from an external datasource.
 + seederUuid (string) - The universally unique id for the original piece of data that allowed us to create this entry. For example, if we have an Ip Address and an Ip Geo-location, they will both have the same seederUuid because they were both sourced from the original ip string.
 + details (object) - Additional data about the entity. Varied by the entity type.    
 
@@ -514,7 +514,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 
 ## Purchase (object)
 
-+ browserIpAddress (string) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase. Do not worry if you think is a proxy address -- Signifyd will figure that out.
++ browserIpAddress (string) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase. Do not worry if you think is a proxy address -- SIGNIFYD will figure that out.
 + shipments ([Shipment][]) - The shipments association with this purchase
 + products ([Product][]) - The products purchased in the transaction.
 + orderId (string) - A string uniquely identifying this order.
