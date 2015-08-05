@@ -372,7 +372,7 @@ In addition to the core case fields, you can retrieve the case's entries, which 
 
 ## Group Webhooks
 
-Webhooks are messages sent by SIGNIFYD via HTTP POST to a url you configure on your settings page in the Notifications section. 
+Webhooks are messages sent by SIGNIFYD via HTTP POST to a url you configure on your [Notifications](https://app.signifyd.com/settings/notifications) page in the SIGNIFYD settings. 
 Webhook messages are sent when certain events occur in the life of an investigation. They allow your application to 
 receive "pushed" updates about a case, rather than poll SIGNIFYD for status changes.
 
@@ -394,7 +394,7 @@ Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion 
 
 To allow a client to verify a webhook message has in fact come from SIGNIFYD, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
 
-See this example code snippet for an idea of how to compute the value in Java.
+See this example [code snippet](https://gist.github.com/blaskey/9533364) for an idea of how to compute the value in Java.
 
 ### Testing a Webhook
 Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook. 
