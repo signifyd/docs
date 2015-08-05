@@ -48,12 +48,6 @@ Complete date plus hours, minutes and seconds.
 yyyy-MM-dd'T'HH:mm:ssZ
 2015-06-03T13:21:58+00:00
 ```
-
-# Cases API Root [/]
-
-This resource does not have any attributes. Instead it offers the initial
-API affordances in the form of the links in the JSON body.
-
 ## Group Cases
 
 Resources related to cases in the API.
@@ -206,7 +200,9 @@ to leave a field blank rather than fill it in with data that does not quite fit 
 
 
 ## Retrieve a Case [/case/{caseId}]
+Individual cases can be retrieved either by the SIGNIFYD CASE_ID, which was issued upon creation of the case and will always be a positive integer, or by the merchant provided ORDER_ID, the format of which is determined by the merchant. For the example at right we have chosen an ORDER_ID with a mix of both numbers and letters.
 
+In addition to the core case fields, you can retrieve the case's entries, which include information such as the billing address, ip geo-location, and linked social profiles. Retrieval follows the same URL resource pattern as Case retrieval. Simply append /entries to case URL.
 ### Get a Case [GET]
 
 + Parameters
