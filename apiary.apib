@@ -145,7 +145,6 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                     "last4": "1234",
                     "expiryMonth": 12,
                     "expiryYear": 2015,
-                    "hash": "sdfvbkel456hj",
                     "billingAddress": {
                         "streetAddress": null,
                         "unit": "2A",
@@ -494,7 +493,6 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + card.last4 (string) - The last four digits of the card number.
 + card.expiryMonth (number) - MM representation of the expiration month of the card.
 + card.expiryYear (number) - yyyy representation of the expiration year of the card.
-+ card.hash (string) - A string uniquely identifying this card (do not send the card number itself).
 + card.billingAddress (Address, required) - The billing address for the card.
 
 + userAccount.emailAddress (string) - The primary email address associated with the account.
@@ -555,7 +553,6 @@ All items related to person or organization receiving the items purchased.
 + last4 (string) - The last four digits of the card number.
 + expiryMonth (number) - MM representation of the expiration month of the card.
 + expiryYear (number) - yyyy representation of the expiration year of the card.
-+ hash (string) - A string uniquely identifying this card (do not send the card number itself).
 + billingAddress (Address) - The billing address for the card.
 
 ## UserAccount (object)
