@@ -19,9 +19,7 @@ Provide your API key as the basic auth username. You do not need to provide a pa
 Be sure all API calls to SIGNIFYD are made over HTTPS. Otherwise they will fail.
 
 ## REST Client
-The SIGNIFYD API docs come with a built-in REST client you can use to [create a case](/docs/api/#/reference/cases/create-a-case/create-a-case?console=1), [retrieve a case](/docs/api/#/reference/cases/retrieve-a-case/get-a-case?console=1), or [retrieve case entries](/docs/api/#/reference/cases/retrieve-case-entries/get-case-entries?console=1). Our console comes pre-filled with example request data and you toggle between the Example and Console in the REST client to see the fields and definitions accepted by our API.
-
-The console is also pre-filled with an example API key of `abcdefghijklmnopqrstuvwxyz` which appears in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`. You **must** replace this with you own base64 encoded API key in the headers section of the console to successfully submit requests.
+The SIGNIFYD API docs come with a built-in REST console you can use to interactively test the API. Each endpoint is configured with example request data that will produce a successful result from our API if you provide valid credentials. By default, the API key in the REST console is `abcdefghijklmnopqrstuvwxyz` which appears in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`. You must replace this with you own base64 encoded API key in the headers section of the console to successfully submit requests.
 
 ## Response Codes
 SIGNIFYD uses conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with SIGNIFYD's servers.
