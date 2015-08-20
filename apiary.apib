@@ -15,9 +15,11 @@ You can find your API key on your [account](https://app.signifyd.com/settings) p
 
 Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side). 
 Provide your API key as the basic auth username. You do not need to provide a password, but some REST clients expect a username:password pair separated by a colon. Since there is no explicit password with the API key, it will need to be followed simply by a colon in those cases.
-Throughout this documentation we will use an example API key of `abcdefghijklmnopqrstuvwxyz` though it will typically appear in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`.
 
 Be sure all API calls to SIGNIFYD are made over HTTPS. Otherwise they will fail.
+
+## REST Client
+The SIGNIFYD API docs come with a built-in REST console you can use to interactively test the API. Each endpoint is configured with example request data that will produce a successful result from our API if you provide valid credentials. By default, the API key in the REST console is `abcdefghijklmnopqrstuvwxyz` which appears in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`. You must replace this with you own base64 encoded API key in the headers section of the console to successfully submit requests.
 
 ## Response Codes
 SIGNIFYD uses conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with SIGNIFYD's servers.
@@ -472,7 +474,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + purchase.shipments (array[Shipment][]) - The shipments association with this purchase
 + purchase.products (array[Product][]) - The products purchased in the transaction.
 + purchase.orderId (string, required) - A string uniquely identifying this order.
-+ purchase.createdAt (string, required) - yyyy-MM-dd'T'HH:mm:ssZ(More about date formats) The date and time when the order was placed.
++ purchase.createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
 + purchase.paymentGateway (string) - The gateway that processed the transaction.
 + purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider. 
 + purchase.currency (string) - The currency of the order.
@@ -498,12 +500,12 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + userAccount.emailAddress (string) - The primary email address associated with the account.
 + userAccount.username (string) - The username associated with the account. Please supply this even if it is the same as the email address.
 + userAccount.phone (string) - The phone number association with the account.
-+ userAccount.createdDate (string) - yyyy-MM-dd'T'HH:mm:ssZ(More about date formats) The date when the account was created.
++ userAccount.createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the account was created. See the Dates section of these docs for more information about date formats.
 + userAccount.accountNumber (string) - Your unique identifier for the account.
 + userAccount.lastOrderId (string) - The unique identifier for the last order placed by this account, prior to the current order.
 + userAccount.aggregateOrderCount (number) - The total count of orders placed by this account since it was created, including the current order.
 + userAccount.aggregateOrderDollars (number) - The total amount spent by this account since it was created, including the current order.
-+ userAccount.lastUpdateDate (string) - yyyy-MM-dd'T'HH:mm:ssZ(More about date formats) The last time a change was made to this account other than an order being placed. Examples include changing email addresses or adding a new credit card.
++ userAccount.lastUpdateDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The last time a change was made to this account other than an order being placed. Examples include changing email addresses or adding a new credit card. See the Dates section of these docs for more information about date formats.
 
 + seller.name (string) - The business name of the seller.
 + seller.domain (string) - The domain of the seller.
@@ -515,7 +517,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + shipments ([Shipment][]) - The shipments association with this purchase
 + products ([Product][]) - The products purchased in the transaction.
 + orderId (string) - A string uniquely identifying this order.
-+ createdAt (string) - yyyy-MM-dd'T'HH:mm:ssZ(More about date formats) The date and time when the order was placed.
++ createdAt (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
 + paymentGateway (string) - The gateway that processed the transaction.
 + transactionId (string) - The unique identifier provided by the payment gateway for this order.
 + currency (string) - The currency of the order.
@@ -563,12 +565,12 @@ Leave them blank if this was a one-time transaction with no account.
 + emailAddress (string) - The primary email address associated with the account.
 + username (string) - The username associated with the account. Please supply this even if it is the same as the email address.
 + phone (string) - The phone number association with the account.
-+ createdDate (string) - yyyy-MM-dd'T'HH:mm:ssZ(More about date formats) The date when the account was created.
++ createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the account was created. See the Dates section of these docs for more information about date formats.
 + accountNumber (string) - Your unique identifier for the account.
 + lastOrderId (string) - The unique identifier for the last order placed by this account, prior to the current order.
 + aggregateOrderCount (number) - The total count of orders placed by this account since it was created, including the current order.
 + aggregateOrderDollars (number) - The total amount spent by this account since it was created, including the current order.
-+ lastUpdateDate (string) - yyyy-MM-dd'T'HH:mm:ssZ(More about date formats) The last time a change was made to this account other than an order being placed. Examples include changing email addresses or adding a new credit card.
++ lastUpdateDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The last time a change was made to this account other than an order being placed. Examples include changing email addresses or adding a new credit card. See the Dates section of these docs for more information about date formats.
 
 ## Seller (object)
 All data related to the merchant that sold the product. If this information is not supplied, 
