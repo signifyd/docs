@@ -476,7 +476,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + purchase.orderId (string, required) - A string uniquely identifying this order.
 + purchase.createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
 + purchase.paymentGateway (string) - The gateway that processed the transaction.
-+ purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider. 
++ purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order.  
 + purchase.currency (string) - The currency of the order.
 + purchase.avsResponseCode (string, required) - The response code from the address verification system (AVS)
 + purchase.cvvResponseCode (string, required) - The response code from the card verification value check
