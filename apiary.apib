@@ -413,7 +413,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + guaranteeDisposition: APPROVED (GuaranteeDisposition, optional) - If a case has been submitted for guarantee, this field will be present and indicate
 + status: DISMISSED (CaseStatus, required) - The current status of the case. OPEN, PROCESSING AND HELD are considered active cases. FLAGGED and DISMISSED are considered resolved cases.
 + caseId: 44 (number, required) - The unique identifier assigned to the case when it is created.
-+ score: 776 (number, required) - A value from 0-1000 indicating the likelihood that the order/transaction is fraud. 0 indicates the highest risk, 1000 inidicates the highest risk.
++ score: 776 (number, required) - A value from 0-1000 indicating the likelihood that the order/transaction is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
 + investigationId: 44 (number, optional) - DEPRECATED.  See caseId.
 + uuid: `97c56c86-7984-44fa-9a3e-7d5f34d1bead` (string, required) - A universally unique id assigned to the case.
 + headline: Maxine Trycia (string, required) - The headline (aka name) assigned to the case.
