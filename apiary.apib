@@ -477,7 +477,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + purchase.createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
 + purchase.paymentGateway (string) - The gateway that processed the transaction.
 + purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order.  
-+ purchase.currency (string) - The currency type of the order, in 3 letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) format.
++ purchase.currency (string) - The currency type of the order, in 3 letter ISO 4217 format.
 + purchase.avsResponseCode (string, required) - The response code from the address verification system (AVS)
 + purchase.cvvResponseCode (string, required) - The response code from the card verification value check
 + purchase.orderChannel (OrderChannel) - The method used by the buyer to place the order.
@@ -520,7 +520,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + createdAt (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
 + paymentGateway (string) - The gateway that processed the transaction.
 + transactionId (string) - The unique identifier provided by the payment gateway for this order.
-+ currency (string) - The currency type of the order, in 3 letter [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) format.
++ currency (string) - The currency type of the order, in 3 letter ISO 4217 format.
 + avsResponseCode (string) - The response code from the address verification system (AVS)
 + cvvResponseCode (string) - The response code from the card verification value check
 + orderChannel (OrderChannel) - The method used by the buyer to place the order.
