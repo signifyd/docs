@@ -477,7 +477,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + purchase.createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
 + purchase.paymentGateway (string) - The gateway that processed the transaction.
 + purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order.  
-+ purchase.currency (string) - The currency type of the order, in 3 letter ISO 4217 format.
++ purchase.currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
 + purchase.avsResponseCode (string, required) - The response code from the address verification system (AVS)
 + purchase.cvvResponseCode (string, required) - The response code from the card verification value check
 + purchase.orderChannel (OrderChannel) - The method used by the buyer to place the order.
@@ -497,7 +497,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + card.expiryYear (number) - yyyy representation of the expiration year of the card.
 + card.billingAddress (Address, required) - The billing address for the card.
 
-+ userAccount.emailAddress (string) - The primary email address associated with the account.
++ userAccount.email (string) - The primary email address associated with the account.
 + userAccount.username (string) - The username associated with the account. Please supply this even if it is the same as the email address.
 + userAccount.phone (string) - The phone number association with the account.
 + userAccount.createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the account was created. See the Dates section of these docs for more information about date formats.
@@ -520,7 +520,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + createdAt (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
 + paymentGateway (string) - The gateway that processed the transaction.
 + transactionId (string) - The unique identifier provided by the payment gateway for this order.
-+ currency (string) - The currency type of the order, in 3 letter ISO 4217 format.
++ currency (string) - The currency type of the order, in 3 letter ISO 4217 format.  Defaults to USD when not sent.
 + avsResponseCode (string) - The response code from the address verification system (AVS)
 + cvvResponseCode (string) - The response code from the card verification value check
 + orderChannel (OrderChannel) - The method used by the buyer to place the order.
@@ -562,7 +562,7 @@ Commonly, a customer must create an account before placing an order. These data 
 that account. You should only fill these values in if the customer has an account into which they can login. 
 Leave them blank if this was a one-time transaction with no account.
 
-+ emailAddress (string) - The primary email address associated with the account.
++ email (string) - The primary email address associated with the account.
 + username (string) - The username associated with the account. Please supply this even if it is the same as the email address.
 + phone (string) - The phone number association with the account.
 + createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the account was created. See the Dates section of these docs for more information about date formats.
@@ -587,8 +587,8 @@ we will assume you are the seller.
 + provinceCode (string) - The code or abbreviation for the province.
 + postalCode string - The postal code.
 + countryCode (string) - The two-letter ISO-3166 country code. If left blank, we will assume US.
-+ latitude (number) - The latitude of the address.
-+ longitude (number) - The longitude of the address.
++ latitude (number) - The latitude of the address. Used when address details are not provided. Ignored otherwise.
++ longitude (number) - The longitude of the address. Used when address details are not provided. Ignored otherwise.
 
 ## Product (object)
 + itemId (string) - Your unique identifier for the product. This is a string because of hexadecimal identifiers.
