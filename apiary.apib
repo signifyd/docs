@@ -44,11 +44,13 @@ Specifically, SIGNIFYD will respond with one of the following status codes:
 The SIGNIFYD API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for 
 complete date plus hours, minutes, seconds and timezone offset."
 
+
 ```
-yyyy-MM-dd'T'HH:mm:ssZ
-2015-06-03T13:21:58+00:00
+         yyyy-MM-dd'T'HH:mm:ssZ
+For UTC: 2015-11-03T13:21:58+00:00
+For PST: 2015-11-03T13:21:58-08:00
 ```
-For more information for your specific programming language, please view [this document](https://developers.google.com/gmail/markup/reference/datetime-formatting).
+For more information about your specific programming language, please view [this document](https://developers.google.com/gmail/markup/reference/datetime-formatting).
 ## Group Cases
 
 Resources related to cases in the API.
@@ -474,7 +476,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + purchase.shipments (array[Shipment][]) - The shipments association with this purchase
 + purchase.products (array[Product][]) - The products purchased in the transaction.
 + purchase.orderId (string, required) - A string uniquely identifying this order.
-+ purchase.createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
++ purchase.createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
 + purchase.paymentGateway (string) - The gateway that processed the transaction.
 + purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order.  
 + purchase.currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
