@@ -480,9 +480,9 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + purchase.paymentGateway (string) - The gateway that processed the transaction.
 + purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order.  
 + purchase.currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
-+ purchase.avsResponseCode (string, required) - The response code from the address verification system (AVS)
-+ purchase.cvvResponseCode (string, required) - The response code from the card verification value check
-+ purchase.orderChannel (OrderChannel) - The method used by the buyer to place the order.
++ purchase.avsResponseCode (string, required) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
++ purchase.cvvResponseCode (string, required) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
++ purchase.orderChannel (OrderChannel) - The method used by the buyer to place the order. Either WEB or PHONE.
 + purchase.receivedBy (string) - If the order was was taken by a customer service or sales agent, his or her name.
 + purchase.totalPrice (number, required) - The total price of the order, including shipping price and taxes.
 
@@ -521,7 +521,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + orderId (string) - A string uniquely identifying this order.
 + createdAt (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
 + paymentGateway (string) - The gateway that processed the transaction.
-+ transactionId (string) - The unique identifier provided by the payment gateway for this order.
++ transactionId (string) - The unique identifier provided by the payment gateway for this order. 
 + currency (string) - The currency type of the order, in 3 letter ISO 4217 format.  Defaults to USD when not sent.
 + avsResponseCode (string) - The response code from the address verification system (AVS)
 + cvvResponseCode (string) - The response code from the card verification value check
