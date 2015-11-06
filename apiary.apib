@@ -479,7 +479,7 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + purchase.createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
 + purchase.paymentGateway (string) - The gateway that processed the transaction.
 + purchase.paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
-+ purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order.  
++ purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider. 
 + purchase.currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
 + purchase.avsResponseCode (string, required) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
 + purchase.cvvResponseCode (string, required) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
