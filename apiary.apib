@@ -375,6 +375,82 @@ In addition to the core case fields, you can retrieve the case's entries, which 
                 ]
             }  
 
+## Group Guarantees
+
+
+## Submit a Case for Guarantee [/guarantees]
+A case can be manually submitted for Guarantee. This is equivalent to clicking the Guarantee button in the case console.     
+Note that you have 7 days from the order date to submit a case for Guarantee. 
+
+### Create guarantee [POST]
+
++ Request (application/json)
+    + Headers
+    
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
+    + Body
+    
+            {
+                "caseId": 44
+            }
+        
+
++ Response 201 (application/json)
+
+    + Body 
+        
+            {
+                "disposition": "APPROVED",
+                "reviewedBy": "support@signifyd.com",
+                "reviewedAt": "2016-02-23T22:28:43+0000",
+                "submittedBy": "support@signifyd.com",
+                "submittedAt": "2016-02-02T18:09:57+0000",
+                "rereviewCount": 0,
+                "caseId": 8260439,
+                "guaranteeId": 53
+            }
+        
+    + Attributes (GuaranteeRequest)
+
++ Response 404 (application/json)
+    + Body
+    
+            {
+                "error": "Requested case cannot be found."
+            }
+            
+## Cancel a Guarantee Request [/cases/{caseId}/guarantee]
+A Guarantee can be canceled for orders that no longer require chargeback insurance. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console.  
+Before canceling a guarantee request you should check the Guarantee Disposition using GET a Case. In some instances the Guarantee may have a declined decision, in which case it does not need to be cancelled.   
+
+### Cancel Guarantee [PUT]
+
++ Parameters
+    + caseId: 44 (integer) - The id for the case whose guarantee is being cancelled.
+    
++ Request 
+    + Headers
+    
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
+
++ Response 200 (application/json)
+    
+    + Attributes (GuaranteeRequest)
+    
+    + Body 
+        
+            {
+                "disposition": "CANCELED",
+                "reviewedBy": "support@signifyd.com",
+                "reviewedAt": "2016-02-23T22:28:43+0000",
+                "submittedBy": "support@signifyd.com",
+                "submittedAt": "2016-02-02T18:09:57+0000",
+                "rereviewCount": 0,
+                "caseId": 8260439,
+                "guaranteeId": 53
+            }
+        
+    
 
 ## Group Webhooks
 
@@ -406,8 +482,7 @@ See this example [code snippet](https://gist.github.com/blaskey/9533364) for an 
 Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook. 
 The test webhook message is sent with an HMAC SHA256 verification header (see Webhook Verification below). 
 The header value is the Base64 encoded output of the HMAC SHA256 encoding of the test webhook JSON body, 
-using the team API key when available. When a team API key is not available, the default secret key `ABCDE`
-is used. A 'cases/test' topic header is also sent with the test POST.
+using the team API key when available. The test webhook message uses the secret key `ABCDE`. A 'cases/test' topic header is also sent with the test POST.
 
 # Data Structures
 
@@ -427,6 +502,16 @@ is used. A 'cases/test' topic header is also sent with the test POST.
 + reviewDisposition: GOOD (ReviewDisposition, required) - The review disposition signifies the agent's opinion after reviewing the case, the value will be FRAUDULENT or GOOD based on the agent's review. If there is no review by the agent the value will be UNSET or NULL.
 + createdAt: `2013-03-06T23:17:17+0000` (string, required) - The date and time when the case was created.
 + updatedAt: `2013-03-06T23:17:18+0000` (string, required) - The date and time when the case was last updated.
+
+## GuaranteeRequest (object)
++ disposition (string) - Guarantee decision result
++ reviewedBy (string) - Analyst who made the decision.
++ reviewedAt (string) - Time of decision. See the Dates section for date formats.
++ submittedBy (string) - User who requested the guarantee.
++ submittedAt (string) - Time when guarantee is requested. See the Dates section for date formats.
++ rereviewCount (number) - Count if there was any re-review
++ caseId (number) - The unique identifier assigned to the case when it is created.
++ guaranteeId (number) - The unique identifier assigned for this guarantee.
 
 ## GuaranteeDisposition (enum)
     
@@ -616,7 +701,3 @@ we will assume you are the seller.
 + itemQuantity (number) - The number of the items purchased.
 + itemPrice (number) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
-
-
-
-
