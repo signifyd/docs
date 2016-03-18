@@ -24,8 +24,6 @@ The SIGNIFYD API docs come with a built-in REST console you can use to interacti
 ## Response Codes
 SIGNIFYD uses conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with SIGNIFYD's servers.
 
-Not all errors map cleanly onto HTTP response codes, however. When a request is valid but does not complete successfully, we return a 402 error code.
-
 Specifically, SIGNIFYD will respond with one of the following status codes:
 
 | Code| Description |
@@ -35,7 +33,6 @@ Specifically, SIGNIFYD will respond with one of the following status codes:
 |`204`| Success. No content to return. Only the status code returns. |
 |`400`| Bad Request - The request could not be parsed. |
 |`401`| Unauthorized - user is not logged in, could not be authenticated. |
-|`402`| Unsuccessful - request is valid but did not complete successfully. |
 |`403`| Forbidden - Cannot access resource. |
 |`404`| Not Found - resource doesn't exist. |
 |`5xx`| Server error. |
