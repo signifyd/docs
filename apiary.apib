@@ -78,7 +78,7 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                 "purchase": {
                     "browserIpAddress": "192.168.1.1",
                     "orderId": "4fj58as",
-                    "createdAt": "2013-01-18T17:54:31-05:00",
+                    "createdAt": "2016-07-11T17:54:31-05:00",
                     "paymentGateway": "stripe",
                     "paymentMethod": "credit_card",
                     "transactionId": "1a2sf3f44f21s1",
@@ -192,7 +192,7 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                     }
                 }
             }
-    
+
 + Response 201 (application/json)
 
     + Body
@@ -211,16 +211,16 @@ Endpoint for retrieving individual cases by the unique case identifier issued by
 + Request
 
     + Headers
-        
+
             Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
 
 + Response 200 (application/json)
 
     + Attributes (Case)
-        
-    
+
+
     + Body
-    
+
             {
                 guaranteeEligible: false,
                 guaranteeDisposition: "APPROVED",
@@ -243,13 +243,13 @@ Endpoint for retrieving individual cases by the unique case identifier issued by
 + Response 404 (application/json)
 
     + Body
-    
+
             {
               messages: [
                   "There is no case with that id, or you do not have permission to access it."
               ]
             }
-            
+
 ## Retrieve Case Entries [/cases/{caseId}/entries]
 In addition to the core case fields, you can retrieve the case's entries, which include information such as the billing address, IP geo-location, and linked social profiles.
 
@@ -261,9 +261,9 @@ In addition to the core case fields, you can retrieve the case's entries, which 
 + Response 200 (application/json)
 
     + Attributes (CaseEntries)
-    
+
     + Body
-    
+
             {
                 "accounts": [
                     {
@@ -370,32 +370,32 @@ In addition to the core case fields, you can retrieve the case's entries, which 
                         "seederUuid": "4f5d1021-fbe4-44c9-8ac3-438a057c150b"
                     }
                 ]
-            }  
+            }
 
 ## Group Guarantees
 
 
 ## Submit a Case for Guarantee [/guarantees]
-A case can be manually submitted for Guarantee. This is equivalent to clicking the Guarantee button in the case console.     
-Note that you have 7 days from the order date to submit a case for Guarantee. 
+A case can be manually submitted for Guarantee. This is equivalent to clicking the Guarantee button in the case console.
+Note that you have 7 days from the order date to submit a case for Guarantee.
 
 ### Create guarantee [POST]
 
 + Request (application/json)
     + Headers
-    
+
             Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
     + Body
-    
+
             {
                 "caseId": 44
             }
-        
+
 
 + Response 201 (application/json)
 
-    + Body 
-        
+    + Body
+
             {
                 "disposition": "APPROVED",
                 "reviewedBy": "support@signifyd.com",
@@ -406,36 +406,42 @@ Note that you have 7 days from the order date to submit a case for Guarantee.
                 "caseId": 8260439,
                 "guaranteeId": 53
             }
-        
+
     + Attributes (GuaranteeRequest)
 
 + Response 404 (application/json)
     + Body
-    
+
             {
                 "error": "Requested case cannot be found."
             }
-            
+
 ## Cancel a Guarantee Request [/cases/{caseId}/guarantee]
-A Guarantee can be canceled for orders that no longer require chargeback insurance. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console.  
-Before canceling a guarantee request you should check the Guarantee Disposition using GET a Case. In some instances the Guarantee may have a declined decision, in which case it does not need to be cancelled.   
+A Guarantee can be canceled for orders that no longer require chargeback insurance. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console.
+Before canceling a guarantee request you should check the Guarantee Disposition using GET a Case. In some instances the Guarantee may have a declined decision, in which case it does not need to be cancelled.
 
 ### Cancel Guarantee [PUT]
 
 + Parameters
     + caseId: 44 (integer) - The id for the case whose guarantee is being cancelled.
-    
-+ Request 
+
++ Request
     + Headers
-    
+
             Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
 
+    + Body
+
+            {
+               "guaranteeDisposition" : "CANCELED"
+            }
+
 + Response 200 (application/json)
-    
+
     + Attributes (GuaranteeRequest)
-    
-    + Body 
-        
+
+    + Body
+
             {
                 "disposition": "CANCELED",
                 "reviewedBy": "support@signifyd.com",
@@ -446,13 +452,13 @@ Before canceling a guarantee request you should check the Guarantee Disposition 
                 "caseId": 8260439,
                 "guaranteeId": 53
             }
-        
-    
+
+
 
 ## Group Webhooks
 
-Webhooks are messages sent by SIGNIFYD via HTTP POST to a url you configure on your [Notifications](https://app.signifyd.com/settings/notifications) page in the SIGNIFYD settings. 
-Webhook messages are sent when certain events occur in the life of an investigation. They allow your application to 
+Webhooks are messages sent by SIGNIFYD via HTTP POST to a url you configure on your [Notifications](https://app.signifyd.com/settings/notifications) page in the SIGNIFYD settings.
+Webhook messages are sent when certain events occur in the life of an investigation. They allow your application to
 receive pushed updates about a case, rather than poll SIGNIFYD for status changes.
 
 ### Supported Events
@@ -468,6 +474,33 @@ Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion 
 | Case Review | `cases/review` | Sent anytime a user assigns a case a Review Disposition (thumbs up/down on console) |
 | Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |
 
+### Webhook Response
+        {
+            analysisUrl: "https://signifyd.com/v2/cases/1/analysis",
+            entriesUrl: "https://signifyd.com/v2/cases/1/entries",
+            notesUrl: "https://signifyd.com/v2/cases/1/notes",
+            orderUrl: "https://signifyd.com/v2/cases/1/order",
+            guaranteeEligible: false,
+            status: "DISMISSED",
+            uuid: "709b9107-eda0-4cdd-bdac-a82f51a8a3f3",
+            headline: "John Smith",
+            reviewDisposition: null,
+            associatedTeam: {
+                teamName: "anyTeam",
+                teamId: 26,
+                getAutoDismiss: true,
+                getTeamDismissalDays: 2 },
+            orderId: "19418",
+            orderDate: "2013-06-17T06:20:47-0700",
+            orderAmount: 365.99,
+            createdAt: "2013-11-05T14:23:26-0800",
+            updatedAt: "2013-11-05T14:23:26-0800",
+            adjustedScore: 262,
+            investigationId: 1,
+            score: 262,
+            caseId: 1,
+            guaranteeDisposition: "APPROVED"
+        }
 
 ### Verification
 
@@ -476,9 +509,9 @@ To allow a client to verify a webhook message has in fact come from SIGNIFYD, an
 See this example [code snippet](https://gist.github.com/blaskey/9533364) for an example of how to compute the value in Java.
 
 ### Testing a Webhook
-Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook. 
-The test webhook message is sent with an HMAC SHA256 verification header (see Webhook Verification below). 
-The header value is the Base64 encoded output of the HMAC SHA256 encoding of the test webhook JSON body, 
+Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook.
+The test webhook message is sent with an HMAC SHA256 verification header (see Webhook Verification below).
+The header value is the Base64 encoded output of the HMAC SHA256 encoding of the test webhook JSON body,
 using the team API key when available. The test webhook message uses the secret key `ABCDE`. A 'cases/test' topic header is also sent with the test POST.
 
 # Data Structures
@@ -511,14 +544,14 @@ using the team API key when available. The test webhook message uses the secret 
 + guaranteeId (number) - The unique identifier assigned for this guarantee.
 
 ## GuaranteeDisposition (enum)
-    
+
     + Members
         + APPROVED
         + DECLINED
         + PENDING
         + CANCELED
         + IN_REVIEW
-    
+
 ## CaseStatus (enum)
 
     + Members
@@ -527,14 +560,14 @@ using the team API key when available. The test webhook message uses the secret 
         + FLAGGED
         + DISMISSED
         + HELD
-    
+
 ## ReviewDisposition (enum)
 
     + Members
         + GOOD
         + FRAUDULENT
         + UNSET
-        
+
 ## CaseEntries (object)
 
  + accounts (array[CaseEntry], required) - all accounts (such as email and social media accounts) associated with this case
@@ -543,7 +576,7 @@ using the team API key when available. The test webhook message uses the secret 
  + people (array[CaseEntry], required) - all people assoicated with this case
  + networkLocations (array[CaseEntry], required) - all network locations associated with this case (such as the IP Address used during the purchase)
  + physicalLocations (array[CaseEntry], required) - all physical locations (such as the billing address) associated with this case
-        
+
 ## CaseEntry (object)
 
 + uuid (string) - A universally unique id for the entry.
@@ -551,7 +584,7 @@ using the team API key when available. The test webhook message uses the secret 
 + role (string) - The entry's role in the case.
 + seeder (boolean) - True if this data was provided at case creation. False if this data was obtained by SIGNIFYD from an external datasource.
 + seederUuid (string) - The universally unique id for the original piece of data that allowed us to create this entry. For example, if we have an Ip Address and an Ip Geo-location, they will both have the same seederUuid because they were both sourced from the original IP string.
-+ details (object) - Additional data about the entity. Varied by the entity type.    
++ details (object) - Additional data about the entity. Varied by the entity type.
 
 ## CaseCreation (object)
 
