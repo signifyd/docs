@@ -77,6 +77,7 @@ to leave a field blank rather than fill it in with data that does not quite fit 
 
             {
                 "purchase": {
+                    "orderSessionId": "uha3d98weicm20eufhlqe"
                     "browserIpAddress": "192.168.1.1",
                     "orderId": "4fj58as",
                     "createdAt": "2016-07-11T17:54:31-05:00",
@@ -516,7 +517,7 @@ The header value is the Base64 encoded output of the HMAC SHA256 encoding of the
 using the team API key when available. The test webhook message uses the secret key `ABCDE`. A 'cases/test' topic header is also sent with the test POST.
 
 Webhooks are messages sent by Signifyd via HTTP POST to endpoint designated using the calls detailed below.
-Webhook messages are sent when certain events occur in the life of an investigation. They allow the client application to 
+Webhook messages are sent when certain events occur in the life of an investigation. They allow the client application to
 receive pushed updates about a case, rather than poll Signifyd for status changes. Only one URL may be specified per event,
 though there is no reason the same URL couldn't be used for all events, using the topic header to determine what kind of event
 was sent.
@@ -572,7 +573,7 @@ See this example [code snippet](https://gist.github.com/blaskey/9533364) for an 
 ## Manage Webhook Lists [/teams/webhooks]
 ### Create [POST]
 + Request (application/json)
-Create new webhook events for team accounts. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events. 
+Create new webhook events for team accounts. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
 
     + Attribute (array[WebhookRequest])
 
@@ -794,6 +795,60 @@ Delete an existing webhook identified by its numeric id.
 
 
 
+### How to Use Device Fingerprinting
+
+1.
+Install the Javascript snippet
+
+Place the following script just before the closing `</head>` tag on all public facing pages. The script loads asynchronously and does not affect page load time.
+
+Note: *We recommend that you load the device ID on all user facing pages. If you are unable to load the script on pages such as a payment, login, etc, make sure to have loaded the the script at least once before the checkout process is complete.*
+
+```
+<script
+async
+type="text/javascript"
+id="sig-api"
+data-order-session-id="YOUR-SESSION-ID-HERE"
+src="https://cdn-scripts.signifyd.com/api/script-tag.js"></script>
+```
+
+2.
+Provide a unique session id
+
+Replace `data-order-session-id` with a unique session id for the current user's browsing session.
+
+3.
+Send the session id on case creation
+
+After an order is created on your website you will need to add the value you used for `data-order-session-id` to the body of the API POST request to, `https://api.signifiyd.com/v2/cases` under the `purchase` object:
+
+```
+// Create a Case
+// POST https://api.signifyd.com/v2/cases
+// Body
+{
+    "purchase": {
+        "orderSessionId": "YOUR-SESSION-ID-HERE",
+        "browserIpAddress": "192.168.1.1",
+        "orderId": "4fj58as",
+        "createdAt": "2016-07-11T17:54:31-05:00",
+        "paymentGateway": "stripe",
+        "paymentMethod": "credit_card",
+        "transactionId": "1a2sf3f44f21s1",
+        "currency": "USD",
+       …
+    }
+}
+```
+
+More information on creating cases with our API can be found here - http://docs.signifydapi.apiary.io/#reference/cases/create-a-case/create-a-case
+
+### Testing the Signifyd device fingerprinting script
+During testing you may want to confirm that the Signifyd device fingerprinting script is working correctly. To do so you can call the `SIGNIFYD_GLOBAL.scriptTagHasLoaded()` method which will return a boolean `true|false` value.
+
+Note - *we have namespaced all of the device fingerprinting methods under the `SIGNIFYD_GLOBAL` object to avoid potential naming conflicts.*
+
 # Data Structures
 
 ## Case (object)
@@ -868,6 +923,7 @@ Delete an existing webhook identified by its numeric id.
 
 ## CaseCreation (object)
 
++ purchase.orderSessionId (string) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
 + purchase.browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase.
 + purchase.shipments (array[Shipment][]) - The shipments association with this purchase
 + purchase.products (array[Product][]) - The products purchased in the transaction.
