@@ -509,10 +509,289 @@ To allow a client to verify a webhook message has in fact come from SIGNIFYD, an
 See this example [code snippet](https://gist.github.com/blaskey/9533364) for an example of how to compute the value in Java.
 
 ### Testing a Webhook
-Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook.
+Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook in the Signifyd console settings.
 The test webhook message is sent with an HMAC SHA256 verification header (see Webhook Verification below).
 The header value is the Base64 encoded output of the HMAC SHA256 encoding of the test webhook JSON body,
 using the team API key when available. The test webhook message uses the secret key `ABCDE`. A 'cases/test' topic header is also sent with the test POST.
+
+Webhooks are messages sent by Signifyd via HTTP POST to endpoint designated using the calls detailed below.
+Webhook messages are sent when certain events occur in the life of an investigation. They allow the client application to 
+receive pushed updates about a case, rather than poll Signifyd for status changes. Only one URL may be specified per event,
+though there is no reason the same URL couldn't be used for all events, using the topic header to determine what kind of event
+was sent.
+
+### Supported Events
+Clients can create webhooks in Signifyd for the following events.  Each event has a corresponding topic identifier
+which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
+
+Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion events can trigger a webhook.
+
+| Event| `X-SIGNIFYD-TOPIC` | Description |
+| --- | --- | --- |
+| Case Creation | `cases/creation` | Sent immediately after a case is created |
+| Case Rescore | `cases/rescore` | Sent anytime a case is scored following case creation |
+| Case Review | `cases/review` | Sent anytime a user assigns a case a Review Disposition (thumbs up/down on console) |
+| Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |
+
+### Webhook Payload
+
+            {
+                analysisUrl: "https://signifyd.com/v2/cases/1/analysis",
+                entriesUrl: "https://signifyd.com/v2/cases/1/entries",
+                notesUrl: "https://signifyd.com/v2/cases/1/notes",
+                orderUrl: "https://signifyd.com/v2/cases/1/order",
+                guaranteeEligible: false,
+                status: "DISMISSED",
+                uuid: "709b9107-eda0-4cdd-bdac-a82f51a8a3f3",
+                headline: "John Smith",
+                reviewDisposition: null,
+                associatedTeam: {
+                    teamName: "anyTeam",
+                    teamId: 26,
+                    getAutoDismiss: true,
+                    getTeamDismissalDays: 2 },
+                orderId: "19418",
+                orderDate: "2013-06-17T06:20:47-0700",
+                orderAmount: 365.99,
+                createdAt: "2013-11-05T14:23:26-0800",
+                updatedAt: "2013-11-05T14:23:26-0800",
+                adjustedScore: 262,
+                investigationId: 1,
+                score: 262,
+                caseId: 1,
+                guaranteeDisposition: "APPROVED"
+            }
+
+### Verification
+
+To allow a client to verify a webhook message has in fact come from Signifyd, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
+
+See this example [code snippet](https://gist.github.com/blaskey/9533364) for an example of how to compute the value in Java.
+
+## Manage Webhook Lists [/teams/webhooks]
+### Create [POST]
++ Request (application/json)
+Create new webhook events for team accounts. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events. 
+
+    + Attribute (array[WebhookRequest])
+
+    + Body
+
+            {
+                "webhooks":
+                    [
+                        {
+                            "event": "CASE_REVIEW",
+                            "url": "http://knickknacks.examplepartner.com/signifydWebhook.php"
+                        },
+                        {
+                            "eventType": "CASE_CREATION",
+                            "url": "http://knickknacks.examplepartner.com/signifydWebhook.php"
+                        },
+                    ]
+            }
+
++ Response 200 (application/json)
+
+    + Attribute (array[Webhook])
+
+    + Body
+
+            [
+                {
+                    "id": 4661,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_REVIEW",
+                    "eventDisplayText": "Case Review"
+                },
+                {
+                    "id": 4659,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_CREATION",
+                    "eventDisplayText": "Case Creation"
+                }
+            ]
+
++ Response 400 (application/json)
+This error response follows our standard error message format, but it also includes an echo of the original request in the `requestBody` field.
+
+    + Body
+
+            {
+                "requestBody": {
+                    "teamId": null,
+                    "webhooks": [
+                        {
+                            "event": "CASE_REVIEW",
+                            "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                        },
+                        {
+                            "eventType": "CASE_CREATION",
+                            "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                        }
+                    ]
+                },
+                "errors": {
+                    "webhooks[1].url": [
+                        "A webhook already exists for that event type"
+                    ],
+                    "webhooks[0].url": [
+                        "A webhook already exists for that event type"
+                    ]
+                },
+                "messages": []
+            }
+
+### Update [PUT]
+Update existing webhook events for a team en masse, overwriting existing topics with new URLs.
+Existing webhooks whose events were not specified in the request will remain intact.
++ Request (application/json)
+
+    + Attribute (array[WebhookRequest])
+
+    + Body
+
+            [
+                {
+                    "eventType": "CASE_REVIEW",
+                    "url": "http://knickknacks.examplepartner.com/altReview.php"
+                },
+                {
+                    "eventType": "GUARANTEE_COMPLETION",
+                    "url": "http://knickknacks.examplepartner.com/altGuaranteeCompletion.php"
+                }
+            ]
+
++ Response 200 (application/json)
+
+    + Attribute (array[Webhook])
+
+    + Body
+
+            [
+                {
+                    "id": 5011,
+                    "url": "http://knickknacks.examplepartner.com/altReview.php"
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_REVIEW",
+                    "eventDisplayText": "Case Review"
+                },
+                {
+                    "id": 5012,
+                    "url": "http://knickknacks.examplepartner.com/altGuaranteeCompletion.php"
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "GUARANTEE_COMPLETION",
+                    "eventDisplayText": "Guarantee Completion"
+                }
+            ]
+
+
+### List [GET]
+Retrieve a list of the current webhooks for a team identified by the API key used.
++ Response 200 (application/json)
+
+    + Attribute (array[Webhook])
+
+    + Body
+
+            [
+                {
+                    "id": 4661,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_REVIEW",
+                    "eventDisplayText": "Case Review"
+                },
+                {
+                    "id": 4659,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_CREATION",
+                    "eventDisplayText": "Case Creation"
+                },
+                {
+                    "id": 4658,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "GUARANTEE_COMPLETION",
+                    "eventDisplayText": "Guarantee Completion"
+                },
+                {
+                    "id": 4660,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_RESCORE",
+                    "eventDisplayText": "Case Rescore"
+                }
+            ]
+
+## Manage Single Webhooks [/teams/webhooks/{hookId}]
+
++ Parameters
+    + hookId: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
+
+### Update [PUT]
+Replace the URL for an existing webhook identfied by its numeric id.
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "url": "http://knickknacks.examplepartner.com/altRescore.php"
+            }
+
+
++ Response 200 (application/json)
+
+    + Attribute (Webhook)
+
+    + Body
+
+                {
+                    "id": 4660,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_RESCORE",
+                    "eventDisplayText": "Case Rescore"
+                }
+
+
+### Delete [DELETE]
+Delete an existing webhook identified by its numeric id.
+
++ Response 204
+
+
 
 # Data Structures
 
@@ -731,3 +1010,55 @@ we will assume you are the seller.
 + itemQuantity (number) - The number of the items purchased.
 + itemPrice (number) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
+
+## InvestigationStatus (enum)
++ OPEN (string)
++ PROCESSING (string)
++ FLAGGED (string)
++ DISMISSED (string)
++ HELD (string)
+
+## WebhookEventType (enum)
++ CASE_CREATION (string)
++ CASE_RESCORE (string)
++ CASE_REVIEW (string)
++ GUARANTEE_COMPLETION (string)
+
+## WebhookRequest (object)
++ event (WebhookEventType) - the type/topic of the event
++ url: `http://knickknacks.examplepartner.com/signifydWebhook.php` (string) - the URL to which the webhook data should be sent when the event is triggered
+
+## Webhook (object)
++ id: 1234 (number) - unique Signifyd generated integer identifying this webhook
++ eventType (WebhookEventType) - the type/topic of the event
++ eventDisplayText: `Guarantee Completion` (string) - A more human friendly version of the event type.
++ url: `http://knickknacks.examplepartner.com/signifydWebhook.php` (string) - the URL to which the webhook data should be sent when the event is triggered
++ team
+    + teamId: 1234 (number) - id of the team owning this webhook
+    + teamName: "Consolidated Knick-Knacks, Inc." (string) - name of the team owning this webhook
+
+## WebhookPayload (object)
++ analysisUrl: `https://signifyd.com/v2/cases/1/analysis` (string)
++ entriesUrl: `https://signifyd.com/v2/cases/1/entries` (string)
++ notesUrl: `https://signifyd.com/v2/cases/1/notes` (string)
++ orderUrl: `https://signifyd.com/v2/cases/1/order` (string)
++ guaranteeEligible (boolean)
++ status: "DISMISSED" (InvestigationStatus)
++ uuid: `709b9107-eda0-4cdd-bdac-a82f51a8a3f3` (string)
++ headline: `John Smith` (string)
++ reviewDisposition (string)
++ associatedTeam
++     teamName: `MyTeamName` (string)
++     teamId: 26 (number)
++     getAutoDismiss (boolean)
++     getTeamDismissalDays (number)
++ orderId: 19418 (number)
++ orderDate: `2013-06-17T06:20:47-0700` (string)
++ orderAmount: 365.99 (number)
++ createdAt: `2013-11-05T14:23:26-0800` (string)
++ updatedAt: `2013-11-05T14:23:26-0800` (string)
++ adjustedScore: 262 (number)
++ investigationId: 1 (number)
++ score: 262 (number)
++ caseId: 1 (number)
++ guaranteeDisposition: "APPROVED" (GuaranteeDisposition)
