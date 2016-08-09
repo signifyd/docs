@@ -795,14 +795,15 @@ Delete an existing webhook identified by its numeric id.
 
 
 
-### How to Use Device Fingerprinting
+### Group Device Fingerprinting
 
-1.
-Install the Javascript snippet
+Signifyd’s device fingerprinting solution uniquely tracks and identifies bad devices used to transact on your site, increasing your protection from fraud.
+
+### 1. Install the Javascript snippet
 
 Place the following script just before the closing `</head>` tag on all public facing pages. The script loads asynchronously and does not affect page load time.
 
-Note: *We recommend that you load the device ID on all user facing pages. If you are unable to load the script on pages such as a payment, login, etc, make sure to have loaded the the script at least once before the checkout process is complete.*
+Note: *We recommend that you load the script on all public user facing pages. If you are unable to load the script on pages such as payment, login, etc, make sure to have loaded the script at least once before the checkout process is complete.*
 
 ```
 <script
@@ -813,13 +814,11 @@ data-order-session-id="YOUR-SESSION-ID-HERE"
 src="https://cdn-scripts.signifyd.com/api/script-tag.js"></script>
 ```
 
-2.
-Provide a unique session id
+### 2. Provide a unique session id
 
 Replace `data-order-session-id` with a unique session id for the current user's browsing session.
 
-3.
-Send the session id on case creation
+### 3. Send the session id on case creation
 
 After an order is created on your website you will need to add the value you used for `data-order-session-id` to the body of the API POST request to, `https://api.signifiyd.com/v2/cases` under the `purchase` object:
 
@@ -842,7 +841,7 @@ After an order is created on your website you will need to add the value you use
 }
 ```
 
-More information on creating cases with our API can be found here - http://docs.signifydapi.apiary.io/#reference/cases/create-a-case/create-a-case
+View the [create a case](http://docs.signifydapi.apiary.io/#reference/cases/create-a-case/create-a-case) docs for additional information on creating cases.
 
 ### Testing the Signifyd device fingerprinting script
 During testing you may want to confirm that the Signifyd device fingerprinting script is working correctly. To do so you can call the `SIGNIFYD_GLOBAL.scriptTagHasLoaded()` method which will return a boolean `true|false` value.
