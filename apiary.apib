@@ -35,6 +35,7 @@ Specifically, SIGNIFYD will respond with one of the following status codes:
 |`401`| Unauthorized - user is not logged in, could not be authenticated. |
 |`403`| Forbidden - Cannot access resource. |
 |`404`| Not Found - resource doesn't exist. |
+|`409`| Conflict - with state of the resource on server. Can occur with (too rapid) PUT requests. |
 |`5xx`| Server error. |
 
 ## Dates
