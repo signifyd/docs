@@ -852,7 +852,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Case (object)
 + guaranteeEligible: false(boolean, required) - boolean value indicating if a guarantee can be requested for this Case.  If a guarantee has already been requested for this case, then this value will be 'false'.
-+ guaranteeDisposition (GuaranteeDisposition, optional) - If a case has been submitted for guarantee, this field will be present and indicate the decision state of the gaurantee.
++ guaranteeDisposition (GuaranteeDisposition, optional) - If a case has been submitted for guarantee, this field will be present and indicate the decision state of the guarantee.
 + status (CaseStatus, required) - The current status of the case. OPEN, PROCESSING AND HELD are considered active cases. FLAGGED and DISMISSED are considered resolved cases.
 + caseId: 44 (number, required) - The unique identifier assigned to the case when it is created.
 + score: 776 (number, required) - A value from 0-1000 indicating the likelihood that the order/transaction is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
@@ -1007,7 +1007,6 @@ All items related to person or organization receiving the items purchased.
 + shipper (string) -The name of the shipper
 + shippingMethod (string) - The type of the shipment method used
 + trackingNumber (string) The tracking number for the shipment.
-ed a
 
 ## Card (object)
 + cardHolderName (string) - The full name on the credit card that was charged.
