@@ -916,21 +916,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## CaseCreation (object)
 
-+ purchase.orderSessionId (string) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
-+ purchase.browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase.
-+ purchase.shipments (array[Shipment][]) - The shipments association with this purchase
-+ purchase.products (array[Product][]) - The products purchased in the transaction.
-+ purchase.orderId (string, required) - A string uniquely identifying this order.
-+ purchase.createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
-+ purchase.paymentGateway (string) - The gateway that processed the transaction. For paypal orders use paypal_account.
-+ purchase.paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
-+ purchase.transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider. 
-+ purchase.currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
-+ purchase.avsResponseCode (string, required) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
-+ purchase.cvvResponseCode (string, required) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
-+ purchase.orderChannel (OrderChannel) - The method used by the buyer to place the order. Either WEB or PHONE.
-+ purchase.receivedBy (string) - If the order was was taken by a customer service or sales agent, his or her name.
-+ purchase.totalPrice (number, required) - The total price of the order, including shipping price and taxes.
++ purchase (Purchase) - Data related to purchase event represented in this Case Creation request.
 
 + recipient.fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
 + recipient.confirmationEmail (string, required) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent.
@@ -961,20 +947,21 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Purchase (object)
 
-+ browserIpAddress (string) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase. Do not worry if you think is a proxy address -- SIGNIFYD will figure that out.
-+ shipments ([Shipment][]) - The shipments association with this purchase
-+ products ([Product][]) - The products purchased in the transaction.
-+ orderId (string) - A string uniquely identifying this order.
-+ createdAt (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed. See the Dates section of these docs for more information about date formats.
++ browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase.
++ orderSessionId (string) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
++ shipments (array[Shipment]) - The shipments association with this purchase
++ products (array[Product]) - The products purchased in the transaction.
++ orderId (string, required) - A string uniquely identifying this order.
++ createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
 + paymentGateway (string) - The gateway that processed the transaction. For paypal orders use paypal_account.
 + paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
-+ transactionId (string) - The unique identifier provided by the payment gateway for this order. 
-+ currency (string) - The currency type of the order, in 3 letter ISO 4217 format.  Defaults to USD when not sent.
-+ avsResponseCode (string) - The response code from the address verification system (AVS)
-+ cvvResponseCode (string) - The response code from the card verification value check
-+ orderChannel (OrderChannel) - The method used by the buyer to place the order.
++ transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider. 
++ currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
++ avsResponseCode (string, required) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
++ cvvResponseCode (string, required) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
++ orderChannel (OrderChannel) - The method used by the buyer to place the order. Either WEB or PHONE.
 + receivedBy (string) - If the order was was taken by a customer service or sales agent, his or her name.
-+ totalPrice (number) - The total price of the order, including shipping price and taxes.
++ totalPrice (number, required) - The total price of the order, including shipping price and taxes.
 
 ## OrderChannel (enum)
 + WEB
