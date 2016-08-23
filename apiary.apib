@@ -852,8 +852,8 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Case (object)
 + guaranteeEligible: false(boolean, required) - boolean value indicating if a guarantee can be requested for this Case.  If a guarantee has already been requested for this case, then this value will be 'false'.
-+ guaranteeDisposition: APPROVED (GuaranteeDisposition, optional) - If a case has been submitted for guarantee, this field will be present and indicate
-+ status: DISMISSED (CaseStatus, required) - The current status of the case. OPEN, PROCESSING AND HELD are considered active cases. FLAGGED and DISMISSED are considered resolved cases.
++ guaranteeDisposition (GuaranteeDisposition, optional) - If a case has been submitted for guarantee, this field will be present and indicate the decision state of the gaurantee.
++ status (CaseStatus, required) - The current status of the case. OPEN, PROCESSING AND HELD are considered active cases. FLAGGED and DISMISSED are considered resolved cases.
 + caseId: 44 (number, required) - The unique identifier assigned to the case when it is created.
 + score: 776 (number, required) - A value from 0-1000 indicating the likelihood that the order/transaction is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
 + investigationId: 44 (number, optional) - DEPRECATED.  See caseId.
@@ -863,7 +863,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + orderDate: `2013-01-18T22:54:29+0000` (string, optional) - The date and time when the order was placed.
 + orderAmount: 48 (number, required) - The total price of the order, including shipping price and taxes.
 + associatedTeam: 1 (number, required) - The id for the team with which this case is associated.
-+ reviewDisposition: GOOD (ReviewDisposition, required) - The review disposition signifies the agent's opinion after reviewing the case, the value will be FRAUDULENT or GOOD based on the agent's review. If there is no review by the agent the value will be UNSET or NULL.
++ reviewDisposition (ReviewDisposition, required) - The review disposition signifies the agent's opinion after reviewing the case, the value will be FRAUDULENT or GOOD based on the agent's review. If there is no review by the agent the value will be UNSET or NULL.
 + createdAt: `2013-03-06T23:17:17+0000` (string, required) - The date and time when the case was created.
 + updatedAt: `2013-03-06T23:17:18+0000` (string, required) - The date and time when the case was last updated.
 
@@ -878,29 +878,23 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + guaranteeId (number) - The unique identifier assigned for this guarantee.
 
 ## GuaranteeDisposition (enum)
-
-    + Members
-        + APPROVED
-        + DECLINED
-        + PENDING
-        + CANCELED
-        + IN_REVIEW
++ APPROVED
++ DECLINED
++ PENDING
++ CANCELED
++ IN_REVIEW
 
 ## CaseStatus (enum)
-
-    + Members
-        + OPEN
-        + PROCESSING
-        + FLAGGED
-        + DISMISSED
-        + HELD
++ OPEN
++ PROCESSING
++ FLAGGED
++ DISMISSED
++ HELD
 
 ## ReviewDisposition (enum)
-
-    + Members
-        + GOOD
-        + FRAUDULENT
-        + UNSET
++ GOOD
++ FRAUDULENT
++ UNSET
 
 ## CaseEntries (object)
 
@@ -1013,7 +1007,7 @@ All items related to person or organization receiving the items purchased.
 + shipper (string) -The name of the shipper
 + shippingMethod (string) - The type of the shipment method used
 + trackingNumber (string) The tracking number for the shipment.
-
+ed a
 
 ## Card (object)
 + cardHolderName (string) - The full name on the credit card that was charged.
@@ -1066,17 +1060,17 @@ we will assume you are the seller.
 + itemWeight (number) - The weight of each item in grams.
 
 ## InvestigationStatus (enum)
-+ OPEN (string)
-+ PROCESSING (string)
-+ FLAGGED (string)
-+ DISMISSED (string)
-+ HELD (string)
++ OPEN
++ PROCESSING
++ FLAGGED
++ DISMISSED
++ HELD
 
 ## WebhookEventType (enum)
-+ CASE_CREATION (string)
-+ CASE_RESCORE (string)
-+ CASE_REVIEW (string)
-+ GUARANTEE_COMPLETION (string)
++ CASE_CREATION
++ CASE_RESCORE
++ CASE_REVIEW
++ GUARANTEE_COMPLETION
 
 ## WebhookRequest (object)
 + event (WebhookEventType) - the type/topic of the event
