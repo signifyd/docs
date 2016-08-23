@@ -930,17 +930,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + card.expiryMonth (number) - MM representation of the expiration month of the card.
 + card.expiryYear (number) - yyyy representation of the expiration year of the card.
 + card.billingAddress (Address, required) - The billing address for the card.
-
-+ userAccount.email (string) - The primary email address associated with the account.
-+ userAccount.username (string) - The username associated with the account. Please supply this even if it is the same as the email address.
-+ userAccount.phone (string) - The phone number association with the account.
-+ userAccount.createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the account was created. See the Dates section of these docs for more information about date formats.
-+ userAccount.accountNumber (string) - Your unique identifier for the account.
-+ userAccount.lastOrderId (string) - The unique identifier for the last order placed by this account, prior to the current order.
-+ userAccount.aggregateOrderCount (number) - The total count of orders placed by this account since it was created, including the current order.
-+ userAccount.aggregateOrderDollars (number) - The total amount spent by this account since it was created, including the current order.
-+ userAccount.lastUpdateDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The last time a change was made to this account other than an order being placed. Examples include changing email addresses or adding a new credit card. See the Dates section of these docs for more information about date formats.
-
++ userAccount (UserAccount) - Commonly, a customer must create an account before placing an order. These data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account.
 + seller.name (string) - The business name of the seller.
 + seller.domain (string) - The domain of the seller.
 + seller.shipFromAddress (Address) - The location from which the seller shipped the order.
@@ -1004,10 +994,6 @@ All items related to person or organization receiving the items purchased.
 + billingAddress (Address) - The billing address for the card.
 
 ## UserAccount (object)
-Commonly, a customer must create an account before placing an order. These data values are details from 
-that account. You should only fill these values in if the customer has an account into which they can login. 
-Leave them blank if this was a one-time transaction with no account.
-
 + email (string) - The primary email address associated with the account.
 + username (string) - The username associated with the account. Please supply this even if it is the same as the email address.
 + phone (string) - The phone number association with the account.
