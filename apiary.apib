@@ -917,23 +917,10 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 ## CaseCreation (object)
 
 + purchase (Purchase) - Data related to purchase event represented in this Case Creation request.
-
-+ recipient.fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
-+ recipient.confirmationEmail (string, required) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent.
-+ recipient.confirmationPhone (string) - The phone number that you would call if there was something wrong with this order or the phone number that was supplied with the shipping information.
-+ recipient.organization (string) - If provided by the buyer, the name of the recipient's company or organization.
-+ recipient.deliveryAddress (Address, required) - The address to which the order will be delivered.
-
-+ card.cardHolderName (string, required) - The full name on the credit card that was charged.
-+ card.bin (number) - The first six digits of the credit card, the bank identification number, which uniquely identifies the issuer.
-+ card.last4 (string) - The last four digits of the card number.
-+ card.expiryMonth (number) - MM representation of the expiration month of the card.
-+ card.expiryYear (number) - yyyy representation of the expiration year of the card.
-+ card.billingAddress (Address, required) - The billing address for the card.
++ recipient (Recipient) - Data related to person or organization receiving the items purchased.
++ card (Card) - Data related to the card that was used for the purchase and its cardholder.
 + userAccount (UserAccount) - Commonly, a customer must create an account before placing an order. These data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account.
-+ seller.name (string) - The business name of the seller.
-+ seller.domain (string) - The domain of the seller.
-+ seller.shipFromAddress (Address) - The location from which the seller shipped the order.
++ seller (Seller) - All data related to the merchant that sold the product. If this information is not supplied, we will assume you are the seller.
 
 ## Purchase (object)
 
@@ -970,13 +957,11 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + PAYPAL_ACCOUNT
 
 ## Recipient (object)
-All items related to person or organization receiving the items purchased.
-
-+ fullName (string) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
-+ confirmationEmail (string) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent.
++ fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
++ confirmationEmail (string, required) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent.
 + confirmationPhone (string) - The phone number that you would call if there was something wrong with this order or the phone number that was supplied with the shipping information.
 + organization (string) - If provided by the buyer, the name of the recipient's company or organization.
-+ deliveryAddress (Address) - The address to which the order will be delivered.
++ deliveryAddress (Address, required) - The address to which the order will be delivered.
 
 ## Shipment (object)
     
@@ -986,12 +971,12 @@ All items related to person or organization receiving the items purchased.
 + trackingNumber (string) The tracking number for the shipment.
 
 ## Card (object)
-+ cardHolderName (string) - The full name on the credit card that was charged.
++ cardHolderName (string, required) - The full name on the credit card that was charged.
 + bin (number) - The first six digits of the credit card, the bank identification number, which uniquely identifies the issuer.
 + last4 (string) - The last four digits of the card number.
 + expiryMonth (number) - MM representation of the expiration month of the card.
 + expiryYear (number) - yyyy representation of the expiration year of the card.
-+ billingAddress (Address) - The billing address for the card.
++ billingAddress (Address, required) - The billing address for the card.
 
 ## UserAccount (object)
 + email (string) - The primary email address associated with the account.
@@ -1005,9 +990,6 @@ All items related to person or organization receiving the items purchased.
 + lastUpdateDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The last time a change was made to this account other than an order being placed. Examples include changing email addresses or adding a new credit card. See the Dates section of these docs for more information about date formats.
 
 ## Seller (object)
-All data related to the merchant that sold the product. If this information is not supplied, 
-we will assume you are the seller.
-
 + name (string) - The business name of the seller.
 + domain (string) - The domain of the seller.
 + shipFromAddress (Address) - The location from which the seller shipped the order.
@@ -1017,7 +999,7 @@ we will assume you are the seller.
 + unit (string) - The unit or apartment number.
 + city (string) - The city name.
 + provinceCode (string) - The code or abbreviation for the province.
-+ postalCode string - The postal code.
++ postalCode (string) - The postal code.
 + countryCode (string) - The two-letter ISO-3166 country code. If left blank, we will assume US.
 + latitude (number) - The latitude of the address. Used when address details are not provided. Ignored otherwise.
 + longitude (number) - The longitude of the address. Used when address details are not provided. Ignored otherwise.
