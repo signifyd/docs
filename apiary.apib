@@ -171,7 +171,15 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                 },
                 "seller": {
                     "name": "Amazon",
+                    "email": "fraud.protection@amazon.com",
+                    "username": "Amazon",
+                    "phone": "8883334545",
                     "domain": "amazon.com",
+                    "createdDate": "2012-01-09T12:33:34-04:00",
+                    "accountNumber": "54321",
+                    "aggregateOrderCount": 4000,
+                    "aggregateOrderDollars": 3000000,
+                    "lastUpdateDate": "2016-07-22T07:22:33-04:00"
                     "shipFromAddress": {
                         "streetAddress": "1850 Mercer Rd",
                         "unit": null,
@@ -191,7 +199,11 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                         "countryCode": "US",
                         "latitude": 47.6,
                         "longitude": -122.33
-                    }
+                    },
+                    "onboardingIpAddress": "192.122.1.1",
+                    "onboardingEmail": "account.setup@amazon.com",
+                    "onboardingLatitude": 22.03,
+                    "onboardingLongitude": -35.12
                 }
             }
 
@@ -991,8 +1003,21 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Seller (object)
 + name (string) - The business name of the seller.
++ email (string) - The primary email address associated with the seller.
++ username (string) - The username associated with the seller. Please supply this even if it is the same as the email address.
++ phone (string) - The phone number association with the seller.
 + domain (string) - The domain of the seller.
++ createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the seller was created.
++ accountNumber (string) Your unique identifier for the seller.
++ aggregateOrderCount (number) - The total count of orders sold by this seller since it was created, including the current order.
++ aggregateOrderDollars (number) - The total amount sold by this seller since it was created, including the current order.
++ lastUpdateDate (string) -  `yyyy-MM-dd'T'HH:mm:ssZ` The last time a change was made to this seller (e.g. changed email).
 + shipFromAddress (Address) - The location from which the seller shipped the order.
++ corporateAddress (Address) - The corporate address of the seller.
++ onboardingIpAddress (string) - The IP address used to signup the seller account.
++ onboardingEmail (string) - The email address used for the seller account used for signup.
++ onboardingLatitude (number) - Latitude (for mobile apps) of the seller’s onboarding time.
++ onbardingLongitude (number) - Longitude (for mobile apps) of the seller’s onboarding time.
 
 ## Address (object)
 + streetAddress (string) - The street number and street name.
