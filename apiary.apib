@@ -170,8 +170,18 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                     "lastUpdateDate": "2013-01-18T17:54:31-05:00"
                 },
                 "seller": {
-                    "name": "Amazon",
-                    "domain": "amazon.com",
+                    "name": "We sell awesome stuff, Inc.",
+                    "email": "wesellawesomestuff@gmail.com",
+                    "username": "awesomestuff1234",
+                    "phone": "8883334545",
+                    "domain": "wesellawesomestuff.com",
+                    "createdDate": "2012-01-09T12:33:34-04:00",
+                    "accountNumber": "54321",
+                    "aggregateOrderCount": 4000,
+                    "aggregateOrderDollars": 3000000.00,
+                    "lastUpdateDate": "2016-07-22T07:22:33-04:00",
+                    "onboardingIpAddress": "192.122.1.1",
+                    "onboardingEmail": "wesellawesomestuff@gmail.com",
                     "shipFromAddress": {
                         "streetAddress": "1850 Mercer Rd",
                         "unit": null,
@@ -920,13 +930,13 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + recipient (Recipient) - Data related to person or organization receiving the items purchased.
 + card (Card) - Data related to the card that was used for the purchase and its cardholder.
 + userAccount (UserAccount) - Commonly, a customer must create an account before placing an order. These data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account.
-+ seller (Seller) - All data related to the merchant that sold the product. If this information is not supplied, we will assume you are the seller.
++ seller (Seller) - All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
 
 ## Purchase (object)
 
 + browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase.
 + orderSessionId (string) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
-+ shipments (array[Shipment]) - The shipments association with this purchase
++ shipments (array[Shipment]) - The shipments associated with this purchase.
 + products (array[Product]) - The products purchased in the transaction.
 + orderId (string, required) - A string uniquely identifying this order.
 + createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
@@ -979,9 +989,9 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + billingAddress (Address, required) - The billing address for the card.
 
 ## UserAccount (object)
-+ email (string) - The primary email address associated with the account.
++ email (string) - The primary email address associated	 with the account.
 + username (string) - The username associated with the account. Please supply this even if it is the same as the email address.
-+ phone (string) - The phone number association with the account.
++ phone (string) - The phone number associated with the account.
 + createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the account was created. See the Dates section of these docs for more information about date formats.
 + accountNumber (string) - Your unique identifier for the account.
 + lastOrderId (string) - The unique identifier for the last order placed by this account, prior to the current order.
@@ -991,8 +1001,19 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Seller (object)
 + name (string) - The business name of the seller.
++ email (string) - The primary email address associated with the seller.
++ username (string) - The unique username associated with the seller. This will likely be whatever they use to login to your site. Please supply this even if it is the same as the email address.
++ accountNumber (string) Your unique, internal identifier for the seller if different from username.
++ phone (string) - The phone number associated with the seller.
 + domain (string) - The domain of the seller.
++ createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the seller account was created on your site.
++ aggregateOrderCount (number) - The total count of orders sold by this seller since it was created, including the current order.
++ aggregateOrderDollars (number) - The total amount sold by this seller since it was created, including the current order.
++ lastUpdateDate (string) -  `yyyy-MM-dd'T'HH:mm:ssZ` The last time a change was made to this seller (e.g. changed email).
++ onboardingIpAddress (string) - The IP address of the device used when this seller account was created.
++ onboardingEmail (string) - The email address associated with this seller account when it was created.
 + shipFromAddress (Address) - The location from which the seller shipped the order.
++ corporateAddress (Address) - The corporate address of the seller.
 
 ## Address (object)
 + streetAddress (string) - The street number and street name.
