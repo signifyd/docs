@@ -1,0 +1,49 @@
+FORMAT: 1A
+HOST: http://upload.signifyd.com/
+
+# File Upload Service
+
+This is a simple file upload handler, specifically (at least for now) for PCI-sensitive documents and files.
+
+## File Upload [/]
+
+### Upload [POST]
+  Post multipart/form-data style body containing a file, "filename", "senstivity" flag (currently always 1) and investigation "caseId".
+
+  On success, this action returns a 200 status code with no body.  On failure, an appropriate HTTP Status code is returned with a body explaining the problem.
+
+  *Fields*
+
+    file        The file itself
+    filename    A name for the file
+    sensitive   1 for PCI-sensitive document
+    caseId      the investigation ID code
+
++ Request
+    + Headers
+
+            Content-Type: multipart/form-data, boundary=mainBoundary
+
+    + Body
+
+            Content-Type: multipart/form-data; boundary=mainBoundary
+            Content-Length: 387
+
+            -----------------------------mainBoundary
+            Content-Disposition: form-data; name="caseId"
+
+            12345678
+            -----------------------------mainBoundary
+            Content-Disposition: form-data; name="sensitive"
+
+            1
+            -----------------------------mainBoundary
+            Content-Disposition: form-data; name="file"; filename="filename.txt"
+            Content-Type: text/plain
+
+            Hello, World.
+            -----------------------------mainBoundary--
+
+
++ Response 200
+

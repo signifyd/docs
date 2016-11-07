@@ -1,0 +1,247 @@
+FORMAT: 1A
+HOST: https://api.signifyd.com/v2
+
+# Signifyd Claims API
+
+The Claims API allows merchants to submit chargebacks for reimbursement.
+
+## Authentication
+You authenticate to the SIGNIFYD API by providing your API key in the request.
+You can find your API key on your [account](https://app.signifyd.com/settings) page.
+
+Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side).
+Provide your API key as the basic auth username. You do not need to provide a password, but some REST clients expect a username:password pair separated by a colon. Since there is no explicit password with the API key, it will need to be followed simply by a colon in those cases.
+Throughout this documentation we will use an example API key of `abcdefghijklmnopqrstuvwxyz` though it will typically appear in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`.
+
+Be sure all API calls to SIGNIFYD are made over HTTPS. Otherwise they will fail.
+
+## Response Codes
+SIGNIFYD uses conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with SIGNIFYD's servers.
+
+Not all errors map cleanly onto HTTP response codes, however. When a request is valid but does not complete successfully, we return a 402 error code.
+
+Specifically, SIGNIFYD will respond with one of the following status codes:
+
+| Code| Description |
+| --- | --- |
+|`200`| Success. Request completed. |
+|`201`| Success. New resource created. |
+|`204`| Success. No content to return. Only the status code returns. |
+|`400`| Bad Request - The request could not be parsed. |
+|`401`| Unauthorized - user is not logged in, could not be authenticated. |
+|`402`| Unsuccessful - request is valid but did not complete successfully. |
+|`403`| Forbidden - Cannot access resource. |
+|`404`| Not Found - resource doesn't exist. |
+|`5xx`| Server error. |
+
+## Dates
+The SIGNIFYD API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for
+complete date plus hours, minutes, and seconds.  All times are in UTC with a 'Z' at the end.
+
+```
+yyyy-MM-dd'T'HH:mm:ssZ
+2015-06-03T13:21:58.343Z
+
+```
+For more information for your specific programming language, please view [this document](https://developers.google.com/gmail/markup/reference/datetime-formatting).
+
+## Create a claim [/cases/{caseId}/claims]
+### Post [POST]
+Create a claim by submitting chargeback and order shipment tracking information.
+
+This action returns a 201 status code with a JSON body containing automatically generated claim information and chargebackId.
+
++ Parameters
+    + caseId: 999999 (integer) - Identifier of the investigation/case for which a claim is requested.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
+
+    + Attribute (ClaimRequest)
+
+    + Body
+
+        {
+            "chargebacks": [
+                {
+                    "amount": {
+                        "amount": 1234.56,
+                        "currencyCode": "USD"
+                    },
+                    "merchantOrderId": 102240764,
+                    "paymentProcessor": "visa",
+                    "chargebackRefId": "visa-fazzle-abcd",
+                    "reason": {
+                        "processorName": "visa",
+                        "processorReasonCode": "81",
+                        "processorReasonDescription": "Fraud"
+                    },
+                    "issuerReportedDate": "2016-02-20T03:15:05.343Z",
+                    "chargebackFees": {
+                        "amount": 12.34,
+                        "currencyCode": "USD"
+                    }
+                }
+            ],
+            "trackingInfo": [
+                {
+                    "shipper": "UPS",
+                    "trackingNumber": "1111111"
+                },
+                {
+                    "shipper": "UPS",
+                    "trackingNumber": "2222222"
+                }
+            ]
+        }
+
++ Response 200 (application/json)
+
+    + Attribute (Claim)
+
+    + Body
+
+            {
+                "investigationId": 999999,
+                "createdAt": "2016-03-22T04:00:31.030Z",
+                "updatedAt": "2016-03-22T04:00:31.030Z",
+                "status": "CLOSED",
+                "disposition": "DECLINED",
+                "dispositionReason": "It was verified that the order was received by the intended recipient.",
+                "notes": "The order has been received by the household belonging to the person who placed the order.",
+                "chargebacks": [
+                    {
+                        "chargebackId": 1,
+                        "investigationId": 999999,
+                        "merchantOrderId": 102240764,
+                        "paymentProcessor": "visa",
+                        "chargebackRefId": "visa-fazzle-abcd",
+                        "reason": {
+                            "processorName": "visa",
+                            "processorReasonCode": "81",
+                            "processorReasonDescription": "Fraud"
+                        },
+                        "issuerReportedDate": "2016-02-20T03:15:05.343Z",
+                        "signifydReportedDate": "2016-03-22T04:00:31.030Z",
+                        "amount": {
+                            "amount": 1234.56,
+                            "currencyCode": "USD"
+                        },
+                        "chargebackFees": {
+                            "amount": 12.34,
+                            "currencyCode": "USD"
+                        }
+                    }
+                ],
+                "trackingInfo": [
+                    {
+                        "shipper": "UPS",
+                        "trackingNumber": "1111111"
+                    },
+                    {
+                        "shipper": "UPS",
+                        "trackingNumber": "2222222"
+                    }
+                ]
+            }
+
+
+
+# Data Structures
+## ChargebackRequest (object)
++ amount: - **required for creation**
+    + amount: 1234.56 (number) - The amount of the transaction being charged back.
+    + currencyCode: `USD` (string) - The ISO 4217 code for the transaction currency.
++ merchantOrderId: 102240764 (string, optional) - Order identifier as given by merchant.
++ paymentProcessor: `visa` (string, optional) - Payment processor (e.g. Visa, Mastercard, etc.).
++ chargebackRefId: `visa-123` (string, optional) - Payment processor or other reference identifier for chargeback.
++ reason: optional
+    + processorName: `visa` (string, optional) - Payment processor (e.g. Visa, Mastercard, etc.).
+    + processorReasonCode: `81` (string, optional) - Reason code issued by payment processor.
+    + processorReasonDescription: `Fraud` (string, optional) - Detailed reason description issued by payment processor.
++ issuerReportedDate: `2016-02-20T03:15:05.343Z` (string, optional) - yyyy-MM-dd'T'HH:mm:ssZ Timestamp when chargeback was reported to issuer.
++ signifydReportedDate: `2016-03-22T04:00:31.030Z` (string, optional) - yyyy-MM-dd'T'HH:mm:ssZ Timestamp when chargeback was reported to Signifyd (defaults to creation time in database).
++ chargebackFees: optional - Chargeback fees in addition to the chargeback amount.
+    + amount: 12.34 (number) - The amount of the chargeback fee.
+    + currencyCode: `USD` (string) - The ISO 4217 code for the chargeback fee currency.
+
+## LegacyChargebackRequest (ChargebackRequest)
++ investigationId: 999999 (number) - Identifier for the investigation or case that got a chargeback, **required for creation**.
+
+## Chargeback (LegacyChargebackRequest)
++ chargebackId: 2 (number) - The unique identifier of the chargeback, **required for updating**.
+
+## ChargebackList (object)
++ chargebacks (array[Chargeback])
+
+## TrackingInfoRequest (object)
+ + shipper: `UPS` (string) - The shipper's name.
+ + trackingNumber: `1111111` (string) - The order's tracking number.
+
+## TrackingInfoList (object)
++ trackingInfo (array[TrackingInfoRequest])
+
+## TrackingInfoResponse (object)
++ investigationId: 999999 (number) - Identifier for the investigation or case for which a claim is sought.
++ trackingInfo (array[TrackingInfoRequest])
+
+## ClaimRequest (object)
++ chargebacks: (array[ChargebackRequest], optional)
++ trackingInfo: (array[TrackingInfoRequest], optional)
+
+## Claim (ClaimRequest)
++ investigationId: 999999 (number) - Identifier for the investigation or case that got a chargeback. (also the unique identifier of the claim, **required for updating**)
++ createdAt: `2016-02-20T03:15:05.343Z` (string): Automatic timestamp indicating when the claim was created.
++ updatedAt: `2016-02-20T03:15:05.343Z` (string): Automatic timestamp indicating when the claim was last modified.
++ status (enum, required)
+    + CANCELLED (string)
+    + PENDING (string)
+    + IN REVIEW (string)
+    + CLOSED (string)
++ disposition (enum) - This is **required when status is CLOSED**.
+    + APPROVED (string)
+    + DECLINED (string)
++ dispositionReason: `It was verified that the order was received by the intended recipient.` (string) - This is **required when disposition is DECLINED**.
++ notes: `The order has been received by the household belonging to the person who placed the order.` (string, optional)
+
+## PartnerRequest (object)
++ partnerName: `General Ecommerce, LLC` (string, required) - Common name of the company participating in the partnership.
++ userFullName: `Vijay Patel` (string, required) - The full name of the user to be created along with the partner.
++ userEmailAddress: `vpatel@example.com` (string, required) - The email address of the user to be created along with the partner.
++ ratePlans: (array, required)
+    + (object)
+        + planType: `COMPLETE` (string): The name of the plan type that the partner has chosen.
+        + rateBps: 100 (number): The rate in bps that the partner has chosen for the plan type.
+
+## Partner (object)
++ partnerId: 2 (number) - The unique id of the partner. This is also the id of the customer attached to this partner, **required for updating**.
++ partnerName: `General Ecommerce, LLC` (string) - Common name of the company participating in the partnership.
++ testAccount: false (boolean, optional) - Flag indicating this is a test partner account.
++ partnerApiKey: `THISISAFAKETOKEN1ppbh9SE92SmXGAc` (string) - Generated API key that will allow Partner to manage their merchants via the API.
++ createdBy: 123 (number, optional) - Identifier of the Signifyd user who setup this Partner account. Inferred from session.
++ createdAt: `2016-06-13T22:08:25.334Z` (string): Automatic timestamp indicating when Partner account was created.
++ updatedAt: `2016-06-13T22:08:25.334Z` (string): Automatic timestamp indicating when Partner account was last modified.
++ ratePlans: (array, required)
+    + (object)
+        + planType: `COMPLETE` (string): The name of the plan type that the partner has chosen.
+        + rateBps: 100 (number): The rate in bps that the partner has chosen for the plan type.
+
+## PartnerList (object)
++ partners (array[Partner])
+
+## UserRequest (object)
++ emailAddress: `vpatel@example.com` (string, required) - The email address of the user to be created.
++ fullName: `Vijay Patel` (string, required) - The full name of the user to be created.
+
+## User (object)
++ active: true (boolean) - Indicates whether or not this user may access Signifyd's API.
++ createdAt: `2016-06-13T22:08:25.334Z` (string) - Automatic timestamp indicating when the user was created.
++ firstName: `Vijay` (string) - First name of the user.
++ lastName: `Patel` (string) - Last name of the user.
++ username: `Evergreen Terrace, Ltd` (string) - The user's email address.
+
+## UserList (object)
++ users (array[User])

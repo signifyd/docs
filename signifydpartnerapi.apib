@@ -1,0 +1,436 @@
+FORMAT: 1A
+HOST: https://api.signifyd.com/v2
+
+# Signifyd Partner API
+
+The Partner API allows e-commerce platforms, payment gateways, and other agencies to create and manage merchant accounts to provide fraud screening and guaranteed payments to merchants.
+
+## Authentication
+
+Authenticate providing your API key with each request.
+
+Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side).
+Provide your API key as the basic auth username. You do not need to provide a password, but
+some REST clients expect a username:password pair separated by a colon. Since there is no explicit password with the API key,
+it will need to be followed simply by a colon in those cases.
+
+All API calls to Signifyd require HTTPS.
+
+## Response Codes
+Conventional HTTP response codes indicate success or failure of an API request. In general, codes in the 2xx
+range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required
+parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with SIGNIFYD's servers.
+
+Specifically, Signifyd will respond with one of the following status codes:
+
+| Code| Description |
+| --- | --- |
+|`200`| Success. Request completed. |
+|`201`| Success. New resource created. |
+|`204`| Success. No content to return. Only the status code returns. |
+|`400`| Bad Request - The request could not be parsed. |
+|`401`| Unauthorized - user is not logged in, could not be authenticated. |
+|`403`| Forbidden - Cannot access resource. |
+|`404`| Not Found - resource doesn't exist. |
+|`5xx`| Server error. |
+
+## Error Messages
+There are two types of errors returned by the API server in the bodies of 4xx and 5xx responses:
+- Field-specific errors
+- General error messages
+
+This is our standard format:
+```
+{
+  "errors": {
+    "fieldName":[
+      "Field-specific error message, e.g., fieldName is not a valid email address."
+    ]
+  },
+  "messages": [
+    "General error message."
+  ]
+}
+```
+
+## Dates
+The API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for
+complete date plus hours, minutes, and seconds.  All dates are in UTC.
+
+
+```
+         yyyy-MM-dd'T'HH:mm:ssZ
+For UTC: 2015-11-03T13:21:58Z
+For PST: 2015-11-03T13:21:58Z
+```
+For more information about your specific programming language, please view
+[this document](https://developers.google.com/gmail/markup/reference/datetime-formatting).
+
+
+## Group Merchant Accounts
+
+## Create Merchant [/partner/merchants]
+### Create Merchant Account [POST]
+Create a Signifyd account for a merchant.
+
++ Request (application/json)
+
+    + Attribute (MerchantRequest)
+
+    + Body
+
+            {
+                "customerContactOptOut": false,
+                "merchantEmail": "sales@ckkllc.com",
+                "merchantName": "Consolidated Knick-Knacks, LLC",
+                "planType": "COMPLETE",
+                "merchantWebsite": "http://www.consolidatedknickknacks.com/"
+            }
+
++ Response 201 (application/json)
+
+    + Attribute (Merchant)
+
+    + Body
+
+            {
+                "active": true,
+                "customerContactOptOut": false,
+                "merchantApiKey": "THISISAFAKETOKEN1ppbh9SE92SmXGAc",
+                "merchantId": 987654,
+                "merchantEmail": "sales@ckkllc.com",
+                "merchantName": "Consolidated Knick-Knacks, LLC",
+                "planType": "COMPLETE",
+                "merchantWebsite": "http://www.consolidatedknickknacks.com/"
+            }
+
+
+## Retrieve or Update Merchant [/partner/merchants/{merchantId}]
++ Parameters
+    + merchantId: 987654 (integer) - Signifyd issued identifier for the merchant to retrieve.
+
+### Retrieve [GET]
+View details for a single merchant, including the merchant API key for submitting transactions.
+
++ Response 200 (application/json)
+
+    + Attribute (Merchant)
+
+    + Body
+
+            {
+                "active": true,
+                "customerContactOptOut": false,
+                "merchantApiKey": "THISISAFAKETOKEN1ppbh9SE92SmXGAc",
+                "merchantEmail": "sales@ckkllc.com",
+                "merchantId": 987654,
+                "merchantName": "Consolidated Knick-Knacks, LLC",
+                "planType": "COMPLETE",
+                "merchantWebsite": "http://www.consolidatedknickknacks.com/"
+            }
+
+### Update [PUT]
+Modify an existing merchant account.
++ Request (application/json)
+
+    + Attribute (MerchantRequest)
+
+    + Body
+
+            {
+                "customerContactOptOut": true,
+                "merchantEmail": "sales@amalgamatedtchotchke.com",
+                "merchantName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                "planType": "COMPLETE",
+                "merchantWebsite": "http://www.amalgamatedtchotchke.com/"
+            }
+
++ Response 200 (application/json)
+
+    + Attribute (Merchant)
+
+    + Body
+
+            {
+                "active": true,
+                "customerContactOptOut": true,
+                "merchantApiKey": "THISISAFAKETOKEN1ppbh9SE92SmXGAc",
+                "merchantId": 987654,
+                "merchantName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                "planType": "COMPLETE",
+                "merchantWebsite": "http://www.amalgamatedtchotchke.com/"
+            }
+
+## Merchant Accounts [/partner/merchants?limit={limit}&offset={offset}&orderBy={orderBy}&ascending={ascending}&includeMeta={includeMeta}&includeData={includeData}]
+### List [GET]
+Retrieve a list of merchant accounts. This list can be paged and ordered allowing for a manageable sliding data window through a long list.
+The result can optionally include a `meta` block which both echoes list parameters and includes aggregate data to
+facilitate paging through a large collection of merchants.
+
++ Parameters
+    + includeMeta: false (boolean, optional) - Indicates whether to include metadata in the results. Defaults to false. Set to false if you have need of the paging metadata.
+    + includeData: true (boolean, optional) - Indicates whether to include data in the results. Defaults to true. Set to false to list only aggregate data such as the count.
+    + limit: 20 (integer, optional) - The max number of merchants to retrieve. Defaults to 20.
+    + offset: 60 (integer, optional) - The number of merchants to skip. Defaults to 0. Combined with limit, allows for paging through the line items.
+    + orderBy: merchantName (LineItemFilterField, optional) - The field on which to order the results. Allowed values are "merchantName" and "partnerMerchantd". Ordering occurs before offset and limit are applied.
+    + ascending: true (boolean, optional) - indicates whether we are ordering the results in ascending order or not. Defaults to true.
+
++ Response 200 (application/json)
+
+    + Attribute (MerchantList)
+
+    + Body
+
+            {
+                "meta": {
+                    "ascending": true,
+                    "dataIncluded": true,
+                    "hasMoreRows": true,
+                    "limit": 20,
+                    "metaIncluded": true,
+                    "nextOffset": 80,
+                    "numRows": 20,
+                    "offset": 60,
+                    "orderBy": "merchantName",
+                    "prevOffset": 40
+                },
+                "merchants": [
+                    {
+                        "active": true,
+                        "customerContactOptOut": false,
+                        "merchantApiKey": "THISISAFAKETOKEN1ppbh9SE92SmXGAc",
+                        "merchantEmail": "sales@ckkllc.com",
+                        "merchantId": 987654,
+                        "merchantName": "Consolidated Knick-Knacks, LLC",
+                        "planType": "COMPLETE",
+                        "merchantWebsite": "http://www.consolidatedknickknacks.com/"
+                    },
+                    {
+                        "active": true,
+                        "customerContactOptOut": true,
+                        "merchantApiKey": "THISISAFAKETOKENqhHVyoyh6bsVStNi",
+                        "merchantId": 999222,
+                        "merchantEmail": null,
+                        "merchantName": "PleaseBuyASweater.com, Inc.",
+                        "planType": "COMPLETE",
+                        "website": "http://www.pleasebuyasweater.com/"
+                    },
+                    {
+                        "active": true,
+                        "customerContactOptOut": true,
+                        "merchantApiKey": "THISISAFAKETOKEN1hpVhoSh9bSVXtAi",
+                        "merchantEmail": "ecommerce@juststuffincans.com",
+                        "merchantId": 800127,
+                        "merchantName": "juststuffincans.com",
+                        "planType": "COMPLETE",
+                        "merchantWebsite": "http://www.juststuffincans.com"
+                    }
+                ]
+            }
+
+
+## Merchant Accounts Count [/partner/merchants/count]
+### Get count of Merchant Accounts [GET]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "count": 42
+            }
+
+
+## Group Merchant Webhooks
+
+Partner Merchants are established as "Teams" in the Signifyd system.
+Teams support webhooks to capture various events around fraud cases:
+"Case Created", "Guarantee Completed", etc.
+To manage a merchant's team webhooks, please consult the general "Webhooks"
+API documentation.
+
+## Group Partner Accounts
+
+## Retrieve Partner [/partner]
+
+### Retrieve [GET]
+View details for the logged-in partner, including the partner API key for submitting transactions.
+
++ Response 200 (application/json)
+
+    + Attribute (Partner)
+
+    + Body
+
+            {
+                "partnerId": 742,
+                "partnerName": "Evergreen Terrace, Ltd",
+                "testAccount": false,
+                "partnerApiKey": "THISISAFAKETOKEN1ppbh9SE92SmXGAc",
+                "ratePlans": [
+                    {
+                        "planType": "COMPLETE",
+                        "rateBps": 100
+                    }
+                ]
+            }
+
+## Create or list users for a partner [/partner/users]
+
+### Create new user [POST]
+Create a new partner user. Partner users are able to retrieve the partner API key as well as add or remove other users.
+The new user will be sent an email for account verification and password setup.
++ Request (application/json)
+
+    + Attribute (UserRequest)
+
+    + Body
+
+            {
+                "emailAddress": "vpatel@example.com",
+                "fullName": "Vijay Patel"
+            }
+
++ Response 201 (application/json)
+
+    + Attribute (User)
+
+    + Body
+
+            {
+                "active": "true",
+                "createdAt": "2016-06-13T22:08:25.334Z",
+                "firstName": "Vijay",
+                "lastName": "Patel",
+                "username": "vpatel@example.com"
+            }
+
+### List users [GET]
+Retrieve a list of partner users ordered by username, i.e., email address, ascending.
+
++ Response 200 (application/json)
+
+    + Attribute (UserList)
+
+    + Body
+
+            {
+                "users": [
+                    {
+                        "active": "true",
+                        "createdAt": "2016-06-13T21:19:37.689Z",
+                        "firstName": "Tina",
+                        "lastName": "Smith",
+                        "username": "tsmith@example.com"
+                    },
+                    {
+                        "active": "true",
+                        "createdAt": "2016-06-13T22:08:25.334Z",
+                        "firstName": "Vijay",
+                        "lastName": "Patel",
+                        "username": "vpatel@example.com"
+                    }
+                ]
+            }
+
+## View or disable users [/partner/users/{username}]
++ Parameters
+    + username: vpatel@example.com (string) - username, i.e., email address, of the user upon which to act.
+
+### View user details [GET]
+View the details for a single user. The username is the user's email address.
+
++ Response 200 (application/json)
+
+    + Attribute (User)
+
+    + Body
+
+            {
+                "active": true,
+                "createdAt": "2016-06-13T22:08:25.334Z",
+                "firstName": "Vijay",
+                "lastName": "Patel",
+                "username": "vpatel@example.com"
+            }
+
++ Response 404 (application/json)
+    + Body
+
+            {
+                "messages": [
+                    "User 'jim.nobody@example.com' not found."
+                ]
+            }
+
+### Disable user [DELETE]
+Disable a user so they are no longer allowed to access the partner account.
++ Response 204 (application/json)
+
+# Data Structures
+## MerchantRequest (object)
++ active: true (boolean) - Indicates whether or not Signifyd should accept orders from this merchant.
++ customerContactOptOut: false (boolean) - True if direct communication with this merchant's customers is not allowed.
++ merchantEmail: `sales@ckkllc.com` (string) - Contact email address for the merchant.
++ merchantName: `Consolidated Knick-Knacks, LLC` (string) - Name of the merchant company
++ planType (enum) - Type of guarantee plan to which merchant is subscribed.
+    + COMPLETE (string) - Plan type indicating all merchant orders should automatically be submitted for guarantee.
++ merchantWebsite: `http://www.consolidatedknickknacks.com/` (string) - URL of merchant's ecommerce site.
+
+## Merchant (MerchantRequest)
++ merchantApiKey: `THISISAFAKETOKEN1ppbh9SE92SmXGAc` (string) - Signifyd generated token used to send merchant orders to API.
++ merchantId: 987654 (number) - Signifyd assigned identifier for this merchant.
+
+## MerchantListMetadata (object)
++ ascending (boolean) - true if the data was requested in ascending order; false for descending
++ dataIncluded (boolean) - true if the data was requested to be included in the response; false to skip data (e.g., when only requesting metadata)
++ hasMoreRows (boolean) - true if there are more rows of data available after the current list
++ limit: 20 (number) - the maximum number of items requested for this list. The actual list length may be shorter. This value should be used in subsequent paging requests.
++ metaIncluded (boolean) - true if metadata was requested to be included in the response. A false value should never be seen
++ nextOffset: 80 (number) - offset value to use to retrieve the next page of data.
++ numRows: 20 (number) - the actual number of rows returned from the request (even if actual data was excluded). Should be <= limit
++ offset: 60 (number) - the number of items that were skipped to generate the list.
++ orderBy: `merchantName` (string) - the column by which the current list was sorted. Should be used in subsequent paging requests.
++ prevOffset: 40 (number) - offset value to use to retrieve previous page of data.
+
+## MerchantList (object)
++ meta (MerchantListMetadata)
++ merchants (array[Merchant])
+
+## InvestigationStatus (enum)
++ OPEN (string)
++ PROCESSING (string)
++ FLAGGED (string)
++ DISMISSED (string)
++ HELD (string)
+
+## GuaranteeDisposition (enum)
++ PENDING (string)
++ IN_REVIEW (string)
++ APPROVED (string)
++ DECLINED (string)
++ CANCELED (string)
+
+## Partner (object)
++ partnerId: 742 (number) - Signifyd-assigned identifier for this partner.
++ partnerName: `Evergreen Terrace, Ltd` (string) - Name of the partner's company.
++ testAccount: false (boolean) - Indicates whether the account is used for test.
++ partnerApiKey: `THISISAFAKETOKEN1ppbh9SE92SmXGAc` (string) - Signifyd-generated token used to send partner/merchant orders to API.
++ planType (enum) - Type of guarantee plan to which the partner is subscribed.
+    + COMPLETE (string) - Plan type indicating all partner/merchant orders should automatically be submitted for guarantee.
++ rateBps: 100 (number) - The rate in basis points (bps) that the partner has chosen for the plan type.
+
+## UserRequest (object)
++ emailAddress: `vpatel@example.com` (string) - The email address of the user to be created.
++ fullName: `Vijay Patel` (string) - The full name of the user to be created.
+
+## User (object)
++ active: true (boolean) - Indicates whether or not this user may access Signifyd's API.
++ createdAt: `2016-06-13T22:08:25.334Z` (string) - The date/time at which the user was created.
++ firstName: `Vijay` (string) - First name of the user.
++ lastName: `Patel` (string) - Last name of the user.
++ username: `Evergreen Terrace, Ltd` (string) - The user's email address.
+
+## UserList (object)
++ users (array[User])
+

@@ -1,0 +1,61 @@
+FORMAT: 1A
+HOST: https://scoring.signifyd.com
+
+# Signifyd Scoring Service
+
+Scoring Service provides an API to apply machine learning models to a supplied
+set of data. The service will return the score outcome of this application.
+
+
+## Response Codes
+
+| Code| Description |
+| --- | --- |
+|`200`| Success. Request completed. |
+|`400`| Bad Request - The request could not be parsed. And should not be retried without modifications.|
+|`402`| Unsuccessful - request is valid but did not complete successfully. |
+|`404`| Not Found - resource doesn't exist. |
+|`5xx`| Server error. |
+
+
+## Models [/v1/model]
+
+### List All Models  [GET]
+Returns a list of all the models that this service can apply.
+
++ Response 200 (application/json)
+    + Attributes (array[ModelId])
+
+
+## Model Scoring [/v1/score]
+### Compute Score [POST]
+Score the request against a list of specified models.
+
++ Request (application/json)
+    + Attributes
+        + investigationId (number) - Signifyd investigation ID.
+        + modelIds (required, array[ModelId]) - List of models to score the data against.
+        + features (required, array)
+            + (object)
+                + name `ExampleFeature` (required, string) - Name of the feature
+                + type (enum)
+                    + boolean
+                    + categorical
+                    + double
+                + one of
+                    + value (boolean)
+                    + value (number)
+                    + value (string)
+
++ Response 200 (application/json)
+    + Attributes
+        + results (required, array)
+            + (object)
+                + modelId (required, ModelId)
+                + score: `530.9` (required, number)
+
+
+## Data Structures
+
+### ModelId (object)
++ modelId: m34 (required, string) - The id of the model
