@@ -1209,7 +1209,7 @@ Additional parameters allow the client to filter the results with various criter
     + investigationId: 987654321 (integer, optional) - Only show the claim for a specific investigation. This should result in zero or one item being returned.
     + limit: 20 (integer, optional) - The max number of claims to retrieve. Defaults to 20. Setting to 0 will return as many rows as possible.
     + offset: 60 (integer, optional) - The number of claims to skip. Defaults to 0. Combined with limit, allows for paging through the claims.
-    + orderBy: "createdAt" (string, optional) - The field on which to order the results. Allowed values are "createdAt" (default) and "chargebackAmount". Ordering occurs before offset and limit are applied.
+    + orderBy: "CREATED_AT" (string, optional) - The field on which to order the results. Allowed values are "createdAt" (default) and "chargebackAmount". Ordering occurs before offset and limit are applied.
     + ascending: true (boolean, optional) - Whether or not the results are ordered in ascending order. Defaults to true.
 
 + Response 200 (application/json)
@@ -1226,7 +1226,7 @@ Additional parameters allow the client to filter the results with various criter
                 "nextOffset": 80,
                 "numRows": 2,
                 "offset": 60,
-                "orderColumn": "createdAt",
+                "orderColumn": "CREATED_AT",
                 "prevOffset": 40,
                 "responseData": [
                     {
@@ -2262,7 +2262,7 @@ This is a simple file upload handler, specifically (at least for now) for PCI-se
 + nextOffset: 80 (number) - offset value to use to retrieve the next page of data.
 + numRows: 20 (number) - the actual number of rows returned from the request (even if actual data was excluded). Should be <= limit
 + offset: 60 (number) - the number of items that were skipped to generate the list.
-+ orderColumn: `createdAt` (string) - the column by which the current list was sorted. Should be used in subsequent paging requests.
++ orderColumn: `CREATED_AT` (string) - the column by which the current list was sorted. Should be used in subsequent paging requests.
 + prevOffset: 40 (number) - offset value to use to retrieve previous page of data.
 
 ## PagedResponseClaims (PagedResponse)
