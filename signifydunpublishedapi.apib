@@ -2175,6 +2175,31 @@ This is a simple file upload handler, specifically (at least for now) for PCI-se
 
 + Response 200
 
+# Group Create Case Additional Fields
+
+## Create a Case [/v2/cases or /v2.1/cases]
+
+In addition to the published fields in our create case API, we support the following for integration with third party ecommerce platforms like TopHatter.  The example shows how we use it internally to label cases coming in from BigCommerce.
+
+### Create a Case [POST]
+
++ Request (application/json)
+
+
+    + Attributes (CaseCreation)
+
+    + Body
+
+            {
+                "platformAndClient": {
+                    "storePlatform":"BigCommerce",
+                    "storePlatformVersion":"v2",
+                    "signifydClientApp":"BcWebhooksServer",
+                    "signifydClientAppVersion":"1.0"
+                }
+            }
+
++ Response 201 (application/json)
 
 
 # Data Structures
@@ -2279,3 +2304,15 @@ This is a simple file upload handler, specifically (at least for now) for PCI-se
 + planType: `COMPLETE` (string, required): The name of the plan type that the partner has chosen.
 + rateBps: 100 (number, required): The rate in bps that the partner has chosen for the plan type.
 
+## CaseCreation (object)
+
++ ...rest of the API ...
++ platformAndClient (PlatformAndClient) - Details about the platform and client (and their versions) that produced the create request.
+
+
+## PlatformAndClient (object)
+
++ storePlatform (string) - The store platform, e.g. 'magento'.
++ storePlatformVersion (string) - The store platform's version, e.g. '1.9'. Per comment above, note that in the case of a hosted platform, we'll use the version of their API.
++ signifydClientApp (string) - Our Signifyd app, e.g. 'magento_plugin'.
++ signifydClientAppVersion (string) - Our Signifyd app's version, e.g. '3.12'. 
