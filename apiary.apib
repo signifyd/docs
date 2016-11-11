@@ -32,6 +32,25 @@ We use conventional HTTP response codes to indicate success or failure of an API
 |`409`| Conflict - with state of the resource on server. Can occur with (too rapid) PUT requests. |
 |`5xx`| Server error. |
 
+## Error Messages
+There are two types of errors returned by the API server in the bodies of 4xx and 5xx responses: 
+- Field-specific errors
+- General error messages
+
+This is our standard format:
+```
+{
+  "errors": {
+    "fieldName":[
+      "Field-specific error message, e.g., fieldName is not a valid email address."
+    ]
+  },
+  "messages": [
+    "General error message."
+  ]
+}
+```
+
 ## Dates
 Our API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for 
 complete date plus hours, minutes, seconds and timezone offset.
