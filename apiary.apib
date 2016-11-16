@@ -213,13 +213,13 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                         "countryCode": "US",
                         "latitude": 47.6,
                         "longitude": -122.33
+                    },
+                    "platformAndClient": {
+                        "storePlatform":"BigCommerce",
+                        "storePlatformVersion":"v2",
+                        "signifydClientApp":"BcWebhooksServer",
+                        "signifydClientAppVersion":"1.0"
                     }
-                },
-		 "platformAndClient": {
-                    "storePlatform":"BigCommerce",
-                    "storePlatformVersion":"v2",
-                    "signifydClientApp":"BcWebhooksServer",
-                    "signifydClientAppVersion":"1.0"
                 }
             }
 
@@ -903,7 +903,6 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + seller (Seller) - All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
 + platformAndClient (PlatformAndClient) - Details about the platform and client (and their versions) that produced the create request.
 
-
 ## Purchase (object)
 
 + browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase.
@@ -1015,7 +1014,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 ## InvestigationStatus (enum)
 + OPEN
 + PROCESSING
-+ FLAGGED
++ FLAGGEDpla
 + DISMISSED
 + HELD
 
