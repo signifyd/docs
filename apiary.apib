@@ -213,6 +213,12 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                         "countryCode": "US",
                         "latitude": 47.6,
                         "longitude": -122.33
+                    },
+                    "platformAndClient": {
+                        "storePlatform":"BigCommerce",
+                        "storePlatformVersion":"v2",
+                        "signifydClientApp":"BcWebhooksServer",
+                        "signifydClientAppVersion":"1.0"
                     }
                 }
             }
@@ -895,6 +901,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + card (Card) - Data related to the card that was used for the purchase and its cardholder.
 + userAccount (UserAccount) - Commonly, a customer must create an account before placing an order. These data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account.
 + seller (Seller) - All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
++ platformAndClient (PlatformAndClient) - Details about the platform and client (and their versions) that produced the create request.
 
 ## Purchase (object)
 
@@ -996,6 +1003,13 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + itemQuantity (number) - The number of the items purchased.
 + itemPrice (number) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
+
+## PlatformAndClient (object)
+
++ storePlatform (string) - The store platform, e.g. 'magento'.
++ storePlatformVersion (string) - The store platform's version, e.g. '1.9'. Per comment above, note that in the case of a hosted platform, we'll use the version of their API.
++ signifydClientApp (string) - Our Signifyd app, e.g. 'magento_plugin'.
++ signifydClientAppVersion (string) - Our Signifyd app's version, e.g. '3.12'.
 
 ## InvestigationStatus (enum)
 + OPEN
