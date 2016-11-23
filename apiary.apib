@@ -1,24 +1,30 @@
 FORMAT: 1A
-HOST: https://api.signifyd.com/v2
+HOST: https://api.signifyd.com/
 
-# Signifyd API
+# Signifyd API v2.1
 
-This doc will show you how to use our REST API to authenticate, make requests, and retrieve data. All responses to and from the API will be in [JSON](http://www.tutorialspoint.com/json/json_data_types.htm).
+Welcome to the SIGNIFYD API. These docs will show you how to authenticate, make requests and view your data that the API will process and create.
+
+The SIGNIFYD API provides a REST interface for creating cases for your orders. Each request you make to the API must be an authenticated call using Basic Authentication. Currently all responses to and from the API will be in [JSON](http://www.tutorialspoint.com/json/json_data_types.htm).
+
+You will be provided with an API token that you can use to make authenticated calls. Be responsible with your key, for it gives full access to your account and data we collect and process.
 
 ## Authentication
-You authenticate to the API by providing your API key in the request.
+You authenticate to the SIGNIFYD API by providing your API key in the request.
 You can find your API key on your [account](https://app.signifyd.com/settings) page.
 
-Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side). 
+Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side).
 Provide your API key as the basic auth username. You do not need to provide a password, but some REST clients expect a username:password pair separated by a colon. Since there is no explicit password with the API key, it will need to be followed simply by a colon in those cases.
 
-Be sure all API calls to Signifyd are made over HTTPS, otherwise they will fail.
+Be sure all API calls to SIGNIFYD are made over HTTPS. Otherwise they will fail.
 
 ## REST Client
-Our API docs include a built-in REST console you can use to interactively test the API. Each endpoint is configured with example request data that will produce a successful result from our API if you provide valid credentials. By default, the API key in the REST console is `abcdefghijklmnopqrstuvwxyz` which appears in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`. You must replace this with you own base64 encoded API key in the headers section of the console to successfully submit requests.
+The SIGNIFYD API docs come with a built-in REST console you can use to interactively test the API. Each endpoint is configured with example request data that will produce a successful result from our API if you provide valid credentials. By default, the API key in the REST console is `abcdefghijklmnopqrstuvwxyz` which appears in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`. You must replace this with you own base64 encoded API key in the headers section of the console to successfully submit requests.
 
 ## Response Codes
-We use conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with Signifyd's servers.
+SIGNIFYD uses conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with SIGNIFYD's servers.
+
+Specifically, SIGNIFYD will respond with one of the following status codes:
 
 | Code| Description |
 | --- | --- |
@@ -33,8 +39,9 @@ We use conventional HTTP response codes to indicate success or failure of an API
 |`5xx`| Server error. |
 
 ## Dates
-Our API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for 
-complete date plus hours, minutes, seconds and timezone offset.
+The SIGNIFYD API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for
+complete date plus hours, minutes, seconds and timezone offset."
+
 
 ```
          yyyy-MM-dd'T'HH:mm:ssZ
@@ -46,14 +53,14 @@ For more information about your specific programming language, please view [this
 
 Resources related to cases in the API.
 
-## Create a Case [/cases]
-To investigate a transaction, you create a case resource.
+## Create a Case [/v2.1/cases]
+To investigate an order, you create a case resource.
 
-Technically, when creating a case all fields are optional, and you can create a case with as 
-much or as little data as you have. However, we have labeled certain fields as required if we believe 
+Technically, when creating a case all fields are optional, and you can create a case with as
+much or as little data as you have. However, we have labeled certain fields as required if we believe
 they are necessary to provide an accurate score.
 
-Read the description of each field carefully. More data is better for scoring, but it is always better 
+Read the description of each field carefully. More data is better for scoring, but it is always better
 to leave a field blank rather than fill it in with data that does not quite fit the definition.
 
 ### Create a Case [POST]
@@ -61,10 +68,10 @@ to leave a field blank rather than fill it in with data that does not quite fit 
 + Request (application/json)
 
     + Headers
-    
+
             Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
 
-    + Attributes (CaseCreation)    
+    + Attributes (CaseCreation)
 
     + Body
 
@@ -74,15 +81,10 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                     "browserIpAddress": "192.168.1.1",
                     "orderId": "4fj58as",
                     "createdAt": "2016-07-11T17:54:31-05:00",
-                    "paymentGateway": "stripe",
-                    "paymentMethod": "credit_card",
-                    "transactionId": "1a2sf3f44f21s1",
                     "currency": "USD",
-                    "avsResponseCode": "Y",
-                    "cvvResponseCode": "M",
                     "orderChannel": "PHONE",
                     "receivedBy": "John Doe",
-                    "totalPrice": 74.99,
+                    "totalPrice": 199.99,
                     "products": [
                         {
                             "itemId": "1",
@@ -95,11 +97,11 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                         },
                         {
                             "itemId": "2",
-                            "itemName": "Summer tank top",
-                            "itemUrl": "http://mydomain.com/summer-tank",
-                            "itemImage": "http://mydomain.com/images/summer-tank.jpeg",
+                            "itemName": "Summer tank top (set of 12)",
+                            "itemUrl": "http://mydomain.com/summer-tank-12",
+                            "itemImage": "http://mydomain.com/images/summer-tank-12.jpeg",
                             "itemQuantity": 1,
-                            "itemPrice": 19.99,
+                            "itemPrice": 150.00,
                             "itemWeight": 2
                         }
                     ],
@@ -118,39 +120,86 @@ to leave a field blank rather than fill it in with data that does not quite fit 
                         }
                     ]
                 },
-                "recipient": {
-                    "fullName": "Bob Smith",
-                    "confirmationEmail": "bob@gmail.com",
-                    "confirmationPhone": "5047130000",
-                    "organization": "SIGNIFYD",
-                    "deliveryAddress": {
-                        "streetAddress": "123 State Street",
-                        "unit": "2A",
-                        "city": "Chicago",
-                        "provinceCode": "IL",
-                        "postalCode": "60622",
-                        "countryCode": "US",
-                        "latitude": 41.92,
-                        "longitude": -87.65
+                  "recipients":[
+                    {
+                        "fullName":"Bob Smith",
+                        "confirmationEmail":"bob@gmail.com",
+                        "confirmationPhone":"5047130000",
+                        "organization":"SIGNIFYD",
+                        "deliveryAddress":{
+                            "streetAddress":"123 State Street",
+                            "unit":"2A",
+                            "city":"Chicago",
+                            "provinceCode":"IL",
+                            "postalCode":"60622",
+                            "countryCode":"US",
+                            "latitude":41.92,
+                            "longitude":-87.65
+                        }
+                    },
+                    {
+                        "fullName":"Mary Smith",
+                        "confirmationEmail":"mary@gmail.com",
+                        "confirmationPhone":"5035131234",
+                        "organization":"SIGNIFYD",
+                        "deliveryAddress":{
+                            "streetAddress":"987 Federal Road",
+                            "unit":"2A",
+                            "city":"San Jose",
+                            "provinceCode":"CA",
+                            "postalCode":"95131",
+                            "countryCode":"US",
+                            "latitude":20.93,
+                            "longitude":-85.65
+                        }
                     }
-                },
-                "card": {
-                    "cardHolderName": "Robert Smith",
-                    "bin": 407441,
-                    "last4": "1234",
-                    "expiryMonth": 12,
-                    "expiryYear": 2015,
-                    "billingAddress": {
-                        "streetAddress": null,
-                        "unit": "2A",
-                        "city": "Chicago",
-                        "provinceCode": "IL",
-                        "postalCode": "60622",
-                        "countryCode": "US",
-                        "latitude": 41.92,
-                        "longitude": -87.65
+                ],
+                "transactions": [
+                    {
+                        "amount": 100.00,
+                        "createdAt": "2016-07-11T17:54:55-05:00",
+                        "transactionId": "1234alkcj38dlkj",
+                        "type": "SALE",
+                        "status": "SUCCESS",
+                        "paymentGateway": null,
+                        "paymentMethod": "cahs",
+                        "avsResponseCode": null,
+                        "cvvResponseCode": null,
+                        "errorCode": null,
+                        "currency": "USD",
+                        "card": null
+                    },
+                    {
+                        "amount": 99.99,
+                        "createdAt": "2016-07-11T17:54:31-05:00",
+                        "transactionId": "1a2sf3f44f21s1",
+                        "type": "AUTHORIZATION",
+                        "status": "SUCCESS",
+                        "paymentGateway": "stripe",
+                        "paymentMethod": "credit_card",
+                        "avsResponseCode": "Y",
+                        "cvvResponseCode": "M",
+                        "errorCode": null,
+                        "currency": "USD",
+                        "card": {
+                            "cardHolderName": "Robert Smith",
+                            "bin": 407441,
+                            "last4": "1234",
+                            "expiryMonth": 12,
+                            "expiryYear": 2015,
+                            "billingAddress": {
+                                "streetAddress": null,
+                                "unit": "2A",
+                                "city": "Chicago",
+                                "provinceCode": "IL",
+                                "postalCode": "60622",
+                                "countryCode": "US",
+                                "latitude": 41.92,
+                                "longitude": -87.65
+                            }
+                        }
                     }
-                },
+                ],
                 "userAccount": {
                     "email": "bob@gmail.com",
                     "username": "bobbo",
@@ -205,8 +254,8 @@ to leave a field blank rather than fill it in with data that does not quite fit 
             {"investigationId":1}
 
 
-## Retrieve a Case [/cases/{caseId}]
-Endpoint for retrieving individual cases by the unique case identifier issued by Signifyd at case creation.
+## Retrieve a Case [/v2/cases/{caseId}]
+Endpoint for retrieving individual cases by the unique case identifier issued by SIGNIFYD at case creation.
 
 ### Get a Case [GET]
 
@@ -255,7 +304,7 @@ Endpoint for retrieving individual cases by the unique case identifier issued by
               ]
             }
 
-## Retrieve Case Entries [/cases/{caseId}/entries]
+## Retrieve Case Entries [/v2/cases/{caseId}/entries]
 In addition to the core case fields, you can retrieve the case's entries, which include information such as the billing address, IP geo-location, and linked social profiles.
 
 ### Get Case Entries [GET]
@@ -380,7 +429,7 @@ In addition to the core case fields, you can retrieve the case's entries, which 
 ## Group Guarantees
 
 
-## Submit a Case for Guarantee [/guarantees]
+## Submit a Case for Guarantee [/v2/guarantees]
 A case can be manually submitted for Guarantee. This is equivalent to clicking the Guarantee button in the case console.
 Note that you have 7 days from the order date to submit a case for Guarantee.
 
@@ -421,8 +470,8 @@ Note that you have 7 days from the order date to submit a case for Guarantee.
                 "error": "Requested case cannot be found."
             }
 
-## Cancel a Guarantee Request [/cases/{caseId}/guarantee]
-A Guarantee can be canceled for orders that no longer require chargeback insurance. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console.
+## Cancel a Guarantee Request [/v2/cases/{caseId}/guarantee]
+A Guarantee can be canceled for orders that no longer require chargeback insurance. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the â€œcancel guarantee requestâ€ button in the case console.
 Before canceling a guarantee request you should check the Guarantee Disposition using GET a Case. In some instances the Guarantee may have a declined decision, in which case it does not need to be cancelled.
 
 ### Cancel Guarantee [PUT]
@@ -525,7 +574,55 @@ receive pushed updates about a case, rather than poll Signifyd for status change
 though there is no reason the same URL couldn't be used for all events, using the topic header to determine what kind of event
 was sent.
 
-## Manage Webhook Lists [/teams/webhooks]
+### Supported Events
+Clients can create webhooks in Signifyd for the following events.  Each event has a corresponding topic identifier
+which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
+
+Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion events can trigger a webhook.
+
+| Event| `X-SIGNIFYD-TOPIC` | Description |
+| --- | --- | --- |
+| Case Creation | `cases/creation` | Sent immediately after a case is created |
+| Case Rescore | `cases/rescore` | Sent anytime a case is scored following case creation |
+| Case Review | `cases/review` | Sent anytime a user assigns a case a Review Disposition (thumbs up/down on console) |
+| Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |
+
+### Webhook Payload
+
+            {
+                analysisUrl: "https://signifyd.com/v2/cases/1/analysis",
+                entriesUrl: "https://signifyd.com/v2/cases/1/entries",
+                notesUrl: "https://signifyd.com/v2/cases/1/notes",
+                orderUrl: "https://signifyd.com/v2/cases/1/order",
+                guaranteeEligible: false,
+                status: "DISMISSED",
+                uuid: "709b9107-eda0-4cdd-bdac-a82f51a8a3f3",
+                headline: "John Smith",
+                reviewDisposition: null,
+                associatedTeam: {
+                    teamName: "anyTeam",
+                    teamId: 26,
+                    getAutoDismiss: true,
+                    getTeamDismissalDays: 2 },
+                orderId: "19418",
+                orderDate: "2013-06-17T06:20:47-0700",
+                orderAmount: 365.99,
+                createdAt: "2013-11-05T14:23:26-0800",
+                updatedAt: "2013-11-05T14:23:26-0800",
+                adjustedScore: 262,
+                investigationId: 1,
+                score: 262,
+                caseId: 1,
+                guaranteeDisposition: "APPROVED"
+            }
+
+### Verification
+
+To allow a client to verify a webhook message has in fact come from Signifyd, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
+
+See this example [code snippet](https://gist.github.com/blaskey/9533364) for an example of how to compute the value in Java.
+
+## Manage Webhook Lists [/v2/teams/webhooks]
 ### Create [POST]
 + Request (application/json)
 Create new webhook events for team accounts. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
@@ -708,7 +805,7 @@ Retrieve a list of the current webhooks for a team identified by the API key use
                 }
             ]
 
-## Manage Single Webhooks [/teams/webhooks/{hookId}]
+## Manage Single Webhooks [/v2/teams/webhooks/{hookId}]
 
 + Parameters
     + hookId: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
@@ -752,7 +849,7 @@ Delete an existing webhook identified by its numeric id.
 
 ### Group Device Fingerprint
 
-Signifyd’s device fingerprinting solution uniquely tracks and identifies devices used to transact on your site, increasing your protection from fraud.
+Signifydâ€™s device fingerprinting solution uniquely tracks and identifies devices used to transact on your site, increasing your protection from fraud.
 
 ### 1. Install the Javascript snippet
 
@@ -787,11 +884,8 @@ After an order is created on your website you will need to add the value you use
         "browserIpAddress": "192.168.1.1",
         "orderId": "4fj58as",
         "createdAt": "2016-07-11T17:54:31-05:00",
-        "paymentGateway": "stripe",
-        "paymentMethod": "credit_card",
-        "transactionId": "1a2sf3f44f21s1",
         "currency": "USD",
-       …
+       â€¦
     }
 }
 ```
@@ -810,7 +904,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + guaranteeDisposition (GuaranteeDisposition, optional) - If a case has been submitted for guarantee, this field will be present and indicate the decision state of the guarantee.
 + status (CaseStatus, required) - The current status of the case. OPEN, PROCESSING AND HELD are considered active cases. FLAGGED and DISMISSED are considered resolved cases.
 + caseId: 44 (number, required) - The unique identifier assigned to the case when it is created.
-+ score: 776 (number, required) - A value from 0-1000 indicating the likelihood that the order/transaction is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
++ score: 776 (number, required) - A value from 0-1000 indicating the likelihood that the order/purchase is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
 + investigationId: 44 (number, optional) - DEPRECATED.  See caseId.
 + uuid: `97c56c86-7984-44fa-9a3e-7d5f34d1bead` (string, required) - A universally unique id assigned to the case.
 + headline: Maxine Trycia (string, required) - The headline (aka name) assigned to the case.
@@ -872,8 +966,8 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 ## CaseCreation (object)
 
 + purchase (Purchase) - Data related to purchase event represented in this Case Creation request.
-+ recipient (Recipient) - Data related to person or organization receiving the items purchased.
-+ card (Card) - Data related to the card that was used for the purchase and its cardholder.
++ recipients (array[Recipient]) - Data related to person(s) or organization(s) receiving the items purchased.
++ transactions (array[Transaction]) - Data related to the payment transaction(s)
 + userAccount (UserAccount) - Commonly, a customer must create an account before placing an order. These data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account.
 + seller (Seller) - All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
 
@@ -885,15 +979,59 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + products (array[Product]) - The products purchased in the transaction.
 + orderId (string, required) - A string uniquely identifying this order.
 + createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
-+ paymentGateway (string) - The gateway that processed the transaction. For paypal orders use paypal_account.
-+ paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
-+ transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider. 
 + currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
-+ avsResponseCode (string, required) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
-+ cvvResponseCode (string, required) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
 + orderChannel (OrderChannel) - The method used by the buyer to place the order. Either WEB or PHONE.
 + receivedBy (string) - If the order was was taken by a customer service or sales agent, his or her name.
 + totalPrice (number, required) - The total price of the order, including shipping price and taxes.
+
+## Transaction (object)
++ amount (number, required) - The amount of money the transaction was for.
++ createdAt (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the transaction was created. See the Dates section of these docs for more information about date formats.
++ transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider.
++ type (TransactionType) - Whether the transaction is an authorization, capture, etc.
++ status (TransactionStatus) - Whether the transaction was a success.
++ paymentGateway (string) - The gateway that processed the transaction. For paypal orders use paypal_account.
++ paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
++ avsResponseCode (string) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
++ cvvResponseCode (string) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
++ errorCode (TransactionErrorCode) - A standardized indication of the type of error.
++ message (string) - Additional text describing the transaction.
++ currency (string) - The currency type of the transaction, in 3 letter ISO 4217 format. Defaults to USD.
++ card (Card) - Data related to the card that was used for the purchase and its cardholder.
+
+## Card (object)
++ cardHolderName (string, required) - The full name on the credit card that was charged.
++ bin (number) - The first six digits of the credit card, the bank identification number, which uniquely identifies the issuer.
++ last4 (string) - The last four digits of the card number.
++ expiryMonth (number) - MM representation of the expiration month of the card.
++ expiryYear (number) - yyyy representation of the expiration year of the card.
++ billingAddress (Address, required) - The billing address for the card.
+
+## TransactionType (enum)
++ AUTHORIZATION
++ CAPTURE
++ SALE
++ VOID
++ REFUND
+
+## TransactionStatus (enum)
++ SUCCESS
++ FAILURE
++ PENDING
++ ERROR
+
+## TransactionErrorCode (enum)
++ INCORRECT_NUMBER
++ INVALID_NUMBER
++ INVALID_EXPIRY_DATE
++ INVALID_CVC
++ EXPIRED_CARD
++ INCORRECT_CVC
++ INCORRECT_ZIP
++ CARD_DECLINED
++ PROCESSING_ERROR
++ CALL_ISSUER
++ PICK_UP_CARD
 
 ## OrderChannel (enum)
 + WEB
@@ -912,7 +1050,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + PAYPAL_ACCOUNT
 
 ## Recipient (object)
-+ fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
++ fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as transaction.card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
 + confirmationEmail (string, required) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent.
 + confirmationPhone (string) - The phone number that you would call if there was something wrong with this order or the phone number that was supplied with the shipping information.
 + organization (string) - If provided by the buyer, the name of the recipient's company or organization.
@@ -923,14 +1061,6 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + shipper (string) -The name of the shipper
 + shippingMethod (string) - The type of the shipment method used
 + trackingNumber (string) The tracking number for the shipment.
-
-## Card (object)
-+ cardHolderName (string, required) - The full name on the credit card that was charged.
-+ bin (number) - The first six digits of the credit card, the bank identification number, which uniquely identifies the issuer.
-+ last4 (string) - The last four digits of the card number.
-+ expiryMonth (number) - MM representation of the expiration month of the card.
-+ expiryYear (number) - yyyy representation of the expiration year of the card.
-+ billingAddress (Address, required) - The billing address for the card.
 
 ## UserAccount (object)
 + email (string) - The primary email address associated with the account.
