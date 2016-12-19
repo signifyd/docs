@@ -5,12 +5,12 @@ HOST: https://api.signifyd.com/v2
 
 The Partner API allows e-commerce platforms, payment gateways, and other agencies to create and manage merchant accounts to provide fraud screening and guaranteed payments to merchants.
 
-## Authentication
+## Authentication 
 
-Authenticate providing your API key with each request.
+Authenticate providing your API key with each request. 
 
 Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side).
-Provide your API key as the basic auth username. You do not need to provide a password, but
+Provide your API key as the basic auth username. You do not need to provide a password, but 
 some REST clients expect a username:password pair separated by a colon. Since there is no explicit password with the API key,
 it will need to be followed simply by a colon in those cases.
 
@@ -35,7 +35,7 @@ Specifically, Signifyd will respond with one of the following status codes:
 |`5xx`| Server error. |
 
 ## Error Messages
-There are two types of errors returned by the API server in the bodies of 4xx and 5xx responses:
+There are two types of errors returned by the API server in the bodies of 4xx and 5xx responses: 
 - Field-specific errors
 - General error messages
 
@@ -54,7 +54,7 @@ This is our standard format:
 ```
 
 ## Dates
-The API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for
+The API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for 
 complete date plus hours, minutes, and seconds.  All dates are in UTC.
 
 
@@ -71,7 +71,7 @@ For more information about your specific programming language, please view
 
 ## Create Merchant [/partner/merchants]
 ### Create Merchant Account [POST]
-Create a Signifyd account for a merchant.
+Create a Signifyd account for a merchant. 
 
 + Request (application/json)
 
@@ -86,7 +86,7 @@ Create a Signifyd account for a merchant.
                 "planType": "COMPLETE",
                 "merchantWebsite": "http://www.consolidatedknickknacks.com/"
             }
-
+    
 + Response 201 (application/json)
 
     + Attribute (Merchant)
@@ -144,7 +144,7 @@ Modify an existing merchant account.
                 "planType": "COMPLETE",
                 "merchantWebsite": "http://www.amalgamatedtchotchke.com/"
             }
-
+    
 + Response 200 (application/json)
 
     + Attribute (Merchant)
@@ -183,15 +183,15 @@ facilitate paging through a large collection of merchants.
 
             {
                 "meta": {
-                    "ascending": true,
-                    "dataIncluded": true,
-                    "hasMoreRows": true,
-                    "limit": 20,
-                    "metaIncluded": true,
-                    "nextOffset": 80,
-                    "numRows": 20,
-                    "offset": 60,
-                    "orderBy": "merchantName",
+                    "ascending": true, 
+                    "dataIncluded": true, 
+                    "hasMoreRows": true, 
+                    "limit": 20, 
+                    "metaIncluded": true, 
+                    "nextOffset": 80, 
+                    "numRows": 20, 
+                    "offset": 60, 
+                    "orderBy": "merchantName", 
                     "prevOffset": 40
                 },
                 "merchants": [
@@ -227,7 +227,7 @@ facilitate paging through a large collection of merchants.
                     }
                 ]
             }
-
+            
 
 ## Merchant Accounts Count [/partner/merchants/count]
 ### Get count of Merchant Accounts [GET]
@@ -249,129 +249,12 @@ Teams support webhooks to capture various events around fraud cases:
 To manage a merchant's team webhooks, please consult the general "Webhooks"
 API documentation.
 
-## Group Partner Accounts
-
-## Retrieve Partner [/partner]
-
-### Retrieve [GET]
-View details for the logged-in partner, including the partner API key for submitting transactions.
-
-+ Response 200 (application/json)
-
-    + Attribute (Partner)
-
-    + Body
-
-            {
-                "partnerId": 742,
-                "partnerName": "Evergreen Terrace, Ltd",
-                "testAccount": false,
-                "partnerApiKey": "THISISAFAKETOKEN1ppbh9SE92SmXGAc",
-                "ratePlans": [
-                    {
-                        "planType": "COMPLETE",
-                        "rateBps": 100
-                    }
-                ]
-            }
-
-## Create or list users for a partner [/partner/users]
-
-### Create new user [POST]
-Create a new partner user. Partner users are able to retrieve the partner API key as well as add or remove other users.
-The new user will be sent an email for account verification and password setup.
-+ Request (application/json)
-
-    + Attribute (UserRequest)
-
-    + Body
-
-            {
-                "emailAddress": "vpatel@example.com",
-                "fullName": "Vijay Patel"
-            }
-
-+ Response 201 (application/json)
-
-    + Attribute (User)
-
-    + Body
-
-            {
-                "active": "true",
-                "createdAt": "2016-06-13T22:08:25.334Z",
-                "firstName": "Vijay",
-                "lastName": "Patel",
-                "username": "vpatel@example.com"
-            }
-
-### List users [GET]
-Retrieve a list of partner users ordered by username, i.e., email address, ascending.
-
-+ Response 200 (application/json)
-
-    + Attribute (UserList)
-
-    + Body
-
-            {
-                "users": [
-                    {
-                        "active": "true",
-                        "createdAt": "2016-06-13T21:19:37.689Z",
-                        "firstName": "Tina",
-                        "lastName": "Smith",
-                        "username": "tsmith@example.com"
-                    },
-                    {
-                        "active": "true",
-                        "createdAt": "2016-06-13T22:08:25.334Z",
-                        "firstName": "Vijay",
-                        "lastName": "Patel",
-                        "username": "vpatel@example.com"
-                    }
-                ]
-            }
-
-## View or disable users [/partner/users/{username}]
-+ Parameters
-    + username: vpatel@example.com (string) - username, i.e., email address, of the user upon which to act.
-
-### View user details [GET]
-View the details for a single user. The username is the user's email address.
-
-+ Response 200 (application/json)
-
-    + Attribute (User)
-
-    + Body
-
-            {
-                "active": true,
-                "createdAt": "2016-06-13T22:08:25.334Z",
-                "firstName": "Vijay",
-                "lastName": "Patel",
-                "username": "vpatel@example.com"
-            }
-
-+ Response 404 (application/json)
-    + Body
-
-            {
-                "messages": [
-                    "User 'jim.nobody@example.com' not found."
-                ]
-            }
-
-### Disable user [DELETE]
-Disable a user so they are no longer allowed to access the partner account.
-+ Response 204 (application/json)
 
 # Data Structures
 ## MerchantRequest (object)
 + active: true (boolean) - Indicates whether or not Signifyd should accept orders from this merchant.
 + customerContactOptOut: false (boolean) - True if direct communication with this merchant's customers is not allowed.
-+ merchantEmail: `sales@ckkllc.com` (string) - Contact email address for the merchant.
++ merchantEmail: `sales@ckkllc.com` (string) - Contact email address for the merchant. 
 + merchantName: `Consolidated Knick-Knacks, LLC` (string) - Name of the merchant company
 + planType (enum) - Type of guarantee plan to which merchant is subscribed.
     + COMPLETE (string) - Plan type indicating all merchant orders should automatically be submitted for guarantee.
@@ -382,15 +265,15 @@ Disable a user so they are no longer allowed to access the partner account.
 + merchantId: 987654 (number) - Signifyd assigned identifier for this merchant.
 
 ## MerchantListMetadata (object)
-+ ascending (boolean) - true if the data was requested in ascending order; false for descending
-+ dataIncluded (boolean) - true if the data was requested to be included in the response; false to skip data (e.g., when only requesting metadata)
-+ hasMoreRows (boolean) - true if there are more rows of data available after the current list
++ ascending (boolean) - true if the data was requested in ascending order; false for descending 
++ dataIncluded (boolean) - true if the data was requested to be included in the response; false to skip data (e.g., when only requesting metadata) 
++ hasMoreRows (boolean) - true if there are more rows of data available after the current list 
 + limit: 20 (number) - the maximum number of items requested for this list. The actual list length may be shorter. This value should be used in subsequent paging requests.
-+ metaIncluded (boolean) - true if metadata was requested to be included in the response. A false value should never be seen
-+ nextOffset: 80 (number) - offset value to use to retrieve the next page of data.
-+ numRows: 20 (number) - the actual number of rows returned from the request (even if actual data was excluded). Should be <= limit
-+ offset: 60 (number) - the number of items that were skipped to generate the list.
-+ orderBy: `merchantName` (string) - the column by which the current list was sorted. Should be used in subsequent paging requests.
++ metaIncluded (boolean) - true if metadata was requested to be included in the response. A false value should never be seen 
++ nextOffset: 80 (number) - offset value to use to retrieve the next page of data. 
++ numRows: 20 (number) - the actual number of rows returned from the request (even if actual data was excluded). Should be <= limit 
++ offset: 60 (number) - the number of items that were skipped to generate the list. 
++ orderBy: `merchantName` (string) - the column by which the current list was sorted. Should be used in subsequent paging requests. 
 + prevOffset: 40 (number) - offset value to use to retrieve previous page of data.
 
 ## MerchantList (object)
@@ -433,4 +316,5 @@ Disable a user so they are no longer allowed to access the partner account.
 
 ## UserList (object)
 + users (array[User])
+
 
