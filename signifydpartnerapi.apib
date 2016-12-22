@@ -67,7 +67,108 @@ For more information about your specific programming language, please view
 [this document](https://developers.google.com/gmail/markup/reference/datetime-formatting).
 
 
-## Group Merchant Accounts
+## Group Partner
+
+## View Partner [/partner]
+### View Partner Account [GET]
+View basic details of your Partner account including your account API key.
+
++ Response 200
+    + Body
+
+            {
+                "partnerId": 742,
+                "partnerName": "Evergreen Terrace, Ltd",
+                "testAccount": false,
+                "partnerApiKey": "92SmXGAcTHISISAFAKETOKEN1ppbh9SE",
+                "createdBy": 11,
+                "createdAt": "2016-06-13T22:08:25.334Z",
+                "updatedAt": "2016-06-13T22:08:25.334Z",
+                "ratePlans": [
+                    {
+                        "planType": "COMPLETE",
+                        "rateBps": 100
+                    }
+                ]
+            }
+
+
+## Group Partner Users
+
+## Create or list users for the partner [/partner/users]
+### Create new user [POST]
+Create a new partner user. Partner users are able to retrieve the partner details - including API key - as well as add or remove other users.
+The new user will be sent an email for password setup.
++ Request (application/json)
+    + Body
+
+            {
+                "emailAddress": "vpatel@example.com",
+                "fullName": "Vijay Patel"
+            }
+
++ Response 201 (application/json)
+    + Body
+
+            {
+                "active": "true",
+                "createdAt": "2016-06-13T22:08:25.334Z",
+                "firstName": "Vijay",
+                "lastName": "Patel",
+                "username": "vpatel@example.com"
+            }
+
+### List users [GET]
+Retrieve a list of partner users ordered by username, i.e., email address, ascending.
++ Response 200 (application/json)
+    + Body
+
+            {
+                "users": [
+                    {
+                        "active": "true",
+                        "createdAt": "2016-06-13T21:19:37.689Z",
+                        "firstName": "Tina",
+                        "lastName": "Smith",
+                        "username": "tsmith@example.com"
+                    },
+                    {
+                        "active": "true",
+                        "createdAt": "2016-06-13T22:08:25.334Z",
+                        "firstName": "Vijay",
+                        "lastName": "Patel",
+                        "username": "vpatel@example.com"
+                    }
+                ]
+            }
+
+## View or disable users [/partner/users/{username}]
++ Parameters
+    + username: vpatel@example.com (string) - username, i.e., email address, of the user upon which to act.
+
+
+### View user details [GET]
+View the details for a single user. The username is the user's email address.
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "active": true,
+                "createdAt": "2016-06-13T22:08:25.334Z",
+                "firstName": "Vijay",
+                "lastName": "Patel",
+                "username": "vpatel@example.com"
+            }
+
+### Disable user [DELETE]
+Not a true deletion but disables a user so they are no longer allowed to login and access the partner account.
++ Response 204 (application/json)
+
+
+
+## Group Partner Merchant Accounts
 
 ## Create Merchant [/partner/merchants]
 ### Create Merchant Account [POST]
@@ -96,7 +197,7 @@ Create a Signifyd account for a merchant.
             {
                 "active": true,
                 "customerContactOptOut": false,
-                "merchantApiKey": "THISISAFAKETOKEN1ppbh9SE92SmXGAc",
+                "merchantApiKey": "92SmXGAcTHISISAFAKETOKEN1ppbh9SE",
                 "merchantId": 987654,
                 "merchantEmail": "sales@ckkllc.com",
                 "merchantName": "Consolidated Knick-Knacks, LLC",
@@ -241,7 +342,7 @@ facilitate paging through a large collection of merchants.
             }
 
 
-## Group Merchant Webhooks
+## Group Partner Merchant Webhooks
 
 Partner Merchants are established as "Teams" in the Signifyd system.
 Teams support webhooks to capture various events around fraud cases:
