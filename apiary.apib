@@ -554,6 +554,7 @@ Create new webhook events for team accounts. Creating a webhook for events that 
     + Body
 
             {
+                "teamId": 1234,
                 "webhooks":
                     [
                         {
@@ -561,7 +562,7 @@ Create new webhook events for team accounts. Creating a webhook for events that 
                             "url": "http://knickknacks.examplepartner.com/signifydWebhook.php"
                         },
                         {
-                            "eventType": "CASE_CREATION",
+                            "event": "CASE_CREATION",
                             "url": "http://knickknacks.examplepartner.com/signifydWebhook.php"
                         },
                     ]
@@ -577,21 +578,21 @@ Create new webhook events for team accounts. Creating a webhook for events that 
                 {
                     "id": 4661,
                     "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
                     "eventType": "CASE_REVIEW",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
                     "eventDisplayText": "Case Review"
                 },
                 {
                     "id": 4659,
                     "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
                     "eventType": "CASE_CREATION",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
                     "eventDisplayText": "Case Creation"
                 }
             ]
@@ -635,16 +636,21 @@ Existing webhooks whose events were not specified in the request will remain int
 
     + Body
 
+        {
+            "teamId": 1234,
+            "webhooks":
             [
+
                 {
-                    "eventType": "CASE_REVIEW",
+                    "event": "CASE_REVIEW",
                     "url": "http://knickknacks.examplepartner.com/altReview.php"
                 },
                 {
-                    "eventType": "GUARANTEE_COMPLETION",
+                    "event": "GUARANTEE_COMPLETION",
                     "url": "http://knickknacks.examplepartner.com/altGuaranteeCompletion.php"
                 }
             ]
+        }
 
 + Response 200 (application/json)
 
@@ -656,21 +662,21 @@ Existing webhooks whose events were not specified in the request will remain int
                 {
                     "id": 5011,
                     "url": "http://knickknacks.examplepartner.com/altReview.php"
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
                     "eventType": "CASE_REVIEW",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
                     "eventDisplayText": "Case Review"
                 },
                 {
                     "id": 5012,
                     "url": "http://knickknacks.examplepartner.com/altGuaranteeCompletion.php"
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
                     "eventType": "GUARANTEE_COMPLETION",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
                     "eventDisplayText": "Guarantee Completion"
                 }
             ]
@@ -688,41 +694,41 @@ Retrieve a list of the current webhooks for a team identified by the API key use
                 {
                     "id": 4661,
                     "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
                     "eventType": "CASE_REVIEW",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
                     "eventDisplayText": "Case Review"
                 },
                 {
                     "id": 4659,
                     "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
                     "eventType": "CASE_CREATION",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
                     "eventDisplayText": "Case Creation"
                 },
                 {
                     "id": 4658,
                     "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
                     "eventType": "GUARANTEE_COMPLETION",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
                     "eventDisplayText": "Guarantee Completion"
                 },
                 {
                     "id": 4660,
                     "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
                     "eventType": "CASE_RESCORE",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
                     "eventDisplayText": "Case Rescore"
                 }
             ]
