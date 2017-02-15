@@ -9,7 +9,7 @@ This doc will show you how to use our REST API to authenticate, make requests, a
 You authenticate to the API by providing your API key in the request.
 You can find your API key on your [account](https://app.signifyd.com/settings) page.
 
-Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side). 
+Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side).
 Provide your API key as the basic auth username. You do not need to provide a password, but some REST clients expect a username:password pair separated by a colon. Since there is no explicit password with the API key, it will need to be followed simply by a colon in those cases.
 
 Be sure all API calls to Signifyd are made over HTTPS, otherwise they will fail.
@@ -33,7 +33,7 @@ We use conventional HTTP response codes to indicate success or failure of an API
 |`5xx`| Server error. |
 
 ## Error Messages
-There are two types of errors returned by the API server in the bodies of 4xx and 5xx responses: 
+There are two types of errors returned by the API server in the bodies of 4xx and 5xx responses:
 - Field-specific errors
 - General error messages
 
@@ -52,7 +52,7 @@ This is our standard format:
 ```
 
 ## Dates
-Our API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for 
+Our API uses the [ISO8601](http://en.wikipedia.org/wiki/ISO_8601) date format for
 complete date plus hours, minutes, seconds and timezone offset.
 
 ```
@@ -68,11 +68,11 @@ Resources related to cases in the API.
 ## Create a Case [/cases]
 To investigate a transaction, you create a case resource.
 
-Technically, when creating a case all fields are optional, and you can create a case with as 
-much or as little data as you have. However, we have labeled certain fields as required if we believe 
+Technically, when creating a case all fields are optional, and you can create a case with as
+much or as little data as you have. However, we have labeled certain fields as required if we believe
 they are necessary to provide an accurate score.
 
-Read the description of each field carefully. More data is better for scoring, but it is always better 
+Read the description of each field carefully. More data is better for scoring, but it is always better
 to leave a field blank rather than fill it in with data that does not quite fit the definition.
 
 ### Create a Case [POST]
@@ -80,10 +80,10 @@ to leave a field blank rather than fill it in with data that does not quite fit 
 + Request (application/json)
 
     + Headers
-    
+
             Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
 
-    + Attributes (CaseCreation)    
+    + Attributes (CaseCreation)
 
     + Body
 
@@ -335,7 +335,8 @@ In addition to the core case fields, you can retrieve the case's entries, which 
                             "familyName": "Smith",
                             "givenName": "Robert",
                             "middleName": null,
-                            "age": null
+                            "age": null,
+                            "ageRange": "25-30"
                         },
                         "entityName": "Robert Smith",
                         "uuid": "ec7b59a7-0043-423e-b015-a6c76a7d9b34",
@@ -392,6 +393,32 @@ In addition to the core case fields, you can retrieve the case's entries, which 
                         "role": "ipGeo",
                         "seeder": false,
                         "seederUuid": "4f5d1021-fbe4-44c9-8ac3-438a057c150b"
+                    },
+                    {
+                      "seederUuid": "cdfb020f-a5e2-34ef-8188-57a514ac2f47",
+                      "details": {
+                        "fullAddress": "123 Delivery Street, San Jose, CA, US",
+                        "isDeliverable": true,
+                        "isReceivingMail": true,
+                        "type": "residential",
+                        "deliveryPoint": "single_unit",
+                        "unit": null,
+                        "street": "123 Delivery Street",
+                        "streetNumber": "123",
+                        "streetName": "Delivery Street",
+                        "regionName": null,
+                        "regionAlpha": "CA",
+                        "cityName": "San Jose",
+                        "countryShortName": null,
+                        "countryFullName": null,
+                        "countryIsoCode": "US",
+                        "latitude": null,
+                        "longitude": null
+                      },
+                      "role": "deliveryAddress",
+                      "uuid": "cdfb020f-a5e2-34ef-8188-57a514ac2f47",
+                      "entityName": "123 Delivery Street, San Jose, CA, US",
+                      "seeder": true
                     }
                 ]
             }
@@ -912,7 +939,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
 + paymentGateway (string) - The gateway that processed the transaction. For paypal orders use paypal_account.
 + paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
-+ transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider. 
++ transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider.
 + currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
 + avsResponseCode (string, required) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
 + cvvResponseCode (string, required) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
@@ -941,7 +968,8 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + confirmationEmail (string, required) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent.
 + confirmationPhone (string) - The phone number that you would call if there was something wrong with this order or the phone number that was supplied with the shipping information.
 + organization (string) - If provided by the buyer, the name of the recipient's company or organization.
-+ deliveryAddress (Address, required) - The address to which the order will be delivered.
++ deliveryAddress (DeliveryAddress, required) - The address to which the order will be delivered.
++ ageRange (string) - age range of the recipient or null.
 
 ## Shipment (object)
 + shippingPrice (number) - The amount charged to the customer for shipping the product
@@ -993,6 +1021,14 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + countryCode (string) - The two-letter ISO-3166 country code. If left blank, we will assume US.
 + latitude (number) - The latitude of the address. Used when address details are not provided. Ignored otherwise.
 + longitude (number) - The longitude of the address. Used when address details are not provided. Ignored otherwise.
++ role (string) - Indicates the roles played by this address.  Example values are ipGeo, billingAddress, and deliveryAddress
+
+## DeliveryAddress (object)
++ isDeliverable (boolean) - Indicates whether the Postal Service can deliver mail to this address.
++ isReceivingMail (boolean) - Indicates if the address is currently receiving mail. Possible values are true, false, or null.
++ type (string) - This indicates the US Postal Service opinion about whether this address is primarily a “Business” or “Residential”.
++ deliveryPoint (string) - Only valid for US address LocationType. Indicates to the US Postal Service whether deliver of mail requires special handling. One of: CommercialMailDrop, POBoxThrowback, POBox, MultiUnit, SingleUnit.
++ Include Address
 
 ## Product (object)
 + itemId (string) - Your unique identifier for the product. This is a string because of hexadecimal identifiers.
