@@ -805,8 +805,10 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Shipment (object)
 + shippingPrice (number) - The amount charged to the customer for shipping the product
-+ shipper (string) -The name of the shipper
++ shipper (string) -The name of the shipper 
+Accepted Values: FEDEX, USPS, UPS, DHL, SHIPWIRE, PICKUP
 + shippingMethod (string) - The type of the shipment method used
+Accepted Values: FREE, GROUND, STANDARD, EXPRESS, OVERNIGHT, TWO_DAY, TWO_DAY_MORNING, THREE_DAY, PRIORITY, PRIORITY_INTERNATIONAL, FIRST_CLASS, FIRST_CLASS_INTERNATIONAL, FREIGHT, CRITICAL, INTERNATIONAL
 + trackingNumber (string) The tracking number for the shipment.
 
 ## Card (object)
