@@ -769,7 +769,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + products (array[Product]) - The products purchased in the transaction.
 + orderId (string, required) - A string uniquely identifying this order.
 + createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
-+ paymentGateway (string) - The gateway that processed the transaction. For paypal orders use paypal_account.
++ paymentGateway (string) - The gateway that processed the transaction.
 + paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
 + transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider.
 + currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
@@ -787,6 +787,8 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + ACH
 + APPLE_PAY
 + AMAZON_PAYMENTS
++ ANDROID_PAY
++ BITCOIN
 + CASH
 + CHECK
 + PAYMENT_CARD
@@ -805,11 +807,34 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Shipment (object)
 + shippingPrice (number) - The amount charged to the customer for shipping the product
-+ shipper (string) -The name of the shipper 
-Accepted Values: FEDEX, USPS, UPS, DHL, SHIPWIRE, PICKUP
-+ shippingMethod (string) - The type of the shipment method used
-Accepted Values: FREE, GROUND, STANDARD, EXPRESS, OVERNIGHT, TWO_DAY, TWO_DAY_MORNING, THREE_DAY, PRIORITY, PRIORITY_INTERNATIONAL, FIRST_CLASS, FIRST_CLASS_INTERNATIONAL, FREIGHT, CRITICAL, INTERNATIONAL
++ shipper (shipper) -The name of the shipper 
++ shippingMethod (shippingMethod) - The type of the shipment method used
 + trackingNumber (string) The tracking number for the shipment.
+
+## shipper (enum)
++ FEDEX
++ DHL
++ PICKUP
++ SHIPWIRE
++ USPS
++ UPS
+
+## shippingMethod (enum)
++ CRITICAL
++ EXPRESS
++ FIRST_CLASS
++ FIRST_CLASS_INTERNATIONAL
++ FREE
++ FREIGHT
++ GROUND
++ INTERNATIONAL
++ OVERNIGHT
++ PRIORITY
++ PRIORITY_INTERNATIONAL
++ STANDARD
++ THREE_DAY
++ TWO_DAY
++ TWO_DAY_MORNING
 
 ## Card (object)
 + cardHolderName (string, required) - The full name on the credit card that was charged.
@@ -872,7 +897,7 @@ Accepted Values: FREE, GROUND, STANDARD, EXPRESS, OVERNIGHT, TWO_DAY, TWO_DAY_MO
 + itemQuantity (number) - The number of the items purchased.
 + itemPrice (number) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
-lat
+
 ## InvestigationStatus (enum)
 + OPEN
 + PROCESSING
