@@ -6,13 +6,11 @@ HOST: https://api.signifyd.com/v2
 This doc will show you how to use our REST API to authenticate, make requests, and retrieve data. All responses to and from the API will be in [JSON](http://www.tutorialspoint.com/json/json_data_types.htm).
 
 ## Authentication
-You authenticate to the API by providing your API key in the request.
-You can find your API key on your [account](https://app.signifyd.com/settings) page.
+API calls must be made over HTTPS. You authenticate to the API by providing your API key in each request. Your API key can be found on the [settings](https://app.signifyd.com/settings) page.
 
-Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side).
-Provide your API key as the basic auth username. You do not need to provide a password, but some REST clients expect a username:password pair separated by a colon. Since there is no explicit password with the API key, it will need to be followed simply by a colon in those cases.
-
-Be sure all API calls to Signifyd are made over HTTPS, otherwise they will fail.
+- Authentication: [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side).
+- Username: Your API key as the basic auth username. 
+- Password: You do not need to provide a password. However, some REST clients expect a username:password pair separated by a colon. If so, you can use a colon as the password.
 
 ## REST Client
 Our API docs include a built-in REST console you can use to interactively test the API. Each endpoint is configured with example request data that will produce a successful result from our API if you provide valid credentials. By default, the API key in the REST console is `abcdefghijklmnopqrstuvwxyz` which appears in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`. You must replace this with you own base64 encoded API key in the headers section of the console to successfully submit requests.
@@ -66,14 +64,10 @@ For more information about your specific programming language, please view [this
 Resources related to cases in the API.
 
 ## Create a Case [/cases]
-To investigate a transaction, you create a case resource.
+To send Signifyd an order for review you'll need to create a case. If you are on a complete plan this will also automatically submit the order for guarantee.
 
-Technically, when creating a case all fields are optional, and you can create a case with as
-much or as little data as you have. However, we have labeled certain fields as required if we believe
-they are necessary to provide an accurate score.
-
-Read the description of each field carefully. More data is better for scoring, but it is always better
-to leave a field blank rather than fill it in with data that does not quite fit the definition.
+For the best decision results we recommend sending as much data as you have available. We have labeled fields as required if we believe
+they are necessary to provide a more accurate decision. 
 
 ### Create a Case [POST]
 
@@ -225,7 +219,7 @@ to leave a field blank rather than fill it in with data that does not quite fit 
 
 
 ## Retrieve a Case [/cases/{caseId}]
-Endpoint for retrieving individual cases by the unique case identifier issued by Signifyd at case creation.
+Endpoint for retrieving individual cases by investigation id, the unique case identifier returned when creating a case.
 
 ### Get a Case [GET]
 
@@ -277,7 +271,7 @@ Endpoint for retrieving individual cases by the unique case identifier issued by
 ## Group Guarantees
 
 
-## Submit a Case for Guarantee [/guarantees]
+## Submit Guarantee [/guarantees]
 A case can be manually submitted for Guarantee. This is equivalent to clicking the Guarantee button in the case console.
 Note that you have 7 days from the order date to submit a case for Guarantee.
 
@@ -318,8 +312,8 @@ Note that you have 7 days from the order date to submit a case for Guarantee.
                 "error": "Requested case cannot be found."
             }
 
-## Cancel a Guarantee Request [/cases/{caseId}/guarantee]
-A Guarantee can be canceled for orders that no longer require chargeback insurance. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console.
+## Cancel Guarantee [/cases/{caseId}/guarantee]
+A Guarantee can be canceled for orders that no longer require a guarantee fraud protection. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console.
 Before canceling a guarantee request you should check the Guarantee Disposition using GET a Case. In some instances the Guarantee may have a declined decision, in which case it does not need to be cancelled.
 
 ### Cancel Guarantee [PUT]
@@ -364,7 +358,7 @@ Webhook messages are sent when certain events occur in the life of an investigat
 receive pushed updates about a case, rather than poll SIGNIFYD for status changes.
 
 ### Supported Events
-You can create webhooks in SIGNIFYD for the following events.  Each event has a corresponding topic identifier
+You can create webhooks in Signifyd for the following events. Each event has a corresponding topic identifier
 which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
 
 Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion events can trigger a webhook.
@@ -377,32 +371,33 @@ Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion 
 | Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |
 
 ### Webhook Response
-        {
-            analysisUrl: "https://signifyd.com/v2/cases/1/analysis",
-            entriesUrl: "https://signifyd.com/v2/cases/1/entries",
-            notesUrl: "https://signifyd.com/v2/cases/1/notes",
-            orderUrl: "https://signifyd.com/v2/cases/1/order",
-            guaranteeEligible: false,
-            status: "DISMISSED",
-            uuid: "709b9107-eda0-4cdd-bdac-a82f51a8a3f3",
-            headline: "John Smith",
-            reviewDisposition: null,
-            associatedTeam: {
-                teamName: "anyTeam",
-                teamId: 26,
-                getAutoDismiss: true,
-                getTeamDismissalDays: 2 },
-            orderId: "19418",
-            orderDate: "2013-06-17T06:20:47-0700",
-            orderAmount: 365.99,
-            createdAt: "2013-11-05T14:23:26-0800",
-            updatedAt: "2013-11-05T14:23:26-0800",
-            investigationId: 1,
-            score: 262,
-            caseId: 1,
-            guaranteeDisposition: "APPROVED"
-        }
-
+```
+{
+    analysisUrl: "https://signifyd.com/v2/cases/1/analysis",
+    entriesUrl: "https://signifyd.com/v2/cases/1/entries",
+    notesUrl: "https://signifyd.com/v2/cases/1/notes",
+    orderUrl: "https://signifyd.com/v2/cases/1/order",
+    guaranteeEligible: false,
+    status: "DISMISSED",
+    uuid: "709b9107-eda0-4cdd-bdac-a82f51a8a3f3",
+    headline: "John Smith",
+    reviewDisposition: null,
+    associatedTeam: {
+        teamName: "anyTeam",
+        teamId: 26,
+        getAutoDismiss: true,
+        getTeamDismissalDays: 2 },
+    orderId: "19418",
+    orderDate: "2013-06-17T06:20:47-0700",
+    orderAmount: 365.99,
+    createdAt: "2013-11-05T14:23:26-0800",
+    updatedAt: "2013-11-05T14:23:26-0800",
+    investigationId: 1,
+    score: 262,
+    caseId: 1,
+    guaranteeDisposition: "APPROVED"
+}
+```
 ### Verification
 
 To allow a client to verify a webhook message has in fact come from SIGNIFYD, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
@@ -421,8 +416,112 @@ receive pushed updates about a case, rather than poll Signifyd for status change
 though there is no reason the same URL couldn't be used for all events, using the topic header to determine what kind of event
 was sent.
 
-## Manage Webhook Lists [/teams/webhooks]
+## Manage a Webhook [/teams/webhooks/{hookId}]
 ### Create [POST]
+Create a single webhook event for a team.
+
++ Request (application/json)
+Create new webhook events for team accounts. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
+
+    + Attribute (array[WebhookRequest])
+
+    + Body
+
+            {
+                "teamId": 1234,
+                "webhooks":
+                    [
+                        {
+                            "event": "CASE_REVIEW",
+                            "url": "http://knickknacks.examplepartner.com/signifydWebhook.php"
+                        }
+                    ]
+            }
+
++ Response 200 (application/json)
+
+    + Attribute (array[Webhook])
+
+    + Body
+
+            [
+                {
+                    "id": 4661,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "eventType": "CASE_REVIEW",
+                    "team": {
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
+                        "teamId": 1234
+                    },
+                    "eventDisplayText": "Case Review"
+                }
+            ]
+
++ Response 400 (application/json)
+This error response follows our standard error message format, but it also includes an echo of the original request in the `requestBody` field.
+
+    + Body
+
+            {
+                "requestBody": {
+                    "teamId": null,
+                    "webhooks": [
+                        {
+                            "event": "CASE_REVIEW",
+                            "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                        }
+                    ]
+                },
+                "errors": {
+                    "webhooks[1].url": [
+                        "A webhook already exists for that event type"
+                    ]
+                },
+                "messages": []
+            }
++ Parameters
+    + hookId: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
+
+### Update [PUT]
+Replace the URL for an existing webhook identfied by its numeric id.
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "url": "http://knickknacks.examplepartner.com/altRescore.php"
+            }
+
+
++ Response 200 (application/json)
+
+    + Attribute (Webhook)
+
+    + Body
+
+                {
+                    "id": 4660,
+                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_RESCORE",
+                    "eventDisplayText": "Case Rescore"
+                }
+
+
+### Delete [DELETE]
+Delete an existing webhook identified by its numeric id.
+
++ Response 204
+
+
+## Manage Webhooks [/teams/webhooks]
+### Create [POST]
+Create multiple webhooks events for a team.
+
 + Request (application/json)
 Create new webhook events for team accounts. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
 
@@ -610,45 +709,6 @@ Retrieve a list of the current webhooks for a team identified by the API key use
                 }
             ]
 
-## Manage Single Webhooks [/teams/webhooks/{hookId}]
-
-+ Parameters
-    + hookId: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
-
-### Update [PUT]
-Replace the URL for an existing webhook identfied by its numeric id.
-
-+ Request (application/json)
-
-    + Body
-
-            {
-                "url": "http://knickknacks.examplepartner.com/altRescore.php"
-            }
-
-
-+ Response 200 (application/json)
-
-    + Attribute (Webhook)
-
-    + Body
-
-                {
-                    "id": 4660,
-                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
-                    "eventType": "CASE_RESCORE",
-                    "eventDisplayText": "Case Rescore"
-                }
-
-
-### Delete [DELETE]
-Delete an existing webhook identified by its numeric id.
-
-+ Response 204
 
 
 
