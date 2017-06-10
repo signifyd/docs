@@ -416,7 +416,7 @@ receive pushed updates about a case, rather than poll Signifyd for status change
 though there is no reason the same URL couldn't be used for all events, using the topic header to determine what kind of event
 was sent.
 
-## Manage a Webhook [/teams/webhooks/{hookId}]
+## Manage a Webhook [/teams/webhooks]
 ### Create [POST]
 Create a single webhook event for a team.
 
@@ -428,7 +428,6 @@ Create new webhook events for team accounts. Creating a webhook for events that 
     + Body
 
             {
-                "teamId": 1234,
                 "webhooks":
                     [
                         {
@@ -464,7 +463,7 @@ This error response follows our standard error message format, but it also inclu
 
             {
                 "requestBody": {
-                    "teamId": null,
+                    "teamId": 1234,
                     "webhooks": [
                         {
                             "event": "CASE_REVIEW",
