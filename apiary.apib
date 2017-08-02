@@ -100,6 +100,9 @@ they are necessary to provide a more accurate decision.
                         {
                             "itemId": "1",
                             "itemName": "Sparkly sandals",
+                            "itemIsDigital": false,
+                            "itemCategory": "apparel",
+                            "itemSubCategory": "footwear"
                             "itemUrl": "http://mydomain.com/sparkly-sandals",
                             "itemImage": "http://mydomain.com/images/sparkly-sandals.jpeg",
                             "itemQuantity": 1,
@@ -109,6 +112,9 @@ they are necessary to provide a more accurate decision.
                         {
                             "itemId": "2",
                             "itemName": "Summer tank top",
+                            "itemIsDigital": false,
+                            "itemCategory": "apparel",
+                            "itemSubCategory": "shirts"
                             "itemUrl": "http://mydomain.com/summer-tank",
                             "itemImage": "http://mydomain.com/images/summer-tank.jpeg",
                             "itemQuantity": 1,
@@ -951,11 +957,15 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 ## Product (object)
 + itemId (string) - Your unique identifier for the product. This is a string because of hexadecimal identifiers.
 + itemName (string) - The name of the product.
++ itemIsDigital (boolean) - Indicates whether the item is electronically delivered e.g. gift cards
++ itemCategory (string) - The name of the top-level product category. e.g. Apparel
++ itemSubCategory (string) - The name of the sub-category of the product if applicable. e.g. T-Shirt 
 + itemUrl (string) - The url to the product's page.
 + itemImage (string) - The url to an image of the product.
 + itemQuantity (number) - The number of the items purchased.
 + itemPrice (number) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
+
 
 ## InvestigationStatus (enum)
 + OPEN
