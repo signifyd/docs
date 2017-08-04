@@ -102,7 +102,7 @@ they are necessary to provide a more accurate decision.
                             "itemName": "Sparkly sandals",
                             "itemIsDigital": false,
                             "itemCategory": "apparel",
-                            "itemSubCategory": "footwear"
+                            "itemSubCategory": "footwear",
                             "itemUrl": "http://mydomain.com/sparkly-sandals",
                             "itemImage": "http://mydomain.com/images/sparkly-sandals.jpeg",
                             "itemQuantity": 1,
@@ -114,7 +114,7 @@ they are necessary to provide a more accurate decision.
                             "itemName": "Summer tank top",
                             "itemIsDigital": false,
                             "itemCategory": "apparel",
-                            "itemSubCategory": "shirts"
+                            "itemSubCategory": "shirts",
                             "itemUrl": "http://mydomain.com/summer-tank",
                             "itemImage": "http://mydomain.com/images/summer-tank.jpeg",
                             "itemQuantity": 1,
@@ -122,6 +122,16 @@ they are necessary to provide a more accurate decision.
                             "itemWeight": 2
                         }
                     ],
+                   "discountCodes": [ 
+                        {
+                           "amount": 10.00,
+                           "code": "TENDOLLARSOFF"
+                        },
+                        {
+                            "percentage": 20,
+                            "code": "20PERCENTOFF"
+                        }
+                    ],   
                     "shipments": [
                         {
                             "shipper": "UPS",
@@ -246,21 +256,28 @@ Endpoint for retrieving individual cases by investigation id, the unique case id
     + Body
 
             {
-                guaranteeEligible: false,
-                guaranteeDisposition: "APPROVED",
-                status: "DISMISSED",
-                caseId: 44,
-                score: 776,
-                investigationId: 44,
-                uuid: "97c56c86-7984-44fa-9a3e-7d5f34d1bead",
-                headline: "Maxine Trycia",
-                orderId: "1234",
-                orderDate: "2013-01-18T22:54:29+0000",
-                orderAmount: 48,
-                associatedTeam: "1",
-                reviewDisposition: "GOOD",
-                createdAt: "2013-03-06T23:17:17+0000",
-                updatedAt: "2013-03-06T23:17:18+0000"
+                "associatedTeam": {
+                "teamId": 24,
+                "teamName": "My ecommerce store"
+            },
+            {
+                "guaranteeDisposition": "APPROVED",
+                "investigationId": 44,
+                "caseId": 44,
+                "headline": "Maxine Trycia",
+                "uuid": "97c56c86-7984-44fa-9a3e-7d5f34d1bead",
+                "updatedAt": "2017-06-09T21:03:26+0000",
+                "status": "DISMISSED",
+                "reviewDisposition": "UNSET",
+                "orderId": "0000219221",
+                "orderAmount": 74.99,
+                "orderOutcome": "SUCCESSFUL,
+                "currency": "USD",
+                "score": 776,
+                "orderDate": "2016-10-28T22:54:31+0000",
+                "createdAt": "2016-10-31T23:46:37+0000",
+                "testInvestigation": false,
+                "guaranteeEligible": false
             }
 
 + Response 404 (application/json)
@@ -617,21 +634,21 @@ Existing webhooks whose events were not specified in the request will remain int
 
     + Body
 
-        {
-            "teamId": 1234,
-            "webhooks":
-            [
-
-                {
-                    "event": "CASE_REVIEW",
-                    "url": "http://knickknacks.examplepartner.com/altReview.php"
-                },
-                {
-                    "event": "GUARANTEE_COMPLETION",
-                    "url": "http://knickknacks.examplepartner.com/altGuaranteeCompletion.php"
-                }
-            ]
-        }
+            {
+                "teamId": 1234,
+                "webhooks":
+                [
+    
+                    {
+                        "event": "CASE_REVIEW",
+                        "url": "http://knickknacks.examplepartner.com/altReview.php"
+                    },
+                    {
+                        "event": "GUARANTEE_COMPLETION",
+                        "url": "http://knickknacks.examplepartner.com/altGuaranteeCompletion.php"
+                    }
+                ]
+            }
 
 + Response 200 (application/json)
 
@@ -788,7 +805,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + reviewDisposition (ReviewDisposition, required) - The review disposition signifies the agent's opinion after reviewing the case, the value will be FRAUDULENT or GOOD based on the agent's review. If there is no review by the agent the value will be UNSET or NULL.
 + createdAt: `2013-03-06T23:17:17+0000` (string, required) - The date and time when the case was created.
 + updatedAt: `2013-03-06T23:17:18+0000` (string, required) - The date and time when the case was last updated.
-
+A
 ## GuaranteeRequest (object)
 + disposition (string) - Guarantee decision result
 + reviewedBy (string) - Analyst who made the decision.
@@ -830,6 +847,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 + browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase.
 + orderSessionId (string) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
++ discountsCodes (array[DiscountsCodes]) - Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. 
 + shipments (array[Shipment]) - The shipments associated with this purchase.
 + products (array[Product]) - The products purchased in the transaction.
 + orderId (string, required) - A string uniquely identifying this order.
@@ -869,6 +887,11 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + organization (string) - If provided by the buyer, the name of the recipient's company or organization.
 + deliveryAddress (DeliveryAddress, required) - The address to which the order will be delivered.
 + ageRange (string) - age range of the recipient or null.
+
+## DiscountsCodes (object)
++ amount (number) - The fixed amount of the discount applied. e.g. $10 off purchase.
++ percentage (number) - If a percentage discount is applied the percentage of the total order amount the discount applies to. e.g. 20% off purchase.
++ code (string) - The name of the discount code entered during checkout.
 
 ## Shipment (object)
 + shippingPrice (number) - The amount charged to the customer for shipping the product
