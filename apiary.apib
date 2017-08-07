@@ -847,7 +847,7 @@ A
 
 + browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase.
 + orderSessionId (string) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
-+ discountsCodes (array[DiscountsCodes]) - Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. 
++ discountCodes (array[DiscountCodes]) - Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. 
 + shipments (array[Shipment]) - The shipments associated with this purchase.
 + products (array[Product]) - The products purchased in the transaction.
 + orderId (string, required) - A string uniquely identifying this order.
@@ -888,7 +888,7 @@ A
 + deliveryAddress (DeliveryAddress, required) - The address to which the order will be delivered.
 + ageRange (string) - age range of the recipient or null.
 
-## DiscountsCodes (object)
+## DiscountCodes (object)
 + amount (number) - The fixed amount of the discount applied. e.g. $10 off purchase.
 + percentage (number) - If a percentage discount is applied the percentage of the total order amount the discount applies to. e.g. 20% off purchase.
 + code (string) - The name of the discount code entered during checkout.
