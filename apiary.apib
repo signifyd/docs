@@ -235,7 +235,7 @@ they are necessary to provide a more accurate decision.
             {"investigationId":1}
 
 
-## Retrieve a Case [/cases/{caseId}]
+## Get a Case [/cases/{caseId}]
 Endpoint for retrieving individual cases by investigation id, the unique case identifier returned when creating a case.
 
 ### Get a Case [GET]
@@ -295,7 +295,7 @@ Endpoint for retrieving individual cases by investigation id, the unique case id
 ## Group Guarantees
 
 
-## Submit Guarantee [/guarantees]
+## Submit a Guarantee [/guarantees]
 A case can be manually submitted for Guarantee. This is equivalent to clicking the Guarantee button in the case console.
 Note that you have 7 days from the order date to submit a case for Guarantee.
 
@@ -336,7 +336,7 @@ Note that you have 7 days from the order date to submit a case for Guarantee.
                 "error": "Requested case cannot be found."
             }
 
-## Cancel Guarantee [/cases/{caseId}/guarantee]
+## Cancel a Guarantee [/cases/{caseId}/guarantee]
 A Guarantee can be canceled for orders that no longer require a guarantee fraud protection. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console.
 Before canceling a guarantee request you should check the Guarantee Disposition using GET a Case. In some instances the Guarantee may have a declined decision, in which case it does not need to be cancelled.
 
@@ -440,120 +440,18 @@ receive pushed updates about a case, rather than poll Signifyd for status change
 though there is no reason the same URL couldn't be used for all events, using the topic header to determine what kind of event
 was sent.
 
-## Manage a Webhook [/teams/webhooks]
+## Create and Update Webhooks [/teams/webhooks]
+
 ### Create [POST]
-Create a single webhook event for a team.
+Create a single or multiple webhooks events for a team. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
 
 + Request (application/json)
-Create new webhook events for team accounts. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
 
     + Attribute (array[WebhookRequest])
 
     + Body
 
             {
-                "webhooks":
-                    [
-                        {
-                            "event": "CASE_REVIEW",
-                            "url": "http://knickknacks.examplepartner.com/signifydWebhook.php"
-                        }
-                    ]
-            }
-
-+ Response 200 (application/json)
-
-    + Attribute (array[Webhook])
-
-    + Body
-
-            [
-                {
-                    "id": 4661,
-                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "eventType": "CASE_REVIEW",
-                    "team": {
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc.",
-                        "teamId": 1234
-                    },
-                    "eventDisplayText": "Case Review"
-                }
-            ]
-
-+ Response 400 (application/json)
-This error response follows our standard error message format, but it also includes an echo of the original request in the `requestBody` field.
-
-    + Body
-
-            {
-                "requestBody": {
-                    "teamId": 1234,
-                    "webhooks": [
-                        {
-                            "event": "CASE_REVIEW",
-                            "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                        }
-                    ]
-                },
-                "errors": {
-                    "webhooks[1].url": [
-                        "A webhook already exists for that event type"
-                    ]
-                },
-                "messages": []
-            }
-+ Parameters
-    + hookId: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
-
-### Update [PUT]
-Replace the URL for an existing webhook identfied by its numeric id.
-
-+ Request (application/json)
-
-    + Body
-
-            {
-                "url": "http://knickknacks.examplepartner.com/altRescore.php"
-            }
-
-
-+ Response 200 (application/json)
-
-    + Attribute (Webhook)
-
-    + Body
-
-                {
-                    "id": 4660,
-                    "url": "http://knickknacks.examplepartner.com/signifydWebhook.php",
-                    "team": {
-                        "teamId": 1234,
-                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
-                    },
-                    "eventType": "CASE_RESCORE",
-                    "eventDisplayText": "Case Rescore"
-                }
-
-
-### Delete [DELETE]
-Delete an existing webhook identified by its numeric id.
-
-+ Response 204
-
-
-## Manage Webhooks [/teams/webhooks]
-### Create [POST]
-Create multiple webhooks events for a team.
-
-+ Request (application/json)
-Create new webhook events for team accounts. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
-
-    + Attribute (array[WebhookRequest])
-
-    + Body
-
-            {
-                "teamId": 1234,
                 "webhooks":
                     [
                         {
@@ -563,7 +461,7 @@ Create new webhook events for team accounts. Creating a webhook for events that 
                         {
                             "event": "CASE_CREATION",
                             "url": "http://knickknacks.examplepartner.com/signifydWebhook.php"
-                        },
+                        }
                     ]
             }
 
@@ -636,7 +534,6 @@ Existing webhooks whose events were not specified in the request will remain int
     + Body
 
             {
-                "teamId": 1234,
                 "webhooks":
                 [
     
@@ -733,6 +630,49 @@ Retrieve a list of the current webhooks for a team identified by the API key use
             ]
 
 
+
+## Update and Delete a Webhook [/teams/webhooks/{id}]
+
+### Update [PUT] 
+Replace the URL for an existing webhook by its id.
+
++ Parameters
+    + id: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
+
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "url": "http://knickknacks.examplepartner.com/altRescore.php"
+            }
+
+
++ Response 200 (application/json)
+
+    + Attribute (Webhook)
+
+    + Body
+
+                {
+                    "id": 4660,
+                    "url" : "http://knickknacks.examplepartner.com/signifydWebhook.php",
+                    "team": {
+                        "teamId": 1234,
+                        "teamName": "Consolidated Knick-Knacks/Amalgamated Tchotchke, Inc."
+                    },
+                    "eventType": "CASE_RESCORE",
+                    "eventDisplayText": "Case Rescore"
+                }
+
+### Delete [DELETE]
+Delete an existing webhook by its id.
+
++ Parameters
+    + id: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
+
++ Response 204
 
 
 ### Group Device Fingerprint
@@ -998,6 +938,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + CASE_RESCORE
 + CASE_REVIEW
 + GUARANTEE_COMPLETION
++ CLAIM_REVIEWED
 
 ## WebhookRequest (object)
 + event (WebhookEventType) - the type/topic of the event
