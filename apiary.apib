@@ -793,7 +793,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 ## Case (object)
 + guaranteeEligible: false(boolean, required) - boolean value indicating if a guarantee can be requested for this Case.  If a guarantee has already been requested for this case, then this value will be 'false'.
 + guaranteeDisposition (GuaranteeDisposition, optional) - If a case has been submitted for guarantee, this field will be present and indicate the decision state of the guarantee.
-+ status (CaseStatus, required) - The current status of the case. OPEN, PROCESSING AND HELD are considered active cases. FLAGGED and DISMISSED are considered resolved cases.
++ status (CaseStatus, required) - The current status of the case. All cases are set to OPEN by default and only set DISMISSED if a user clicks the "Dismissed" button in the Signifyd console.
 + caseId: 44 (number, required) - The unique identifier assigned to the case when it is created.
 + score: 776 (number, required) - A value from 0-1000 indicating the likelihood that the order/transaction is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
 + investigationId: 44 (number, optional) - DEPRECATED.  See caseId.
@@ -806,7 +806,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + reviewDisposition (ReviewDisposition, required) - The review disposition signifies the agent's opinion after reviewing the case, the value will be FRAUDULENT or GOOD based on the agent's review. If there is no review by the agent the value will be UNSET or NULL.
 + createdAt: `2013-03-06T23:17:17+0000` (string, required) - The date and time when the case was created.
 + updatedAt: `2013-03-06T23:17:18+0000` (string, required) - The date and time when the case was last updated.
-A
+
 ## GuaranteeRequest (object)
 + disposition (string) - Guarantee decision result
 + reviewedBy (string) - Analyst who made the decision.
@@ -826,10 +826,7 @@ A
 
 ## CaseStatus (enum)
 + OPEN
-+ PROCESSING
-+ FLAGGED
 + DISMISSED
-+ HELD
 
 ## ReviewDisposition (enum)
 + GOOD
@@ -995,7 +992,7 @@ A
 ## InvestigationStatus (enum)
 + OPEN
 + DISMISSED
-d 
+
 ## WebhookEventType (enum)
 + CASE_CREATION
 + CASE_RESCORE
