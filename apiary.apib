@@ -756,7 +756,7 @@ src="https://cdn-scripts.signifyd.com/api/script-tag.js"></script>
 
 ### 2. Provide a unique session id
 
-Replace `data-order-session-id` with a unique session id for the current user's browsing session.
+Replace `data-order-session-id` with a unique session id for the current user's browsing session. We strongly recommend you base64 encode the store url and order id or checkout id to create a unique session id for fingerprinting. 
 
 ### 3. Send the session id on case creation
 
@@ -914,7 +914,7 @@ A
 + FIRST_CLASS
 + FIRST_CLASS_INTERNATIONAL
 + FREE
-+ FREIGHTM
++ FREIGHT
 + GROUND
 + INTERNATIONAL
 + OVERNIGHT
