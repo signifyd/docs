@@ -64,9 +64,7 @@ For more information about your specific programming language, please view [this
 Resources related to cases in the API.
 
 ## Create a Case [/cases]
-To send Signifyd an order for review you'll need to create a case. If you are on a complete plan this will also automatically submit the order for guarantee.
-
-For the best decision results we recommend sending as much data as you have available. We have labeled fields as required if we believe
+To send Signifyd an order for review you'll need to create a case. If you are on a complete plan this will also automatically submit the order for guarantee. For the best decision results we recommend sending as much data as you have available. We have labeled fields as required if we believe
 they are necessary to provide a more accurate decision. 
 
 ### Create a Case [POST]
@@ -337,15 +335,15 @@ Note that you have 7 days from the order date to submit a case for Guarantee.
             }
 
 ## Cancel a Guarantee [/cases/{caseId}/guarantee]
-A Guarantee can be canceled for orders that no longer require a guarantee fraud protection. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console.
-Before canceling a guarantee request you should check the Guarantee Disposition using GET a Case. In some instances the Guarantee may have a declined decision, in which case it does not need to be cancelled.
+A Guarantee can be canceled for orders that no longer require a guarantee fraud protection. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console. Note: You cannot cancel a guarantee that has been declined.
 
 ### Cancel Guarantee [PUT]
 
 + Parameters
     + caseId: 44 (integer) - The id for the case whose guarantee is being cancelled.
 
-+ Request
++ Request (application/json)
+
     + Headers
 
             Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
@@ -632,13 +630,13 @@ Retrieve a list of the current webhooks for a team identified by the API key use
 
 
 ## Update and Delete a Webhook [/teams/webhooks/{id}]
+Replace or delete the URL for an existing webhook by its id.
 
 ### Update [PUT] 
-Replace the URL for an existing webhook by its id.
+
 
 + Parameters
     + id: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
-
 
 + Request (application/json)
 
@@ -667,8 +665,6 @@ Replace the URL for an existing webhook by its id.
                 }
 
 ### Delete [DELETE]
-Delete an existing webhook by its id.
-
 + Parameters
     + id: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
 
@@ -696,7 +692,7 @@ src="https://cdn-scripts.signifyd.com/api/script-tag.js"></script>
 
 ### 2. Provide a unique session id
 
-Replace `data-order-session-id` with a unique session id for the current user's browsing session. We strongly recommend you base64 encode the store url and order id or checkout id to create a unique session id for fingerprinting. 
+Replace `data-order-session-id` with a unique session id for the current user's browsing session. We strongly recommend you generate a session id by base64 encoding the store url and order id or checkout id to ensure uniqueness for device fingerprinting. 
 
 ### 3. Send the session id on case creation
 
@@ -783,7 +779,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Purchase (object)
 
-+ browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase.
++ browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase. You must provide a valid IP address syntax. 
 + orderSessionId (string) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
 + discountCodes (array[DiscountCodes]) - Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. 
 + shipments (array[Shipment]) - The shipments associated with this purchase.
@@ -820,7 +816,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Recipient (object)
 + fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
-+ confirmationEmail (string, required) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent.
++ confirmationEmail (string, required) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent. You must provide a valid email syntax.
 + confirmationPhone (string) - The phone number that you would call if there was something wrong with this order or the phone number that was supplied with the shipping information.
 + organization (string) - If provided by the buyer, the name of the recipient's company or organization.
 + deliveryAddress (DeliveryAddress, required) - The address to which the order will be delivered.
