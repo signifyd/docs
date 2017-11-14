@@ -35,7 +35,6 @@ There are two types of errors returned by the API server in the bodies of 4xx an
 - Field-specific errors
 - General error messages
 
-This is our standard format:
 ```
 {
   "errors": {
@@ -67,7 +66,7 @@ Resources related to cases in the API.
 To send Signifyd an order for review you'll need to create a case. If you are on a complete plan this will also automatically submit the order for guarantee. For the best decision results we recommend sending as much data as you have available. We have labeled fields as required if we believe
 they are necessary to provide a more accurate decision. 
 
-### Create a Case [POST]
+### Create Case [POST]
 
 + Request (application/json)
 
@@ -236,7 +235,7 @@ they are necessary to provide a more accurate decision.
 ## Get a Case [/cases/{caseId}]
 Endpoint for retrieving individual cases by investigation id, the unique case identifier returned when creating a case.
 
-### Get a Case [GET]
+### Get Case [GET]
 
 + Parameters
     + caseId: 44 (integer) - The unique identifier for the case that you want to retrieve.  This identifier is issued upon case creation.
@@ -297,7 +296,7 @@ Endpoint for retrieving individual cases by investigation id, the unique case id
 A case can be manually submitted for Guarantee. This is equivalent to clicking the Guarantee button in the case console.
 Note that you have 7 days from the order date to submit a case for Guarantee.
 
-### Create guarantee [POST]
+### Submit Guarantee [POST]
 
 + Request (application/json)
     + Headers
@@ -383,7 +382,7 @@ receive pushed updates about a case, rather than poll SIGNIFYD for status change
 You can create webhooks in Signifyd for the following events. Each event has a corresponding topic identifier
 which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
 
-Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion events can trigger a webhook.
+Currently the following events can trigger a webhook.
 
 | Event| `X-SIGNIFYD-TOPIC` | Description |
 | --- | --- | --- |
@@ -391,8 +390,13 @@ Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion 
 | Case Rescore | `cases/rescore` | Sent anytime a case is scored following case creation |
 | Case Review | `cases/review` | Sent anytime a user assigns a case a Review Disposition (thumbs up/down on console) |
 | Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |
+| Claim Reviewed | `claim/reviewed` | Sent anytime a request for chargeback reimbursement has been completed |
+
 
 ### Webhook Response
+
+#### Cases and Guarantees
+
 ```
 {
     analysisUrl: "https://signifyd.com/v2/cases/1/analysis",
@@ -420,6 +424,20 @@ Currently the Case Creation, Case Rescore, Case Review and Guarantee Completion 
     guaranteeDisposition: "APPROVED"
 }
 ```
+
+#### Claims
+```
+{
+    caseId: 1,
+    orderId: "19418",
+    updatedAt: "2016-02-21T06:45:05.343Z",
+    amount: 365.99,
+    currency: "USD",
+    status: "CLOSED",
+    disposition: "APPROVED",
+    dispositionReason: "elgible chargeback"
+}
+```
 ### Verification
 
 To allow a client to verify a webhook message has in fact come from SIGNIFYD, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
@@ -440,7 +458,7 @@ was sent.
 
 ## Create and Update Webhooks [/teams/webhooks]
 
-### Create [POST]
+### Create Webhooks [POST]
 Create a single or multiple webhooks events for a team. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
 
 + Request (application/json)
@@ -522,7 +540,7 @@ This error response follows our standard error message format, but it also inclu
                 "messages": []
             }
 
-### Update [PUT]
+### Update Webhooks [PUT]
 Update existing webhook events for a team en masse, overwriting existing topics with new URLs.
 Existing webhooks whose events were not specified in the request will remain intact.
 + Request (application/json)
@@ -576,7 +594,7 @@ Existing webhooks whose events were not specified in the request will remain int
             ]
 
 
-### List [GET]
+### Retrieve Webhooks [GET]
 Retrieve a list of the current webhooks for a team identified by the API key used.
 + Response 200 (application/json)
 
@@ -632,7 +650,7 @@ Retrieve a list of the current webhooks for a team identified by the API key use
 ## Update and Delete a Webhook [/teams/webhooks/{id}]
 Replace or delete the URL for an existing webhook by its id.
 
-### Update [PUT] 
+### Update Webhook [PUT] 
 
 
 + Parameters
@@ -664,7 +682,7 @@ Replace or delete the URL for an existing webhook by its id.
                     "eventDisplayText": "Case Rescore"
                 }
 
-### Delete [DELETE]
+### Delete Webhook [DELETE]
 + Parameters
     + id: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
 
