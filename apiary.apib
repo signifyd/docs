@@ -16,7 +16,7 @@ API calls must be made over HTTPS. You authenticate to the API by providing your
 Our API docs include a built-in REST console you can use to interactively test the API. Each endpoint is configured with example request data that will produce a successful result from our API if you provide valid credentials. By default, the API key in the REST console is `abcdefghijklmnopqrstuvwxyz` which appears in it's base64 encoded form, `YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6`. You must replace this with you own base64 encoded API key in the headers section of the console to successfully submit requests.
 
 ## Response Codes
-We use conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, a charge failed, etc.), and codes in the 5xx range indicate an error with Signifyd's servers.
+We use conventional HTTP response codes to indicate success or failure of an API request. In general, codes in the 2xx range indicate success, codes in the 4xx range indicate an error that resulted from the provided information (e.g. a required parameter was missing, invalid syntax, etc.), and codes in the 5xx range indicate an error with Signifyd's servers.
 
 | Code| Description |
 | --- | --- |
@@ -60,11 +60,14 @@ For PST: 2015-11-03T13:21:58-08:00
 For more information about your specific programming language, please view [this document](https://developers.google.com/gmail/markup/reference/datetime-formatting).
 ## Group Cases
 
-Resources related to cases in the API.
+Cases are orders submitted to Signifyd for review. A case contains payment, recipent, product, shipping, and account information.
 
 ## Create a Case [/cases]
-To send Signifyd an order for review you'll need to create a case. If you are on a complete plan this will also automatically submit the order for guarantee. For the best decision results we recommend sending as much data as you have available. We have labeled fields as required if we believe
-they are necessary to provide a more accurate decision. 
+Submit an order for fraud review. 
+
+We recommend sending as many data points as available for the best decision.
+
+If you are on a complete plan this will also automatically submit the order for guarantee.
 
 ### Create Case [POST]
 
@@ -233,7 +236,7 @@ they are necessary to provide a more accurate decision.
 
 
 ## Get a Case [/cases/{caseId}]
-Endpoint for retrieving individual cases by investigation id, the unique case identifier returned when creating a case.
+Retrieve details about an individual case by investigation id or case id.
 
 ### Get Case [GET]
 
@@ -290,11 +293,13 @@ Endpoint for retrieving individual cases by investigation id, the unique case id
 
 
 ## Group Guarantees
+A guarantee is a financial liability shift that protects online retailers in case of chargebacks. View our product manual to [learn more](https://www.signifyd.com/resources/manual/signifyd-guarantee/signifyd-guarantee/). 
 
-
+*Guarantee APIs require a case or investigation id which is only provided when  d[creating a case](https://jsapi.apiary.io/apis/signifydapi/reference/cases/create-a-case/create-case.html).*
 ## Submit a Guarantee [/guarantees]
-A case can be manually submitted for Guarantee. This is equivalent to clicking the Guarantee button in the case console.
-Note that you have 7 days from the order date to submit a case for Guarantee.
+Submit an existing case for guarantee. 
+
+*You have 7 days from the order date to submit a case for guarantee. If you are on a complete plan a guarantee is automatically submitted when a case is created.* 
 
 ### Submit Guarantee [POST]
 
@@ -334,7 +339,9 @@ Note that you have 7 days from the order date to submit a case for Guarantee.
             }
 
 ## Cancel a Guarantee [/cases/{caseId}/guarantee]
-A Guarantee can be canceled for orders that no longer require a guarantee fraud protection. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. This is equivalent to clicking the “cancel guarantee request” button in the case console. Note: You cannot cancel a guarantee that has been declined.
+A Guarantee can be canceled for orders that no longer require a guarantee. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. 
+
+*Your account will be credited for any canceled guarantees. You cannot cancel a guarantee that has been declined or after 30 days of submission.*
 
 ### Cancel Guarantee [PUT]
 
@@ -370,19 +377,17 @@ A Guarantee can be canceled for orders that no longer require a guarantee fraud 
                 "guaranteeId": 53
             }
 
-
-
 ## Group Webhooks
 
 Webhooks are messages sent by SIGNIFYD via HTTP POST to a url you configure on your [Notifications](https://app.signifyd.com/settings/notifications) page in the SIGNIFYD settings.
 Webhook messages are sent when certain events occur in the life of an investigation. They allow your application to
-receive pushed updates about a case, rather than poll SIGNIFYD for status changes.
+receive pushed updates about a case, rather than poll SIGNIFYD for status changes. 
 
 ### Supported Events
 You can create webhooks in Signifyd for the following events. Each event has a corresponding topic identifier
 which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
 
-Currently the following events can trigger a webhook.
+Currently the following events can trigger a webhook. Only one URL may be specified per event.
 
 | Event| `X-SIGNIFYD-TOPIC` | Description |
 | --- | --- | --- |
@@ -392,6 +397,17 @@ Currently the following events can trigger a webhook.
 | Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |
 | Claim Reviewed | `claim/reviewed` | Sent anytime a request for chargeback reimbursement has been completed |
 
+### Verification
+
+To allow a client to verify a webhook message has in fact come from SIGNIFYD, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
+
+See this example [code snippet](https://gist.github.com/blaskey/9533364) for an example of how to compute the value in Java.
+
+### Testing a Webhook
+Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook in the Signifyd console settings.
+The test webhook message is sent with an HMAC SHA256 verification header (see Webhook Verification below).
+The header value is the Base64 encoded output of the HMAC SHA256 encoding of the test webhook JSON body,
+using the team API key when available. The test webhook message uses the secret key `ABCDE`. A 'cases/test' topic header is also sent with the test POST.
 
 ### Webhook Response
 
@@ -438,28 +454,11 @@ Currently the following events can trigger a webhook.
     dispositionReason: "elgible chargeback"
 }
 ```
-### Verification
-
-To allow a client to verify a webhook message has in fact come from SIGNIFYD, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
-
-See this example [code snippet](https://gist.github.com/blaskey/9533364) for an example of how to compute the value in Java.
-
-### Testing a Webhook
-Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook in the Signifyd console settings.
-The test webhook message is sent with an HMAC SHA256 verification header (see Webhook Verification below).
-The header value is the Base64 encoded output of the HMAC SHA256 encoding of the test webhook JSON body,
-using the team API key when available. The test webhook message uses the secret key `ABCDE`. A 'cases/test' topic header is also sent with the test POST.
-
-Webhooks are messages sent by Signifyd via HTTP POST to endpoint designated using the calls detailed below.
-Webhook messages are sent when certain events occur in the life of an investigation. They allow the client application to
-receive pushed updates about a case, rather than poll Signifyd for status changes. Only one URL may be specified per event,
-though there is no reason the same URL couldn't be used for all events, using the topic header to determine what kind of event
-was sent.
 
 ## Create and Update Webhooks [/teams/webhooks]
 
 ### Create Webhooks [POST]
-Create a single or multiple webhooks events for a team. Creating a webhook for events that already exist will result in an error. Use the update method to modify existing webhook events.
+Create a new webhook or webhooks for a team. 
 
 + Request (application/json)
 
@@ -541,8 +540,7 @@ This error response follows our standard error message format, but it also inclu
             }
 
 ### Update Webhooks [PUT]
-Update existing webhook events for a team en masse, overwriting existing topics with new URLs.
-Existing webhooks whose events were not specified in the request will remain intact.
+Update existing webhooks for a team in bulk.
 + Request (application/json)
 
     + Attribute (array[WebhookRequest])
@@ -595,7 +593,7 @@ Existing webhooks whose events were not specified in the request will remain int
 
 
 ### Retrieve Webhooks [GET]
-Retrieve a list of the current webhooks for a team identified by the API key used.
+Retrieve all webhooks for a team.
 + Response 200 (application/json)
 
     + Attribute (array[Webhook])
@@ -648,7 +646,7 @@ Retrieve a list of the current webhooks for a team identified by the API key use
 
 
 ## Update and Delete a Webhook [/teams/webhooks/{id}]
-Replace or delete the URL for an existing webhook by its id.
+Modify or delete an existing webhook for a team.
 
 ### Update Webhook [PUT] 
 
@@ -697,7 +695,7 @@ Signifyd’s device fingerprinting solution uniquely tracks and identifies devic
 
 Place the following script just before the closing `</head>` tag on all public facing pages. The script loads asynchronously and does not affect page load time.
 
-Note: *We recommend that you load the script on all public user facing pages. If you are unable to load the script on pages such as payment, login, etc, make sure to have loaded the script at least once before the checkout process is complete.*
+*We recommend that you load the script on all public user facing pages. If you are unable to load the script on pages such as payment, login, etc, make sure to have loaded the script at least once before the checkout process is complete.*
 
 ```
 <script
