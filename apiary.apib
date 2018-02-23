@@ -60,7 +60,7 @@ For PST: 2015-11-03T13:21:58-08:00
 For more information about your specific programming language, please view [this document](https://developers.google.com/gmail/markup/reference/datetime-formatting).
 ## Group Cases
 
-Cases are orders submitted to Signifyd for review. A case contains payment, recipent, product, shipping, and account information.
+Cases are orders submitted to Signifyd for review. A case contains payment, recipient, product, shipping, and account information.
 
 ## Create a Case [/cases]
 Submit an order for fraud review. 
@@ -136,14 +136,12 @@ If you are on a complete plan this will also automatically submit the order for 
                         {
                             "shipper": "UPS",
                             "shippingMethod": "ground",
-                            "shippingPrice": 10,
-                            "trackingNumber": "3A4U569H1572924642"
+                            "shippingPrice": 10
                         },
                         {
                             "shipper": "USPS",
                             "shippingMethod": "international",
-                            "shippingPrice": 20,
-                            "trackingNumber": "9201120200855113889012"
+                            "shippingPrice": 20
                         }
                     ]
                 },
@@ -158,9 +156,7 @@ If you are on a complete plan this will also automatically submit the order for 
                         "city": "Chicago",
                         "provinceCode": "IL",
                         "postalCode": "60622",
-                        "countryCode": "US",
-                        "latitude": 41.92,
-                        "longitude": -87.65
+                        "countryCode": "US"
                     }
                 },
                 "card": {
@@ -175,9 +171,7 @@ If you are on a complete plan this will also automatically submit the order for 
                         "city": "Chicago",
                         "provinceCode": "IL",
                         "postalCode": "60622",
-                        "countryCode": "US",
-                        "latitude": 41.92,
-                        "longitude": -87.65
+                        "countryCode": "US"
                     }
                 },
                 "userAccount": {
@@ -211,9 +205,7 @@ If you are on a complete plan this will also automatically submit the order for 
                         "city": "Lexington",
                         "provinceCode": "KY",
                         "postalCode": "40511",
-                        "countryCode": "US",
-                        "latitude": 38.07,
-                        "longitude": -84.53
+                        "countryCode": "US"
                     },
                     "corporateAddress": {
                         "streetAddress": "410 Terry Ave",
@@ -221,9 +213,7 @@ If you are on a complete plan this will also automatically submit the order for 
                         "city": "Seattle",
                         "provinceCode": "WA",
                         "postalCode": "98109",
-                        "countryCode": "US",
-                        "latitude": 47.6,
-                        "longitude": -122.33
+                        "countryCode": "US"
                     }
                 }
             }
@@ -295,7 +285,7 @@ Retrieve details about an individual case by investigation id or case id.
 ## Group Guarantees
 A guarantee is a financial liability shift that protects online retailers in case of chargebacks. View our product manual to [learn more](https://www.signifyd.com/resources/manual/signifyd-guarantee/signifyd-guarantee/). 
 
-*Guarantee APIs require a case or investigation id which is only provided when  d[creating a case](https://jsapi.apiary.io/apis/signifydapi/reference/cases/create-a-case/create-case.html).*
+*Guarantee APIs require a case or investigation id which is only provided when [creating a case](https://jsapi.apiary.io/apis/signifydapi/reference/cases/create-a-case/create-case.html).*
 ## Submit a Guarantee [/guarantees]
 Submit an existing case for guarantee. 
 
@@ -387,7 +377,7 @@ receive pushed updates about a case, rather than poll SIGNIFYD for status change
 You can create webhooks in Signifyd for the following events. Each event has a corresponding topic identifier
 which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
 
-Currently the following events can trigger a webhook. Only one URL may be specified per event.
+Currently, the following events can trigger a webhook. Only one URL may be specified per event.
 
 | Event| `X-SIGNIFYD-TOPIC` | Description |
 | --- | --- | --- |
@@ -695,7 +685,7 @@ Signifyd’s device fingerprinting solution uniquely tracks and identifies devic
 
 Place the following script just before the closing `</head>` tag on all public facing pages. The script loads asynchronously and does not affect page load time.
 
-*We recommend that you load the script on all public user facing pages. If you are unable to load the script on pages such as payment, login, etc, make sure to have loaded the script at least once before the checkout process is complete.*
+*We recommend that you load the script on all public user-facing pages. If you are unable to load the script on pages such as payment, login, etc, make sure to have loaded the script at least once before the checkout process is complete.*
 
 ```
 <script
@@ -790,25 +780,25 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + purchase (Purchase) - Data related to purchase event represented in this Case Creation request.
 + recipient (Recipient) - Data related to person or organization receiving the items purchased.
 + card (Card) - Data related to the card that was used for the purchase and its cardholder.
-+ userAccount (UserAccount) - Commonly, a customer must create an account before placing an order. These data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account.
++ userAccount (UserAccount) - If you allow customers to create an account before placing an orders these data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account (Guest Checkout).
 + seller (Seller) - All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
 
 ## Purchase (object)
 
 + browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase. You must provide a valid IP address syntax. 
-+ orderSessionId (string) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
-+ discountCodes (array[DiscountCodes]) - Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. 
-+ shipments (array[Shipment]) - The shipments associated with this purchase.
-+ products (array[Product]) - The products purchased in the transaction.
++ orderSessionId (string, required) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
++ discountCodes (array[DiscountCodes], required) - Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. 
++ shipments (array[Shipment], required) - The shipments associated with this purchase.
++ products (array[Product], required) - The products purchased in the transaction.
 + orderId (string, required) - A string uniquely identifying this order.
 + createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
 + paymentGateway (string) - The gateway that processed the transaction.
 + paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
 + transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider.
-+ currency (string) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
++ currency (string, required) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
 + avsResponseCode (string, required) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
 + cvvResponseCode (string, required) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
-+ orderChannel (OrderChannel) - The method used by the buyer to place the order. Either WEB or PHONE.
++ orderChannel (OrderChannel, required) - The method used by the buyer to place the order. Either WEB or PHONE.
 + receivedBy (string) - If the order was was taken by a customer service or sales agent, his or her name.
 + totalPrice (number, required) - The total price of the order, including shipping price and taxes.
 
@@ -833,21 +823,19 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 ## Recipient (object)
 + fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
 + confirmationEmail (string, required) - When this purchase was completed, you likely sent a confirmation email or you will be sending a confirmation email to someone once you approve the order. This is the email address to which that confirmation email will be sent. You must provide a valid email syntax.
-+ confirmationPhone (string) - The phone number that you would call if there was something wrong with this order or the phone number that was supplied with the shipping information.
++ confirmationPhone (string, required) - The phone number that you would call if there was something wrong with this order or the phone number that was supplied with the shipping information.
 + organization (string) - If provided by the buyer, the name of the recipient's company or organization.
 + deliveryAddress (DeliveryAddress, required) - The address to which the order will be delivered.
-+ ageRange (string) - age range of the recipient or null.
 
 ## DiscountCodes (object)
-+ amount (number) - The fixed amount of the discount applied. e.g. $10 off purchase.
-+ percentage (number) - If a percentage discount is applied the percentage of the total order amount the discount applies to. e.g. 20% off purchase.
-+ code (string) - The name of the discount code entered during checkout.
++ amount (number, required) - The fixed amount of the discount applied. e.g. $10 off purchase.
++ percentage (number, required) - If a percentage discount is applied the percentage of the total order amount the discount applies to. e.g. 20% off purchase.
++ code (string, required) - The name of the discount code entered during checkout.
 
 ## Shipment (object)
-+ shippingPrice (number) - The amount charged to the customer for shipping the product
++ shippingPrice (number, required) - The amount charged to the customer for shipping the product
 + shipper (shipper) -The name of the shipper 
-+ shippingMethod (shippingMethod) - The type of the shipment method used
-+ trackingNumber (string) The tracking number for the shipment.
++ shippingMethod (shippingMethod, required) - The type of the shipment method used
 
 ## shipper (enum)
 + FEDEX
@@ -876,21 +864,21 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Card (object)
 + cardHolderName (string, required) - The full name on the credit card that was charged.
-+ bin (number) - The first six digits of the credit card, the bank identification number, which uniquely identifies the issuer.
-+ last4 (string) - The last four digits of the card number.
++ bin (number, required) - The first six digits of the credit card, the bank identification number, which uniquely identifies the issuer.
++ last4 (string, required) - The last four digits of the card number.
 + expiryMonth (number) - MM representation of the expiration month of the card.
 + expiryYear (number) - yyyy representation of the expiration year of the card.
 + billingAddress (Address, required) - The billing address for the card.
 
 ## UserAccount (object)
-+ email (string) - The primary email address associated with the account.
++ email (string, required) - The primary email address associated with the account.
 + username (string) - The username associated with the account. Please supply this even if it is the same as the email address.
-+ phone (string) - The phone number associated with the account.
-+ createdDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the account was created. See the Dates section of these docs for more information about date formats.
++ phone (string, required) - The phone number associated with the account.
++ createdDate (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date when the account was created. See the Dates section of these docs for more information about date formats.
 + accountNumber (string) - Your unique identifier for the account.
 + lastOrderId (string) - The unique identifier for the last order placed by this account, prior to the current order.
-+ aggregateOrderCount (number) - The total count of orders placed by this account since it was created, including the current order.
-+ aggregateOrderDollars (number) - The total amount spent by this account since it was created, including the current order.
++ aggregateOrderCount (number, required) - The total count of orders placed by this account since it was created, including the current order.
++ aggregateOrderDollars (number, required) - The total amount spent by this account since it was created, including the current order.
 + lastUpdateDate (string) - `yyyy-MM-dd'T'HH:mm:ssZ` The last time a change was made to this account other than an order being placed. Examples include changing email addresses or adding a new credit card. See the Dates section of these docs for more information about date formats.
 
 ## Seller (object)
@@ -907,37 +895,38 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + onboardingIpAddress (string) - The IP address of the device used when this seller account was created.
 + onboardingEmail (string) - The email address associated with this seller account when it was created.
 + tags (array[string]) - A list of attributes or short descriptors associated with the seller account, formatted as a string of comma-separated values. Example: tag1, tag2, tag3.
-+ shipFromAddress (Address) - The location from which the seller shipped the order.
-+ corporateAddress (Address) - The corporate address of the seller.
++ shipFromAddress (SellerAddress) - The location from which the seller shipped the order.
++ corporateAddress (SellerAddress) - The corporate address of the seller.
 
 ## Address (object)
++ streetAddress (string, required) - The street number and street name.
++ unit (string, required) - The unit or apartment number.
++ city (string, required) - The city name.
++ provinceCode (string, required) - The code or abbreviation for the province.
++ postalCode (string, required) - The postal code.
++ countryCode (string, required) - The two-letter ISO-3166 country code. If left blank, we will assume US.
+
+## SellerAddress (object)
 + streetAddress (string) - The street number and street name.
 + unit (string) - The unit or apartment number.
 + city (string) - The city name.
 + provinceCode (string) - The code or abbreviation for the province.
 + postalCode (string) - The postal code.
 + countryCode (string) - The two-letter ISO-3166 country code. If left blank, we will assume US.
-+ latitude (number) - The latitude of the address. Used when address details are not provided. Ignored otherwise.
-+ longitude (number) - The longitude of the address. Used when address details are not provided. Ignored otherwise.
-+ role (string) - Indicates the roles played by this address.  Example values are ipGeo, billingAddress, and deliveryAddress
 
 ## DeliveryAddress (object)
-+ isDeliverable (boolean) - Indicates whether the Postal Service can deliver mail to this address.
-+ isReceivingMail (boolean) - Indicates if the address is currently receiving mail. Possible values are true, false, or null.
-+ type (string) - This indicates the US Postal Service opinion about whether this address is primarily a “Business” or “Residential”.
-+ deliveryPoint (string) - Only valid for US address LocationType. Indicates to the US Postal Service whether deliver of mail requires special handling. One of: CommercialMailDrop, POBoxThrowback, POBox, MultiUnit, SingleUnit.
 + Include Address
 
 ## Product (object)
 + itemId (string) - Your unique identifier for the product. This is a string because of hexadecimal identifiers.
-+ itemName (string) - The name of the product.
-+ itemIsDigital (boolean) - Indicates whether the item is electronically delivered e.g. gift cards
++ itemName (string, required) - The name of the product.
++ itemIsDigital (boolean, required) - Indicates whether the item is electronically delivered e.g. gift cards
 + itemCategory (string) - The name of the top-level product category. e.g. Apparel
 + itemSubCategory (string) - The name of the sub-category of the product if applicable. e.g. T-Shirt 
 + itemUrl (string) - The url to the product's page.
 + itemImage (string) - The url to an image of the product.
-+ itemQuantity (number) - The number of the items purchased.
-+ itemPrice (number) - The price paid for each item (not the aggregate).
++ itemQuantity (number, required) - The number of the items purchased.
++ itemPrice (number, required) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
 
 
