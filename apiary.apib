@@ -406,9 +406,7 @@ using the team API key when available. The test webhook message uses the secret 
 ```
 {
     analysisUrl: "https://signifyd.com/v2/cases/1/analysis",
-    entriesUrl: "https://signifyd.com/v2/cases/1/entries",
     notesUrl: "https://signifyd.com/v2/cases/1/notes",
-    orderUrl: "https://signifyd.com/v2/cases/1/order",
     guaranteeEligible: false,
     status: "DISMISSED",
     uuid: "709b9107-eda0-4cdd-bdac-a82f51a8a3f3",
@@ -451,6 +449,10 @@ using the team API key when available. The test webhook message uses the secret 
 Create a new webhook or webhooks for a team. 
 
 + Request (application/json)
+
+  + Headers
+
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
 
     + Attribute (array[WebhookRequest])
 
@@ -533,6 +535,10 @@ This error response follows our standard error message format, but it also inclu
 Update existing webhooks for a team in bulk.
 + Request (application/json)
 
+  + Headers
+
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
+
     + Attribute (array[WebhookRequest])
 
     + Body
@@ -584,6 +590,11 @@ Update existing webhooks for a team in bulk.
 
 ### Retrieve Webhooks [GET]
 Retrieve all webhooks for a team.
++ Request
+
+    + Headers
+
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
 + Response 200 (application/json)
 
     + Attribute (array[Webhook])
@@ -645,7 +656,10 @@ Modify or delete an existing webhook for a team.
     + id: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
 
 + Request (application/json)
+  + Headers
 
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
+            
     + Body
 
             {
@@ -674,6 +688,11 @@ Modify or delete an existing webhook for a team.
 + Parameters
     + id: 4660 (number) - Signifyd generated id for the given webhook. These are available when webhooks are first created or when listing webhooks.
 
++ Request
+
+    + Headers
+
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
 + Response 204
 
 
