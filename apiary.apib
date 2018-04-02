@@ -286,47 +286,7 @@ Retrieve details about an individual case by investigation id or case id.
 A guarantee is a financial liability shift that protects online retailers in case of chargebacks. View our product manual to [learn more](https://www.signifyd.com/resources/manual/signifyd-guarantee/signifyd-guarantee/). 
 
 *Guarantee APIs require a case or investigation id which is only provided when [creating a case](https://jsapi.apiary.io/apis/signifydapi/reference/cases/create-a-case/create-case.html).*
-## Submit a Guarantee [/guarantees]
-Submit an existing case for guarantee. 
 
-*You have 7 days from the order date to submit a case for guarantee. If you are on a complete plan a guarantee is automatically submitted when a case is created.* 
-
-### Submit Guarantee [POST]
-
-+ Request (application/json)
-    + Headers
-
-            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
-    + Body
-
-            {
-                "caseId": 44
-            }
-
-
-+ Response 201 (application/json)
-
-    + Body
-
-            {
-                "disposition": "APPROVED",
-                "reviewedBy": "support@signifyd.com",
-                "reviewedAt": "2016-02-23T22:28:43+0000",
-                "submittedBy": "support@signifyd.com",
-                "submittedAt": "2016-02-02T18:09:57+0000",
-                "rereviewCount": 0,
-                "caseId": 8260439,
-                "guaranteeId": 53
-            }
-
-    + Attributes (GuaranteeRequest)
-
-+ Response 404 (application/json)
-    + Body
-
-            {
-                "error": "Requested case cannot be found."
-            }
 
 ## Cancel a Guarantee [/cases/{caseId}/guarantee]
 A Guarantee can be canceled for orders that no longer require a guarantee. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. 
