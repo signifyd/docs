@@ -8,7 +8,7 @@ This doc will show you how to use our REST API to authenticate, make requests, a
 You can view a [step-by-step tutorial](https://www.youtube.com/watch?v=aUE-Othaf2c&feature=youtu.be) on how to send and fetch data using the Signifyd API. 
 
 ## Authentication
-API calls must be made over HTTPS. You authenticate to the API by providing your API key in each request. Your API key can be found on the [settings](https://app.signifyd.com/settings) page.
+All API requests must be made over HTTPS using a [base64 encoded](https://en.wikipedia.org/wiki/Base64) API key. You can generate an API key by creating a team in [settings](https://app.signifyd.com/settings) page.
 
 - Authentication: [HTTP Basic Auth](http://en.wikipedia.org/wiki/Basic_access_authentication#Client_side).
 - Username: Your API key as the basic auth username. 
@@ -60,6 +60,13 @@ For UTC: 2015-11-03T13:21:58+00:00
 For PST: 2015-11-03T13:21:58-08:00
 ```
 For more information about your specific programming language, please view [this document](https://developers.google.com/gmail/markup/reference/datetime-formatting).
+
+## Feedback 
+Was this document helpful?
+[Yes](https://docs.google.com/forms/d/e/1FAIpQLSdBB8IWudRFdAob3uxwcEJTl9ryPJjyyJKsv5DbahYYG2Ickg/viewform?usp=pp_url&entry.323773105=5)
+or [No](https://docs.google.com/forms/d/e/1FAIpQLSdBB8IWudRFdAob3uxwcEJTl9ryPJjyyJKsv5DbahYYG2Ickg/viewform?usp=pp_url&entry.323773105=1)
+
+
 ## Group Cases
 
 Cases are orders submitted to Signifyd for review. A case contains payment, recipient, product, shipping, and account information.
@@ -224,8 +231,21 @@ If you are on a complete plan this will also automatically submit the order for 
 
     + Body
 
-            {"investigationId":1}
+            {
+                "investigationId": 1
+            }
 
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                  "errors": {
+                     "purchase.browserIpAddress": [
+                          "error.ip"
+                    ]
+                }
+            }
 
 ## Get a Case [/cases/{caseId}]
 Retrieve details about an individual case by investigation id or case id.
@@ -328,6 +348,16 @@ A Guarantee can be canceled for orders that no longer require a guarantee. Examp
                 "caseId": 8260439,
                 "guaranteeId": 53
             }
+            
++ Response 404 (application/json)
+
+    + Body
+
+            {
+              messages: [
+                  "You are not authorized to set this Guarantee Disposition."
+              ]
+            }
 
 ## Group Webhooks
 
@@ -335,25 +365,37 @@ Webhooks are messages sent by SIGNIFYD via HTTP POST to a url you configure on y
 Webhook messages are sent when certain events occur in the life of an investigation. They allow your application to
 receive pushed updates about a case, rather than poll SIGNIFYD for status changes. 
 
-### Supported Events
+
+### Webhook Events
 You can create webhooks in Signifyd for the following events. Each event has a corresponding topic identifier
 which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
 
 Currently, the following events can trigger a webhook. Only one URL may be specified per event.
 
-| Event| `X-SIGNIFYD-TOPIC` | Description |
-| --- | --- | --- |
-| Case Creation | `cases/creation` | Sent immediately after a case is created |
-| Case Rescore | `cases/rescore` | Sent anytime a case is scored following case creation |
-| Case Review | `cases/review` | Sent anytime a user assigns a case a Review Disposition (thumbs up/down on console) |
-| Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |
-| Claim Reviewed | `claim/reviewed` | Sent anytime a request for chargeback reimbursement has been completed |
+| Event| `X-SIGNIFYD-TOPIC` | Description | Response |
+| --- | --- | --- | --- |
+| Case Creation | `cases/creation` | Sent immediately after a case is created | <a href="#case-webhook">View</a> |
+| Case Rescore | `cases/rescore` | Sent anytime a case is scored following case creation |  <a href="#case-webhook">View</a> |
+| Case Review | `cases/review` | Sent anytime a user assigns a case a Review Disposition (thumbs up/down on console) |  <a href="#case-webhook">View</a> |
+| Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |  <a href="#case-webhook">View</a> |
+| Claim Reviewed | `claim/reviewed` | Sent anytime a request for chargeback reimbursement has been completed |  <a href="#claim">View</a> |
 
-### Verification
+
+### Responding to a Webhook
+To acknowledge receipt of a webhook, your endpoint should be publicly accessible and return a 2xx HTTP status code. All response codes outside this range, including 3xx codes, will indicate to Signifyd that you did not receive the webhook. This mean that a URL redirection or a "Not Modified" response will be treated as a failure. 
+
+If your endpoint does not successfully receive a webhook we will resend the webhook up to 15 times over four days. The first webhook will be retried after 20s with expotential delays for each subsequent retry. Webhooks cannot be manually retriggered, however you can retrieve the status of a guarantee or case by making a GET request on the applicable resource.
+
+### Verifying a Webhook
 
 To allow a client to verify a webhook message has in fact come from SIGNIFYD, an `X-SIGNIFYD-SEC-HMAC-SHA256` header is included in each webhook POST message. The contents of this header is the Base64 encoded output of the HMAC SHA256 encoding of the JSON body of the message, using the team's API key as the encryption key. To verify the authenticity of the webhook message, you should calculate this value yourself and verify it equals the value contained in the header.
 
-See this example [code snippet](https://gist.github.com/blaskey/9533364) for an example of how to compute the value in Java.
+Here's an example of how to compute the value in Java.
+
+`Mac sha256HMAC = javax.crypto.Mac.getInstance("HmacSHA256");
+SecretKeySpec secretKey = new SecretKeySpec(teamAPIKEY.getBytes(), "HmacSHA256");
+sha256HMAC.init(secretKey);
+String encodedHMAC256 = Base64.encodeBase64String(sha256HMAC.doFinal(jsonBody.getBytes("UTF-8")));`
 
 ### Testing a Webhook
 Once a webhook is configured, a test POST can be sent by selecting the Test button next to the desired webhook in the Signifyd console settings.
@@ -363,45 +405,46 @@ using the team API key when available. The test webhook message uses the secret 
 
 ### Webhook Response
 
-#### Cases and Guarantees
+#### <a name="case-webhook"/>Cases and Guarantees</a>
 
 ```
 {
-    analysisUrl: "https://signifyd.com/v2/cases/1/analysis",
-    notesUrl: "https://signifyd.com/v2/cases/1/notes",
-    guaranteeEligible: false,
-    status: "DISMISSED",
-    uuid: "709b9107-eda0-4cdd-bdac-a82f51a8a3f3",
-    headline: "John Smith",
-    reviewDisposition: null,
-    associatedTeam: {
-        teamName: "anyTeam",
-        teamId: 26,
-        getAutoDismiss: true,
-        getTeamDismissalDays: 2 },
-    orderId: "19418",
-    orderDate: "2013-06-17T06:20:47-0700",
-    orderAmount: 365.99,
-    createdAt: "2013-11-05T14:23:26-0800",
-    updatedAt: "2013-11-05T14:23:26-0800",
-    investigationId: 1,
-    score: 262,
-    caseId: 1,
-    guaranteeDisposition: "APPROVED"
+   "analysisUrl":"https://signifyd.com/v2/cases/1/analysis",
+   "notesUrl":"https://signifyd.com/v2/cases/1/notes",
+   "guaranteeEligible":false,
+   "status":"DISMISSED",
+   "uuid":"709b9107-eda0-4cdd-bdac-a82f51a8a3f3",
+   "headline":"John Smith",
+   "reviewDisposition":null,
+   "associatedTeam":{
+      "teamName":"anyTeam",
+      "teamId":26,
+      "getAutoDismiss":true,
+      "getTeamDismissalDays":2
+   },
+   "orderId":"19418",
+   "orderDate":"2013-06-17T06:20:47-0700",
+   "orderAmount":365.99,
+   "createdAt":"2013-11-05T14:23:26-0800",
+   "updatedAt":"2013-11-05T14:23:26-0800",
+   "investigationId":1,
+   "score":262,
+   "caseId":1,
+   "guaranteeDisposition":"APPROVED"
 }
 ```
+#### <a name="claim"/>Claims</a>
 
-#### Claims
 ```
 {
-    caseId: 1,
-    orderId: "19418",
-    updatedAt: "2016-02-21T06:45:05.343Z",
-    amount: 365.99,
-    currency: "USD",
-    status: "CLOSED",
-    disposition: "APPROVED",
-    dispositionReason: "elgible chargeback"
+   "caseId":1,
+   "orderId":"19418",
+   "updatedAt":"2016-02-21T06:45:05.343Z",
+   "amount":365.99,
+   "currency":"USD",
+   "status":"CLOSED",
+   "disposition":"APPROVED",
+   "dispositionReason":"elgible chargeback"
 }
 ```
 
@@ -717,6 +760,8 @@ View the [create a case](http://docs.signifydapi.apiary.io/#reference/cases/crea
 During testing you may want to confirm that the Signifyd device fingerprinting script is working correctly. To do so you can call the `SIGNIFYD_GLOBAL.scriptTagHasLoaded()` method which will return a boolean `true|false` value.
 
 Note - *we have namespaced all of the device fingerprinting methods under the `SIGNIFYD_GLOBAL` object to avoid potential naming conflicts.*
+
+
 
 # Data Structures
 
