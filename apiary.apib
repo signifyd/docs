@@ -94,7 +94,7 @@ If you are on a complete plan this will also automatically submit the order for 
                 "purchase": {
                     "orderSessionId": "uha3d98weicm20eufhlqe",
                     "browserIpAddress": "192.168.1.1",
-                    "orderId": "4fj58as",
+                    "orderId": "19418",
                     "createdAt": "2016-07-11T17:54:31-05:00",
                     "paymentGateway": "stripe",
                     "paymentMethod": "credit_card",
@@ -105,6 +105,7 @@ If you are on a complete plan this will also automatically submit the order for 
                     "orderChannel": "PHONE",
                     "receivedBy": "John Doe",
                     "totalPrice": 74.99,
+                    "customerOrderRecommendation": "REJECT",
                     "products": [
                         {
                             "itemId": "1",
@@ -282,7 +283,7 @@ Retrieve details about an individual case by investigation id or case id.
                 "updatedAt": "2017-06-09T21:03:26+0000",
                 "status": "DISMISSED",
                 "reviewDisposition": "UNSET",
-                "orderId": "0000219221",
+                "orderId": "19418",
                 "orderAmount": 74.99,
                 "orderOutcome": "SUCCESSFUL,
                 "currency": "USD",
@@ -303,6 +304,105 @@ Retrieve details about an individual case by investigation id or case id.
               ]
             }
 
+
+## Add a Fulfillment [/fulfillments/{orderId}]
+A fulfillment represents a shipment of one or more items in an order. Submit fulfillments details for orders that you have shipped, even if the order is partially shipped. Fulfillments are used to improve decision performance and as proof of delivery for submitted chargebacks. 
+
+
+### Add Fulfillment [POST]
+
++ Parameters
+    + orderId: "19418" (string) - the order id associated to a case that was previously created.
+
++ Request (application/json)
+
+    + Attribute (Fulfillments)
+
+    + Body
+    
+            {  
+               "fulfillments":[  
+                  {  
+                     "id":"1002",
+                     "orderId":"19418",
+                     "createdAt":"2018-09-01T13:00:00Z",
+                     "recipientName":"Bob Smith",
+                     "deliveryEmail":"bob@gmail.com",
+                     "fulfillmentStatus":"partial",
+                     "shipmentStatus":"delivered",
+                     "shippingCarrier":"UPS",
+                     "trackingNumbers":[  
+                        "1Z827wk74630"
+                     ],
+                     "trackingUrls":[  
+                        "http:\/\/wwwapps.ups.com\/etracking\/tracking.cgi?1Z827wk74630"
+                     ],
+                     "products":[  
+                        {  
+                           "itemId":"1",
+                           "itemName":"Sparkly sandals",
+                           "itemIsDigital":false,
+                           "itemCategory":"apparel",
+                           "itemSubCategory":"footwear",
+                           "itemUrl":"http://mydomain.com/sparkly-sandals",
+                           "itemImage":"http://mydomain.com/images/sparkly-sandals.jpeg",
+                           "itemQuantity":1,
+                           "itemPrice":49.99,
+                           "itemWeight":5
+                        }
+                      ],
+                        "deliveryAddress": {
+                        "streetAddress": "123 State Street",
+                        "unit": "2A",
+                        "city": "Chicago",
+                        "provinceCode": "IL",
+                        "postalCode": "60622",
+                        "countryCode": "US"
+                    },
+                    "confirmationName": "ACME Ware House",
+                    "confirmationPhone": 1231232
+                    }
+                ]
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {  
+               "fulfillments":[  
+                  {  
+                     "id":"1002",
+                     "orderId":"19418",
+                     "createdAt":"2018-09-01T13:00:00Z",
+                     "recipientName":"Bob Smith",
+                     "deliveryEmail":"bob@gmail.com",
+                     "fulfillmentStatus":"partial",
+                     "shipmentStatus":"delivered",
+                     "shippingCarrier":"UPS",
+                     "trackingNumbers":[  
+                        "1Z827wk74630"
+                     ],
+                     "trackingUrls":[  
+                        "http:\/\/wwwapps.ups.com\/etracking\/tracking.cgi?1Z827wk74630"
+                     ],
+                     "products":[  
+                        {  
+                           "itemId":"1",
+                           "itemName":"Sparkly sandals",
+                           "itemIsDigital":false,
+                           "itemCategory":"apparel",
+                           "itemSubCategory":"footwear",
+                           "itemUrl":"http://mydomain.com/sparkly-sandals",
+                           "itemImage":"http://mydomain.com/images/sparkly-sandals.jpeg",
+                           "itemQuantity":1,
+                           "itemPrice":49.99,
+                           "itemWeight":5
+                        }
+                     ]
+                  }
+               ]
+            }
 
 ## Group Guarantees
 A guarantee is a financial liability shift that protects online retailers in case of chargebacks. View our product manual to [learn more](https://www.signifyd.com/resources/manual/signifyd-guarantee/signifyd-guarantee/). 
@@ -743,7 +843,7 @@ After an order is created on your website you will need to add the value you use
     "purchase": {
         "orderSessionId": "YOUR-SESSION-ID-HERE",
         "browserIpAddress": "192.168.1.1",
-        "orderId": "4fj58as",
+        "orderId": "19418",
         "createdAt": "2016-07-11T17:54:31-05:00",
         "paymentGateway": "stripe",
         "paymentMethod": "credit_card",
@@ -774,7 +874,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + investigationId: 44 (number, optional) - DEPRECATED.  See caseId.
 + uuid: `97c56c86-7984-44fa-9a3e-7d5f34d1bead` (string, required) - A universally unique id assigned to the case.
 + headline: Maxine Trycia (string, required) - The headline (aka name) assigned to the case.
-+ orderId: 1234 (string, required) - The unique identifier for the order that was provided when the case was created.
++ orderId: 19418 (string, required) - The unique identifier for the order that was provided when the case was created.
 + orderDate: `2013-01-18T22:54:29+0000` (string, optional) - The date and time when the order was placed.
 + orderAmount: 48 (number, required) - The total price of the order, including shipping price and taxes.
 + associatedTeam: 1 (number, required) - The id for the team with which this case is associated.
@@ -834,6 +934,13 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + orderChannel (OrderChannel, required) - The method used by the buyer to place the order.
 + receivedBy (string) - If the order was was taken by a customer service or sales agent, his or her name.
 + totalPrice (number, required) - The total price of the order, including shipping price and taxes.
++ customerOrderRecommendation (customerOrderRecommendation) - The recommendation 
+
+## customerOrderRecommendation (enum)
++ DECLINE_POLICY - The order was declined for business reasons.
++ DECLINE_FRAUD - The order was declined due to fraud related reasons. 
++ APPROVE - The order was approved by the merchant.
++ REVIEW - The order was reviewed by the merchant. 
 
 ## OrderChannel (enum)
 + WEB - Orders placed online through a digital storefront.
@@ -841,6 +948,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + MOBILE_APP - Orders placed through a native mobile application installed on the device (iOS / Android).
 + SOCIAL - Orders placed directly through a social network platform (Facebook, Twitter etc).
 + MARKETPLACE - Orders placed on a 3rd party ecommerce site where products are sold by multiple sellers (Amazon, Wish, Walmart, EBay, etc).
++ IN_STORE_KIOSK - Orders purchased at a physical store on a store owned device and shipped to the buyer's home.
 
 ## PaymentMethod (enum)
 + ACH
@@ -855,6 +963,8 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + GOOGLE_WALLET
 + LOAN
 + PAYPAL_ACCOUNT
++ SAMSUNG_PAY
+
 
 ## Recipient (object)
 + fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
@@ -964,6 +1074,40 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + itemPrice (number, required) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
 
+
+## FulfillmentStatus (enum)
+# Members
++ partial
++ complete
++ replacement
+
+## ShipmentStatus (enum)
+# Members
++ in transit
++ out for delivery
++ waiting for pickup
++ failed attempt
++ delivered
++ exception
+
+## Fulfillment (object)
++ id (number, required) - The id that uniquely identifies the fulfillment.
++ orderId (string, required) - The id that uniquely identifies this order.
++ createdAt (string, required) - yyyy-MM-dd'T'HH:mm:ssZ The date and time when the items were fulfilled.
++ deliveryEmail (string, optional) - For digital goods - the email address the item was sent to.
++ fulfillmentStatus (FulfillmentStatus, optional) - Status of an order in terms of the line_items being fulfilled.
++ trackingNumbers (array[string], optional) - Tracking number provided by the shipping carrier.
++ trackingUrls (array[string], optional) - Tracking URLs provided by the shipping carrier.
++ products (array[Product], optional) - The list of products that were fulfilled.
++ shipmentStatus (ShipmentStatus, optional) - The status of the shipment.
++ deliveryAddress (Address, optional) - The location where the item was delivered to.
++ recipientName (string, optional) - The full name of the person receiving the goods.
++ confirmationName (string, optional) - For in-store pickups - the name of the store or business the item was picked up from.
++ confirmationPhone (string, optional) - For in-store pickups - the phone number of the store or business the item was picked up from.
++ shippingCarrier (string, optional) - The shipping company name.
+
+## Fulfillments (object)
++ fulfillments (array[Fulfillment]) - A list of fulfillments associated with an order.
 
 ## InvestigationStatus (enum)
 + OPEN
