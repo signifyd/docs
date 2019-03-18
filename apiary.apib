@@ -502,8 +502,8 @@ Currently, the following events can trigger a webhook. Only one URL may be speci
 | Case Rescore | `cases/rescore` | Sent anytime a case is scored following case creation |  <a href="#case-webhook">View</a> |
 | Case Review | `cases/review` | Sent anytime a user assigns a case a Review Disposition (thumbs up/down on console) |  <a href="#case-webhook">View</a> |
 | Guarantee Completion | `guarantees/completion` | Sent anytime a guarantees decision is made on a case |  <a href="#case-webhook">View</a> |
-| Claim Reviewed | `claim/reviewed` | Sent anytime a request for chargeback reimbursement has been completed |  <a href="#claim">View</a> |
-
+| Claim Reviewed | `claim/reviewed` | Sent anytime a request for chargeback reimbursement has been completed |  <a href="#claim-reviewed">View</a> |
+| Claim Paid | `claims/paid` | Sent anytime a claim has been paid | <a href="#claim-payouts">View</a> |
 
 ### Responding to a Webhook
 To acknowledge receipt of a webhook, your endpoint should be publicly accessible and return a 2xx HTTP status code. All response codes outside this range, including 3xx codes, will indicate to Signifyd that you did not receive the webhook. This mean that a URL redirection or a "Not Modified" response will be treated as a failure. 
@@ -557,18 +557,44 @@ using the team API key when available. The test webhook message uses the secret 
    "guaranteeDisposition":"APPROVED"
 }
 ```
-#### <a name="claim"/>Claims</a>
-
+#### <a name="claim-reviewed"/>Claim Reviewed</a>
 ```
 {
    "caseId":1,
    "orderId":"19418",
+   "createdAt":"2016-02-21T06:45:05.343Z",
    "updatedAt":"2016-02-21T06:45:05.343Z",
    "amount":365.99,
    "currency":"USD",
    "status":"CLOSED",
    "disposition":"APPROVED",
    "dispositionReason":"elgible chargeback"
+}
+```
+
+#### <a name="claim-payouts"/>Claim Payouts</a>
+```
+{
+   "caseId":1,
+   "orderId":"19418",
+   "createdAt":"2016-02-21T06:45:05.343Z",
+   "updatedAt":"2016-02-21T06:45:05.343Z",
+   "amount":365.99,
+   "currency":"USD",
+   "status":"CLOSED",
+   "disposition":"APPROVED",
+   "dispositionReason":"elgible chargeback",
+   "payouts":[
+    {
+      "id":123,
+      "createdAt":"2016-08-18T06:17:10.225Z",
+      "payoutDate":"2016-08-18",
+      "method":"PayPal",
+      "currency":"USD",
+      "amount":101.95,
+      "transactionId":"1232"
+    }
+  ]
 }
 ```
 
