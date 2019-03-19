@@ -409,7 +409,31 @@ A guarantee is a financial liability shift that protects online retailers in cas
 
 *Guarantee APIs require a case or investigation id which is only provided when [creating a case](https://jsapi.apiary.io/apis/signifydapi/reference/cases/create-a-case/create-case.html).*
 
+## Submit a Guarantee [/async/guarantees]
+Submit a request to guarantee an existing case.
 
+### Submit Guarantee [POST]
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
+    + Body
+
+            {
+                "caseId": 44
+            }
+
+
++ Response 202 (application/json)
+
+    + Body
+
+            {
+                "caseId": 44            
+            }
+            
+            
 ## Cancel a Guarantee [/cases/{caseId}/guarantee]
 A Guarantee can be canceled for orders that no longer require a guarantee. Example: Your customer cancels the order and you issue a refund, you run out of stock for the ordered item, or you cancel the order. 
 
@@ -916,6 +940,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + userAccount (UserAccount) - If you allow customers to create an account before placing an orders these data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account (Guest Checkout).
 + seller (Seller) - All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
 
+
 ## Purchase (object)
 
 + browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase. You must provide a valid IP address syntax. 
@@ -925,16 +950,16 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + products (array[Product], required) - The products purchased in the transaction.
 + orderId (string, required) - A string uniquely identifying this order.
 + createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
-+ paymentGateway (string) - The gateway that processed the transaction.
++ paymentGateway (string) - The gateway or financial institution that processed the transaction.
 + paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
 + transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider.
 + currency (string, required) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
-+ avsResponseCode (string, required) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
-+ cvvResponseCode (string, required) - The response code from the card verification value (CVV) check. Accepted codes listed on above link.
++ avsResponseCode (avsCodes, required) - The response code from the address verification system (AVS). View our [avs and cvv mapping guide](https://www.signifyd.com/resources/manual/avs-and-cvv-mapping-guide/) for mapping suggestions for popular payment gateways. 
++ cvvResponseCode (cvvCodes, required) - The response code from the card verification value (CVV) check. View our [avs and cvv mapping guide](https://www.signifyd.com/resources/manual/avs-and-cvv-mapping-guide/) for mapping suggestions for popular payment gateways.
 + orderChannel (OrderChannel, required) - The method used by the buyer to place the order.
 + receivedBy (string) - If the order was was taken by a customer service or sales agent, his or her name.
 + totalPrice (number, required) - The total price of the order, including shipping price and taxes.
-+ customerOrderRecommendation (customerOrderRecommendation) - The recommendation 
++ customerOrderRecommendation (customerOrderRecommendation) - If the order has already been reviewed for fraud this should indicate the outcome of that review. 
 
 ## customerOrderRecommendation (enum)
 + DECLINE_POLICY - The order was declined for business reasons.
@@ -950,8 +975,35 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + MARKETPLACE - Orders placed on a 3rd party ecommerce site where products are sold by multiple sellers (Amazon, Wish, Walmart, EBay, etc).
 + IN_STORE_KIOSK - Orders purchased at a physical store on a store owned device and shipped to the buyer's home.
 
+## cvvCodes (enum)
++ M - The CVV provided matches the information on file with the cardholder's bank
++ N - The CVV provided does not match the information on file with the cardholder's bank
++ P - The request did not contain all the information needed to verify the CVV2 code
++ S - The CVV was provided but the card-issuing bank does not participate in card verification
++ U - The card-issuing bank received the CVV, but did not verify whether it was correct. This typically happens if the bank declines an authorization before evaluating the CVV.
+
+## avsCodes (enum)
++ X - Full match: Street address and 9-digit ZIP code both match
++ Y - Full match: Street address and 5-digit ZIP code both match
++ A - Partial match: Street address matches, but both 5-digit and 9-digit ZIP Code do not match
++ W - Partial match: Street address does not match, but 9-digit ZIP code matches
++ Z - Partial match: Street address does not match, but 5-digit ZIP code matches
++ N - No Match: AVS is not available or if the AVS in a U.S. bank is not functioning properly
++ U - Unavailable: AVS is not available or if the AVS in a U.S. bank is not functioning properly
++ R - Unavailable: Issuer’s System Unavailable or Timed Out
++ E - Invalid: AVS data is invalid
++ S - Not suppoted: U.S. issuing bank does not support AVS
++ D - International AVS Code: Full match - Street Address and Postal Code match for International Transaction
++ M - International AVS Code: Full match - Street Address and Postal Code match for International Transaction
++ B - International AVS Code: Partial match - Street Address Match for International Transaction. Postal Code not verified due to incompatible formats
++ P - International AVS Code: Partial match - Postal Codes match for International Transaction but street address not verified due to incompatible formats
++ C - International AVS Code: No match - Street Address and Postal Code not verified for International Transaction due to incompatible formats
++ I - International AVS Code: No match - Address Information not verified by International issuer
++ G - International AVS Code: Not Supported - Non International AVS Code:US. Issuer does not participate
+
 ## PaymentMethod (enum)
 + ACH
++ ALI_PAY
 + APPLE_PAY
 + AMAZON_PAYMENTS
 + ANDROID_PAY
@@ -960,11 +1012,13 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + CHECK
 + CREDIT_CARD
 + FREE
-+ GOOGLE_WALLET
++ GOOGLE_PAY
 + LOAN
 + PAYPAL_ACCOUNT
++ REWARD_POINTS
++ STORE_CREDIT
 + SAMSUNG_PAY
-
++ VISA_CHECKOUT
 
 ## Recipient (object)
 + fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
@@ -980,7 +1034,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 ## Shipment (object)
 + shippingPrice (number, required) - The amount charged to the customer for shipping the product
-+ shipper (shipper) -The name of the shipper 
++ shipper (shipper) - The name of the shipper 
 + shippingMethod (shippingMethod, required) - The type of the shipment method used
 
 ## shipper (enum)
@@ -1063,7 +1117,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + Include Address
 
 ## Product (object)
-+ itemId (string) - Your unique identifier for the product. This is a string because of hexadecimal identifiers.
++ itemId (string) - Your unique identifier for the product. 
 + itemName (string, required) - The name of the product.
 + itemIsDigital (boolean, required) - Indicates whether the item is electronically delivered e.g. gift cards
 + itemCategory (string) - The name of the top-level product category. e.g. Apparel
@@ -1074,37 +1128,36 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + itemPrice (number, required) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
 
-
 ## FulfillmentStatus (enum)
 # Members
-+ partial
-+ complete
-+ replacement
++ PARTIAL - Some of the items on the order have not been shipped. 
++ COMPLETE - All of the items on the order have been shipped. 
++ REPLACEMENT - A replacement for one of the items on the order has been shipped. 
 
 ## ShipmentStatus (enum)
 # Members
-+ in transit
-+ out for delivery
-+ waiting for pickup
-+ failed attempt
-+ delivered
-+ exception
++ WAITING FOR PICKUP - The carrier has received the request and is about to pick up the shipment.
++ IN TRANSIT - The carrier has accepted or picked up shipment.
++ OUT FOR DELIVERY - The carrier is about to deliver the shipment, or it is ready to pickup.
++ FAILED ATTEMPT - The carrier attempted to deliver but failed. 
++ DELIVERED - The shipment was delivered successfully.
++ EXCEPTION - An issue occured while attempting to deliver the shipment (customs hold, undelivered, and returned shipment).
 
 ## Fulfillment (object)
-+ id (number, required) - The id that uniquely identifies the fulfillment.
-+ orderId (string, required) - The id that uniquely identifies this order.
++ id (number, required) - The id that uniquely identifies the shipment.
++ orderId (string, required) - The id that uniquely identifies the order the shipment is for. This should be the same order id provided when the case was created in Signifyd.
 + createdAt (string, required) - yyyy-MM-dd'T'HH:mm:ssZ The date and time when the items were fulfilled.
-+ deliveryEmail (string, optional) - For digital goods - the email address the item was sent to.
-+ fulfillmentStatus (FulfillmentStatus, optional) - Status of an order in terms of the line_items being fulfilled.
-+ trackingNumbers (array[string], optional) - Tracking number provided by the shipping carrier.
-+ trackingUrls (array[string], optional) - Tracking URLs provided by the shipping carrier.
-+ products (array[Product], optional) - The list of products that were fulfilled.
-+ shipmentStatus (ShipmentStatus, optional) - The status of the shipment.
-+ deliveryAddress (Address, optional) - The location where the item was delivered to.
-+ recipientName (string, optional) - The full name of the person receiving the goods.
-+ confirmationName (string, optional) - For in-store pickups - the name of the store or business the item was picked up from.
-+ confirmationPhone (string, optional) - For in-store pickups - the phone number of the store or business the item was picked up from.
-+ shippingCarrier (string, optional) - The shipping company name.
++ fulfillmentStatus (FulfillmentStatus, optional) - The status of whether all of the products on the order have been shipped. If all of the products on the order have been shipped the status should be COMPLETE, if additional products need to still be shipped the status should be PARTIAL. 
++ shipmentStatus (ShipmentStatus, optional) - The delivery status of the shipment as provided by the shipping company.
++ shippingCarrier (string, optional) - The name of the shipping company that delivered is delivering the product(s).
++ trackingNumbers (array, optional) - The tracking number(s) for the shipment as provided by the shipping carrier.
++ trackingUrls (array) - The tracking URLs for the shipment as provided by the shipping carrier.
++ recipientName (string, optional) - The full name of the person receiving the shipment.
++ deliveryAddress (Address, optional) - The physical location where the item has been or is being shipped to.
++ products (array[Product], optional) - The list of products that were including in the shipment. 
++ deliveryEmail (string, optional) - If any of the items fulfilled were digital, the email address of the user that downloaded or has access to the digital product.
++ confirmationName (string, optional) - If the item was picked up at a physical location, the name of the store or business the item was picked up from.
++ confirmationPhone (string, optional) - If the item was picked up at a physical location, the phone number of the store or business the item was picked up from.
 
 ## Fulfillments (object)
 + fulfillments (array[Fulfillment]) - A list of fulfillments associated with an order.
