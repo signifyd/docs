@@ -71,12 +71,9 @@ or [No](https://docs.google.com/forms/d/e/1FAIpQLSdBB8IWudRFdAob3uxwcEJTl9ryPJjy
 
 Cases are orders submitted to Signifyd for review. A case contains payment, recipient, product, shipping, and account information.
 
-## Create a Case [/cases]
-Submit an order for fraud review. 
+## Create Case [/cases]
 
-We recommend sending as many data points as available for the best decision.
-
-If you are on a complete plan this will also automatically submit the order for guarantee.
+Submit an order for fraud review. We recommend sending as many data points as available for the best decision. If you are on a complete plan this will also automatically submit the order for guarantee.
 
 ### Create Case [POST]
 
@@ -93,19 +90,14 @@ If you are on a complete plan this will also automatically submit the order for 
             {
                 "purchase": {
                     "orderSessionId": "uha3d98weicm20eufhlqe",
-                    "browserIpAddress": "192.168.1.1",
                     "orderId": "19418",
+                    "checkoutToken": "b1946ac92492d2347c6235b4d2611184",
+                    "browserIpAddress": "192.168.1.1",
                     "createdAt": "2016-07-11T17:54:31-05:00",
-                    "paymentGateway": "stripe",
-                    "paymentMethod": "credit_card",
-                    "transactionId": "1a2sf3f44f21s1",
                     "currency": "USD",
-                    "avsResponseCode": "Y",
-                    "cvvResponseCode": "M",
                     "orderChannel": "PHONE",
                     "receivedBy": "John Doe",
                     "totalPrice": 74.99,
-                    "customerOrderRecommendation": "REJECT",
                     "products": [
                         {
                             "itemId": "1",
@@ -155,35 +147,208 @@ If you are on a complete plan this will also automatically submit the order for 
                         }
                     ]
                 },
-                "recipient": {
-                    "fullName": "Bob Smith",
-                    "confirmationEmail": "bob@gmail.com",
-                    "confirmationPhone": "5047130000",
-                    "organization": "SIGNIFYD",
-                    "deliveryAddress": {
-                        "streetAddress": "123 State Street",
-                        "unit": "2A",
-                        "city": "Chicago",
-                        "provinceCode": "IL",
-                        "postalCode": "60622",
-                        "countryCode": "US"
+                "recipients": [ 
+                    {
+                        "fullName": "Bob Smith",
+                        "confirmationEmail": "bob@gmail.com",
+                        "confirmationPhone": "5047130000",
+                        "organization": "SIGNIFYD",
+                        "deliveryAddress": {
+                            "streetAddress": "123 State Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    {
+                        "fullName": "Mary Smith",
+                        "confirmationEmail": "mary@gmail.com",
+                        "confirmationPhone": "5047120000",
+                        "organization": "SIGNIFYD",
+                        "deliveryAddress": {
+                            "streetAddress": "123 State Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    }
+                ],
+                "transactions": [ 
+                {
+                    "parentTransactionId": null,
+                    "transactionId": "1053198581844",
+                    "createdAt": "2018-10-11T17:55:31-05:00",
+                    "gateway": "Stripe",
+                    "paymentMethod": "CREDIT_CARD",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "FAILURE",
+                    "gatewayStatusMessage": "incorrect CVC number provided.",
+                    "gatewayErrorCode": "INVALID_CVC",
+                    "currency": "USD",
+                    "amount": 700,
+                    "avsResponseCode": "Y",
+                    "cvvResponseCode": "N",
+                    "paypalPendingReasonCode": null,
+                    "paypalProtectionEligibility": null,
+                    "paypalProtectionEligibilityType": null,
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": "403712",
+                        "cardLast4": "3423",
+                        "cardExpiryMonth": 12,
+                        "cardExpiryYear": 2021,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": null,
+                        "accountId": null,
+                        "accountHolderName": null,
+                        "accountHolderPhone": null,
+                        "accountHolderEmail": null,
+                        "accountHolderDob": null,
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": null,
+                        "accountIsActive": null,
+                        "accountCreditLine": null,
+                        "accountBalance": null,
+                        "billingAddress": {
+                            "streetAddress": null,
+                            "unit": null,
+                            "city": null,
+                            "provinceCode": null,
+                            "postalCode": null,
+                            "countryCode": null
+                        }
                     }
                 },
-                "card": {
-                    "cardHolderName": "Robert Smith",
-                    "bin": 407441,
-                    "last4": "1234",
-                    "expiryMonth": 12,
-                    "expiryYear": 2015,
-                    "billingAddress": {
-                        "streetAddress": null,
-                        "unit": "2A",
-                        "city": "Chicago",
-                        "provinceCode": "IL",
-                        "postalCode": "60622",
-                        "countryCode": "US"
+                {
+                    "parentTransactionId": "1053198581844",
+                    "transactionId": "1053198581844",
+                    "createdAt": "2018-10-11T17:56:11-05:00",
+                    "gateway": "Stripe",
+                    "paymentMethod": "CREDIT_CARD",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "SUCCESS",
+                    "gatewayStatusMessage": null,
+                    "gatewayErrorCode": null,
+                    "currency": "USD",
+                    "amount": 700,
+                    "avsResponseCode": "Y",
+                    "cvvResponseCode": "M",
+                    "paypalPendingReasonCode": null,
+                    "paypalProtectionEligibility": null,
+                    "paypalProtectionEligibilityType": null,
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": "403712",
+                        "cardLast4": "3423",
+                        "cardExpiryMonth": 12,
+                        "cardExpiryYear": 2021,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": null,
+                        "accountId": null,
+                        "accountHolderName": null,
+                        "accountHolderPhone": null,
+                        "accountHolderEmail": null,
+                        "accountHolderDob": null,
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": null,
+                        "accountIsActive": null,
+                        "accountCreditLine": null,
+                        "accountBalance": null,
+                        "billingAddress": {
+                            "streetAddress": null,
+                            "unit": null,
+                            "city": null,
+                            "provinceCode": null,
+                            "postalCode": null,
+                            "countryCode": null
+                        }
                     }
                 },
+                {
+                    "parentTransactionId": null,
+                    "transactionId": "PAY-1B56960729604235TKQQIYVY",
+                    "createdAt": "2018-10-11T17:55:41-05:00",
+                    "gateway": "Paypal Express",
+                    "paymentMethod": "PAYPAL_ACCOUNT",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "PENDING",
+                    "gatewayStatusMessage": null,
+                    "gatewayErrorCode": null,
+                    "currency": "USD",
+                    "amount": 100,
+                    "avsResponseCode": null,
+                    "cvvResponseCode": null,
+                    "paypalPendingReasonCode": "VERIFICATION_REQUIRED",
+                    "paypalProtectionEligibility": "ELIGIBLE",
+                    "paypalProtectionEligibilityType": "ITEM_NOT_RECEIVED_ELIGIBLE",
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": null,
+                        "cardLast4": null,
+                        "cardExpiryMonth": null,
+                        "cardExpiryYear": null,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": "2015-10-11T17:55:41-05:00",
+                        "accountId": "PUP87RBJV8HPU",
+                        "accountHolderName": "John Wick",
+                        "accountHolderPhone": "4088001000",
+                        "accountHolderEmail": "john.wick@gmail.com",
+                        "accountHolderDob": "1980-01-02",
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": true,
+                        "accountIsActive": true,
+                        "accountCreditLine": null,
+                        "accountBalance": 300,
+                        "billingAddress": {
+                            "streetAddress": "10 Taylor Street",
+                            "unit": null,
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    }
+                }
+                ],
+                "customerOrderRecommendation": "REJECT",
+                "tags": ["wholesale", "march summer sale event"],
                 "userAccount": {
                     "email": "bob@gmail.com",
                     "username": "bobbo",
@@ -193,7 +358,8 @@ If you are on a complete plan this will also automatically submit the order for 
                     "lastOrderId": "4321",
                     "aggregateOrderCount": 40,
                     "aggregateOrderDollars": 5000,
-                    "lastUpdateDate": "2013-01-18T17:54:31-05:00"
+                    "lastUpdateDate": "2013-01-18T17:54:31-05:00",
+                    "rating": "200"
                 },
                 "seller": {
                     "name": "We sell awesome stuff, Inc.",
@@ -209,6 +375,7 @@ If you are on a complete plan this will also automatically submit the order for 
                     "onboardingIpAddress": "192.122.1.1",
                     "onboardingEmail": "wesellawesomestuff@gmail.com",
                     "tags": ["Enterprise Account", "Gold Plan"],
+                    "rating": "12",
                     "shipFromAddress": {
                         "streetAddress": "1850 Mercer Rd",
                         "unit": null,
@@ -914,6 +1081,30 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 
 # Data Structures
+## Transactions (object)
++ parentTransactionId - If there was a previous transaction for the payment like a partial AUTHORIZATION or SALE, the parent id should include the originating transaction id.
++ transactionId (string) - The unique identifier provided by the payment provider for the payment. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider.
++ createdAt (string) - The date and time when the transaction was processed by the payment provider. Formatted as `yyyy-MM-dd'T'HH:mm:ssZ` see the dates section of the doc for more information about date formats.
++ gateway (string) - The name of the payment gateway or financial institution that processed the transaction.
++ paymentMethod (PaymentMethod) - The funding source used to complete the payment.
++ type (TransactionType, required) - The type of transaction that was processed by the payment provider.
++ gatewayStatusCode (TransactionStatus, required) - The status as returned by the payment provider when the transaction was submitted.
++ gatewayStatusMessage - Additional information provided by the payment provider describing why the transaction succeeded or failed.
++ gatewayErrorCode (ErrorCode) -  If the transaction resulted in an error or failure the enumerated reason the transcaction failed as provided by the payment provider.
++ currency (string, required) - The currency type of the payment, in 3 letter ISO 4217 format.
++ amount (number, required) - A positive integer representing how much the payment method was charged.
++ avsResponseCode (string) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
++ cvvResponseCode (string) - The response code from the card verification value (CVV) check. Accepted codes listed on the above link.
++ paypalPendingReasonCode (paypalPendingReasons) - The response provided in reason_code by Paypal if the payment_status is Pending. This field does not apply to capturing point-of-sale authorizations, which do not create pending payments.
++ paypalProtectionEligibility (ProtectionEligibility) - The response provided by Paypal for protection_eligibility. The merchant protection level in effect for the transaction. Supported only for PayPal payments.
++ paypalProtectionEligibilityType (ProtectionEligibilityType) - The response provided by Paypal for protection_eligibility_type. The merchant protection type in effect for the transaction. Returned only when protection_eligibility is ELIGIBLE or PARTIALLY_ELIGIBLE. Supported only for PayPal payments.
++ checkoutPaymentDetails (CheckoutPaymentDetails) - Information about the payment method as submitted by the purchaser during checkout.
++ paymentAccountHolder (PaymentAccount) - If the payment method requires an account to use, the information pertaining to that payment account should be provided. This information should only come from by the financial institution or payment provider that manages the payment account and not the purchaser.
+
+## ProtectionEligibilityType (enum)
++ ITEM_NOT_RECEIVED_ELIGIBLE
++ UNAUTHORIZED_PAYMENT_ELIGIBLE
++ ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE (string)
 
 ## Case (object)
 + guaranteeEligible: false(boolean, required) - boolean value indicating if a guarantee can be requested for this Case.  If a guarantee has already been requested for this case, then this value will be 'false'.
@@ -959,33 +1150,27 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + UNSET 
 
 ## CaseCreation (object)
-
-+ purchase (Purchase) - Data related to purchase event represented in this Case Creation request.
-+ recipient (Recipient) - Data related to person or organization receiving the items purchased.
-+ card (Card) - Data related to the card that was used for the purchase and its cardholder.
-+ userAccount (UserAccount) - If you allow customers to create an account before placing an orders these data values are details from that account. You should only fill these values in if the customer has an account into which they can login. Leave them blank if this was a one-time transaction with no account (Guest Checkout).
-+ seller (Seller) - All data related to the seller of the product. This information is optional unless you are operating a marketplace, listing goods on behalf of multiple sellers who each hold a seller account registered with your site (e.g. Ebay).
-
++ purchase (Purchase) - Information about the purchase event of the order.
++ recipients (array [Recipient]) - Information about the person or organization receiving the items on the order.
++ transactions (array [Transactions]) - A list of payment instruments and associated payment details used to pay for the order.  
++ userAccount (UserAccount) - Use only if shoppers can create or sign into an online account on the store to place an order. Leave as null if the order was placed without an account / guest checkout.
++ customerOrderRecommendation (customerOrderRecommendation) - If the order has already been reviewed for fraud this should indicate the outcome of the review.
++ tags (array[string]) - A list of attributes or short descriptors associated with the order, formatted a
++ sellers (array [Seller]) - Use only if you operate a marketplace (e.g. Ebay) and allow other merchants to list and sell products on the online store. A seller is an online account for the merchant or business that listed and sold the product(s) on the order. 
 
 ## Purchase (object)
-
-+ browserIpAddress (string, required) - The IP Address of the browser that was used to make the purchase. This is the IP Address that was used to connect to your site and make the purchase. You must provide a valid IP address syntax. 
-+ orderSessionId (string, required) - The unique ID for the user's browsing session. This is to be used in conjunction with the Signifyd Fingerprinting Javascript.
-+ discountCodes (array[DiscountCodes], required) - Any discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage. 
-+ shipments (array[Shipment], required) - The shipments associated with this purchase.
-+ products (array[Product], required) - The products purchased in the transaction.
-+ orderId (string, required) - A string uniquely identifying this order.
-+ createdAt (string, required) - `yyyy-MM-dd'T'HH:mm:ssZ` The date and time when the order was placed, shown on the signifyd console. See the Dates section of these docs for more information about date formats.
-+ paymentGateway (string) - The gateway or financial institution that processed the transaction.
-+ paymentMethod (PaymentMethod) - The method the user used to complete the purchase.
-+ transactionId (string) - The unique identifier provided by the payment gateway for this order. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider.
-+ currency (string, required) - The currency type of the order, in 3 letter ISO 4217 format. Defaults to USD.
-+ avsResponseCode (avsCodes, required) - The response code from the address verification system (AVS). View our [avs and cvv mapping guide](https://www.signifyd.com/resources/manual/avs-and-cvv-mapping-guide/) for mapping suggestions for popular payment gateways. 
-+ cvvResponseCode (cvvCodes, required) - The response code from the card verification value (CVV) check. View our [avs and cvv mapping guide](https://www.signifyd.com/resources/manual/avs-and-cvv-mapping-guide/) for mapping suggestions for popular payment gateways.
-+ orderChannel (OrderChannel, required) - The method used by the buyer to place the order.
-+ receivedBy (string) - If the order was was taken by a customer service or sales agent, his or her name.
-+ totalPrice (number, required) - The total price of the order, including shipping price and taxes.
-+ customerOrderRecommendation (customerOrderRecommendation) - If the order has already been reviewed for fraud this should indicate the outcome of that review. 
++ orderId (string, required) - The unique id of the order.
++ orderSessionId (string, required) - The unique id for the user's session. This is to be used in conjunction with the Signifyd fingerprinting javascript.
++ checkoutToken (string) - A unique id for a particular checkout.
++ browserIpAddress (string, required) - The IP Address of the device or browser that was used to place the order. You must provide a valid IP address syntax. Local host IPs or IPs from a CDN or load balancer should not be provided.
++ discountCodes (array[DiscountCodes], required) - A list of discount codes, coupons, or promotional codes used during checkout to recieve a discount on the order. You can only provide the discount code and the discount amount OR the discount percentage. 
++ shipments (array[Shipment], required) - A list of shipments for the order.
++ products (array[Product], required) - A list of products purchased on the order.
++ createdAt (string, required) - The date and time when the order was placed. Formatted as `yyyy-MM-dd'T'HH:mm:ssZ` see the dates section of the doc for more information about date formats.
++ currency (string, required) - The currency type of the order, in 3 letter ISO 4217 format.
++ orderChannel (OrderChannel, required) - The channel or source where the order was placed.
++ receivedBy (string) - If the order was was placed on-behalf of a customer service or sales agent, his or her name.
++ totalPrice (number, required) - The total amount of the order, including the shipping price, taxes, and any fees. This should be the amount you want Signifyd to provide Guarantee Fraud Protection coverage for. 
 
 ## customerOrderRecommendation (enum)
 + DECLINE_POLICY - The order was declined for business reasons.
@@ -1191,6 +1376,80 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 ## InvestigationStatus (enum)
 + OPEN
 + DISMISSED
+
+
+## paypalPendingReasons (enum)
++ CHARGEBACK
++ GUARANTEE
++ BUYER_COMPLAINT
++ REFUND
++ UNCONFIRMED_SHIPPING_ADDRESS
++ ECHECK
++ INTERNATIONAL_WITHDRAWAL
++ RECEIVING_PREFERENCE_MANDATES_MANUAL_ACTION
++ PAYMENT_REVIEW
++ REGULATORY_REVIEW
++ UNILATERAL
++ VERIFICATION_REQUIRED
++ TRANSACTION_APPROVED_AWAITING_FUNDING
+
+## ProtectionEligibility (enum)
++ ELIGIBLE
++ PARTIALLY_ELIGIBLE
++ INELIGIBLE
+## PaymentAccount (object)
++ accountCreatedAt (string) - The date the payment account was created. This should be provided by the financial institution or payment provider. 
++ accountId (string) - The unique identifier of the payment account. This should be provided by the financial institution or payment provider. 
++ accountHolderName (string) - The full name of the account holder. This should be provided by the financial institution or payment provider. 
++ accountHolderPhone (string) - The phone number of the account holder. This should be provided by the financial institution or payment provider. 
++ accountHolderEmail (string) - The email of the account holder. This should be provided by the financial institution or payment provider. 
++ accountHolderDob (string) - The date of birth of the account holder. This should be provided by the financial institution or payment provider. 
++ accountHolderAnnualIncome (number) - The annual income of the account holder. This should be provided by the financial institution or payment provider. 
++ accountIsVerified (boolean) - Denote whether the account holder's identity was verified by the institution or payment provider. 
++ accountIsActive (boolean) - Denotes whether the account is live and in good standing. This should be provided by the financial institution or payment provider. 
++ accountCreditLine (number) - The total maximum amount the account can transact for. This should be provided by the financial institution or payment provider. 
++ accountBalance (number) - The total available amount the account can transact for. This should be provided by the financial institution or payment provider. 
++ billingAddress (Address) - The billing address for the account holder. This should be provided by the financial institution or payment provider. 
+
+## TransactionStatus (enum)
++ SUCCESS
++ PENDING
++ FAILURE
++ ERROR
+
+## ErrorCode (enum)
++ CARD_DECLINED
++ CALL_ISSUER
++ EXPIRED_CARD
++ FRAUD_DECLINE
++ INCORRECT_NUMBER
++ INVALID_NUMBER
++ INVALID_EXPIRY_DATE
++ INVALID_CVC
++ INCORRECT_CVC
++ INCORRECT_ZIP
++ INCORRECT_ADDRESS
++ INSUFFICIENT_FUNDS
++ PROCESSING_ERROR
++ PICK_UP_CARD
++ RESTRICTED_CARD
++ STOLEN_CARD
++ TEST_CARD_DECLINE
+
+## TransactionType (enum)
++ PREAUTHORIZATION - A transaction that has not been submitted to the payment processor or financial institution for authorization or settlement. 
++ AUTHORIZATION - A transaction where the amount has been reserved against the cardholder's funding source but not charged.
++ SALE - A transaction where the amount has been authorized and the card has been charged in a single step. 
+
+## CheckoutPaymentDetails (object)
++ holderName - The full name of the account holder as provided during checkout.
++ cardBin - The first six digits of the credit card, the bank identification number, which uniquely identifies the issuer as provided during checkout.
++ cardLast4 - The last four digits of the credit card number as provided during checkout.
++ cardExpiryMonth (number) - MM representation of the expiration month of the credit card as provided during checkout.
++ cardExpiryYear (number) - yyyy representation of the expiration year of the credit card as provided during checkout.
++ bankAccountNumber - The last 4 digits of the bank account as provided during checkout.
++ bankRoutingNumber - The routing number (ABA) of the bank account that was used as provided during checkout.
++ billingAddress (Address) - The full billing address as provided during checkout.
 
 ## WebhookEventType (enum)
 + CASE_CREATION
