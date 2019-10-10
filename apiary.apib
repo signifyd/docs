@@ -415,7 +415,7 @@ Submit an order for fraud review. We recommend sending as many data points as av
                 }
             }
 
-## Get a Case [/cases/{caseId}]
+## Get Case [/cases/{caseId}]
 Retrieve details about an individual case by investigation id or case id.
 
 ### Get Case [GET]
@@ -471,12 +471,15 @@ Retrieve details about an individual case by investigation id or case id.
               ]
             }
 
+# Group Events
 
-## Add a Fulfillment [/fulfillments/{orderId}]
+Events are used to notify Signifyd about key events that occur during the lifecycle of an order. These events are used to collect indictors about  
+
+## Order Fulfilled [/fulfillments/{orderId}]
 A fulfillment represents a shipment of one or more items in an order. Submit fulfillments details for orders that you have shipped, even if the order is partially shipped. Fulfillments are used to improve decision performance and as proof of delivery for submitted chargebacks. 
 
 
-### Add Fulfillment [POST]
+### Send Fulfillment [POST]
 
 + Parameters
     + orderId: "19418" (string) - the order id associated to a case that was previously created.
@@ -571,12 +574,393 @@ A fulfillment represents a shipment of one or more items in an order. Submit ful
                ]
             }
 
+## Payment Completed [/transactions]
+A transaction represents an attempt to exchange money for an order. This is used to collect the details of the payment and the status of the payment, success or failure. This API should be used only if you are creating a [case](https://developer.signifyd.com/api/#/reference/cases/create-case) before collecting payment (pre-authorization). 
+
+### Send Transaction [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Basic YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo6
+
+    + Attributes (CreateTransactions)
+
+    + Body
+
+            {
+                "checkoutToken": "b1946ac92492d2347c6235b4d2611184",
+                "transactions": [ 
+                {
+                    "parentTransactionId": null,
+                    "transactionId": "1053198581844",
+                    "createdAt": "2018-10-11T17:55:31-05:00",
+                    "gateway": "Stripe",
+                    "paymentMethod": "CREDIT_CARD",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "FAILURE",
+                    "gatewayStatusMessage": "incorrect CVC number provided.",
+                    "gatewayErrorCode": "INVALID_CVC",
+                    "currency": "USD",
+                    "amount": 700,
+                    "avsResponseCode": "Y",
+                    "cvvResponseCode": "N",
+                    "paypalPendingReasonCode": null,
+                    "paypalProtectionEligibility": null,
+                    "paypalProtectionEligibilityType": null,
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": "403712",
+                        "cardLast4": "3423",
+                        "cardExpiryMonth": 12,
+                        "cardExpiryYear": 2021,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": null,
+                        "accountId": null,
+                        "accountHolderName": null,
+                        "accountHolderPhone": null,
+                        "accountHolderEmail": null,
+                        "accountHolderDob": null,
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": null,
+                        "accountIsActive": null,
+                        "accountCreditLine": null,
+                        "accountBalance": null,
+                        "billingAddress": {
+                            "streetAddress": null,
+                            "unit": null,
+                            "city": null,
+                            "provinceCode": null,
+                            "postalCode": null,
+                            "countryCode": null
+                        }
+                    }
+                },
+                {
+                    "parentTransactionId": "1053198581844",
+                    "transactionId": "1053198581844",
+                    "createdAt": "2018-10-11T17:56:11-05:00",
+                    "gateway": "Stripe",
+                    "paymentMethod": "CREDIT_CARD",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "SUCCESS",
+                    "gatewayStatusMessage": null,
+                    "gatewayErrorCode": null,
+                    "currency": "USD",
+                    "amount": 700,
+                    "avsResponseCode": "Y",
+                    "cvvResponseCode": "M",
+                    "paypalPendingReasonCode": null,
+                    "paypalProtectionEligibility": null,
+                    "paypalProtectionEligibilityType": null,
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": "403712",
+                        "cardLast4": "3423",
+                        "cardExpiryMonth": 12,
+                        "cardExpiryYear": 2021,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": null,
+                        "accountId": null,
+                        "accountHolderName": null,
+                        "accountHolderPhone": null,
+                        "accountHolderEmail": null,
+                        "accountHolderDob": null,
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": null,
+                        "accountIsActive": null,
+                        "accountCreditLine": null,
+                        "accountBalance": null,
+                        "billingAddress": {
+                            "streetAddress": null,
+                            "unit": null,
+                            "city": null,
+                            "provinceCode": null,
+                            "postalCode": null,
+                            "countryCode": null
+                        }
+                    }
+                },
+                {
+                    "parentTransactionId": null,
+                    "transactionId": "PAY-1B56960729604235TKQQIYVY",
+                    "createdAt": "2018-10-11T17:55:41-05:00",
+                    "gateway": "Paypal Express",
+                    "paymentMethod": "PAYPAL_ACCOUNT",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "PENDING",
+                    "gatewayStatusMessage": null,
+                    "gatewayErrorCode": null,
+                    "currency": "USD",
+                    "amount": 100,
+                    "avsResponseCode": null,
+                    "cvvResponseCode": null,
+                    "paypalPendingReasonCode": "VERIFICATION_REQUIRED",
+                    "paypalProtectionEligibility": "ELIGIBLE",
+                    "paypalProtectionEligibilityType": "ITEM_NOT_RECEIVED_ELIGIBLE",
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": null,
+                        "cardLast4": null,
+                        "cardExpiryMonth": null,
+                        "cardExpiryYear": null,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": "2015-10-11T17:55:41-05:00",
+                        "accountId": "PUP87RBJV8HPU",
+                        "accountHolderName": "John Wick",
+                        "accountHolderPhone": "4088001000",
+                        "accountHolderEmail": "john.wick@gmail.com",
+                        "accountHolderDob": "1980-01-02",
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": true,
+                        "accountIsActive": true,
+                        "accountCreditLine": null,
+                        "accountBalance": 300,
+                        "billingAddress": {
+                            "streetAddress": "10 Taylor Street",
+                            "unit": null,
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    }
+                }
+                ]
+                }
+
++ Response 200 (application/json)
+
+    + Body
+    
+
+            {
+                "checkoutToken": "b1946ac92492d2347c6235b4d2611184",
+                "transactions": [ 
+                {
+                    "parentTransactionId": null,
+                    "transactionId": "1053198581844",
+                    "createdAt": "2018-10-11T17:55:31-05:00",
+                    "gateway": "Stripe",
+                    "paymentMethod": "CREDIT_CARD",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "FAILURE",
+                    "gatewayStatusMessage": "incorrect CVC number provided.",
+                    "gatewayErrorCode": "INVALID_CVC",
+                    "currency": "USD",
+                    "amount": 700,
+                    "avsResponseCode": "Y",
+                    "cvvResponseCode": "N",
+                    "paypalPendingReasonCode": null,
+                    "paypalProtectionEligibility": null,
+                    "paypalProtectionEligibilityType": null,
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": "403712",
+                        "cardLast4": "3423",
+                        "cardExpiryMonth": 12,
+                        "cardExpiryYear": 2021,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": null,
+                        "accountId": null,
+                        "accountHolderName": null,
+                        "accountHolderPhone": null,
+                        "accountHolderEmail": null,
+                        "accountHolderDob": null,
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": null,
+                        "accountIsActive": null,
+                        "accountCreditLine": null,
+                        "accountBalance": null,
+                        "billingAddress": {
+                            "streetAddress": null,
+                            "unit": null,
+                            "city": null,
+                            "provinceCode": null,
+                            "postalCode": null,
+                            "countryCode": null
+                        }
+                    }
+                },
+                {
+                    "parentTransactionId": "1053198581844",
+                    "transactionId": "1053198581844",
+                    "createdAt": "2018-10-11T17:56:11-05:00",
+                    "gateway": "Stripe",
+                    "paymentMethod": "CREDIT_CARD",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "SUCCESS",
+                    "gatewayStatusMessage": null,
+                    "gatewayErrorCode": null,
+                    "currency": "USD",
+                    "amount": 700,
+                    "avsResponseCode": "Y",
+                    "cvvResponseCode": "M",
+                    "paypalPendingReasonCode": null,
+                    "paypalProtectionEligibility": null,
+                    "paypalProtectionEligibilityType": null,
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": "403712",
+                        "cardLast4": "3423",
+                        "cardExpiryMonth": 12,
+                        "cardExpiryYear": 2021,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": null,
+                        "accountId": null,
+                        "accountHolderName": null,
+                        "accountHolderPhone": null,
+                        "accountHolderEmail": null,
+                        "accountHolderDob": null,
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": null,
+                        "accountIsActive": null,
+                        "accountCreditLine": null,
+                        "accountBalance": null,
+                        "billingAddress": {
+                            "streetAddress": null,
+                            "unit": null,
+                            "city": null,
+                            "provinceCode": null,
+                            "postalCode": null,
+                            "countryCode": null
+                        }
+                    }
+                },
+                {
+                    "parentTransactionId": null,
+                    "transactionId": "PAY-1B56960729604235TKQQIYVY",
+                    "createdAt": "2018-10-11T17:55:41-05:00",
+                    "gateway": "Paypal Express",
+                    "paymentMethod": "PAYPAL_ACCOUNT",
+                    "type": "AUTHORIZATION",
+                    "gatewayStatusCode": "PENDING",
+                    "gatewayStatusMessage": null,
+                    "gatewayErrorCode": null,
+                    "currency": "USD",
+                    "amount": 100,
+                    "avsResponseCode": null,
+                    "cvvResponseCode": null,
+                    "paypalPendingReasonCode": "VERIFICATION_REQUIRED",
+                    "paypalProtectionEligibility": "ELIGIBLE",
+                    "paypalProtectionEligibilityType": "ITEM_NOT_RECEIVED_ELIGIBLE",
+                    "checkoutPaymentDetails": {
+                        "holderName": "John Wick",
+                        "cardBin": null,
+                        "cardLast4": null,
+                        "cardExpiryMonth": null,
+                        "cardExpiryYear": null,
+                        "bankAccountNumber": null,
+                        "bankRoutingNumber": null,
+                        "billingAddress": {
+                            "streetAddress": "1800 Vine Street",
+                            "unit": "2A",
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    },
+                    "paymentAccountHolder": {
+                        "accountCreatedAt": "2015-10-11T17:55:41-05:00",
+                        "accountId": "PUP87RBJV8HPU",
+                        "accountHolderName": "John Wick",
+                        "accountHolderPhone": "4088001000",
+                        "accountHolderEmail": "john.wick@gmail.com",
+                        "accountHolderDob": "1980-01-02",
+                        "accountHolderAnnualIncome": null,
+                        "accountIsVerified": true,
+                        "accountIsActive": true,
+                        "accountCreditLine": null,
+                        "accountBalance": 300,
+                        "billingAddress": {
+                            "streetAddress": "10 Taylor Street",
+                            "unit": null,
+                            "city": "Chicago",
+                            "provinceCode": "IL",
+                            "postalCode": "60622",
+                            "countryCode": "US"
+                        }
+                    }
+                }
+                ]
+                }
+
+            
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "errors": {
+                "transactions[0].type": [
+                "This field is required."
+            ]
+            }
+            }
+
 ## Group Guarantees
 A guarantee is a financial liability shift that protects online retailers in case of chargebacks. View our product manual to [learn more](https://www.signifyd.com/resources/manual/signifyd-guarantee/signifyd-guarantee/). 
 
 *Guarantee APIs require a case or investigation id which is only provided when [creating a case](https://jsapi.apiary.io/apis/signifydapi/reference/cases/create-a-case/create-case.html).*
 
-## Submit a Guarantee [/async/guarantees]
+## Submit for Guarantee [/async/guarantees]
 Submit a request to guarantee an existing case.
 
 ### Submit Guarantee [POST]
@@ -1157,6 +1541,11 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + customerOrderRecommendation (customerOrderRecommendation) - If the order has already been reviewed for fraud this should indicate the outcome of the review.
 + tags (array[string]) - A list of attributes or short descriptors associated with the order, formatted a
 + sellers (array [Seller]) - Use only if you operate a marketplace (e.g. Ebay) and allow other merchants to list and sell products on the online store. A seller is an online account for the merchant or business that listed and sold the product(s) on the order. 
+
+## CreateTransactions (object)
++ checkoutToken (string, required) - A unique id for a particular checkout.
++ transactions (Transactions, required)-  A list of payment instruments and associated payment details used to pay for the order.
+
 
 ## Purchase (object)
 + orderId (string, required) - The unique id of the order.
