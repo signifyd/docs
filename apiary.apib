@@ -22,15 +22,20 @@ We use conventional HTTP response codes to indicate success or failure of an API
 
 | Code| Description |
 | --- | --- |
-|`200`| Success. Request completed. |
-|`201`| Success. New resource created. |
-|`204`| Success. No content to return. Only the status code returns. |
-|`400`| Bad Request - The request could not be parsed. |
-|`401`| Unauthorized - user is not logged in, could not be authenticated. |
-|`403`| Forbidden - Cannot access resource. |
-|`404`| Not Found - resource doesn't exist. |
-|`409`| Conflict - with state of the resource on server. Can occur with (too rapid) PUT requests. |
-|`5xx`| Server error. |
+|`200`| Success - Request completed. |
+|`201`| Success - New resource created. |
+|`202`| Success - The request has been accepted, but not yet processed. |
+|`204`| Success - No content to return. |
+|`400`| Bad Request - The request could not be parsed, generally due to bad syntax. |
+|`401`| Unauthorized - The request could not be authenticated due to missing or invalid credentials. |
+|`403`| Forbidden - You do not have permission to access to the resource. |
+|`404`| Not Found - The resource doesn't exist. |
+|`409`| Conflict - The with state of the resource on server. Can occur with (too rapid) PUT requests. |
+|`429`| The request was not accepted because the application has exceeded the rate limit. APIs that have rate limits are specified in the API documentation. |
+|`500`| Internal Server Error - An internal error occurred in Signifyd. |
+|`503`| Service Unavailable - The server is currently unavailable. Check the status page for reported outages. |
+|`504`| Gateway Timeout - The request could not complete in time. |
+
 
 ## Error Messages
 There are two types of errors returned by the API server in the bodies of 4xx and 5xx responses:
@@ -93,7 +98,7 @@ Submit an order for fraud review. We recommend sending as many data points as av
                     "orderId": "19418",
                     "checkoutToken": "b1946ac92492d2347c6235b4d2611184",
                     "browserIpAddress": "192.168.1.1",
-                    "createdAt": "2016-07-11T17:54:31-05:00",
+                    "createdAt": "2019-07-11T17:54:31-05:00",
                     "currency": "USD",
                     "orderChannel": "PHONE",
                     "receivedBy": "John Doe",
@@ -371,7 +376,7 @@ Submit an order for fraud review. We recommend sending as many data points as av
                     "accountNumber": "54321",
                     "aggregateOrderCount": 4000,
                     "aggregateOrderDollars": 3000000.00,
-                    "lastUpdateDate": "2016-07-22T07:22:33-04:00",
+                    "lastUpdateDate": "2019-07-22T07:22:33-04:00",
                     "onboardingIpAddress": "192.122.1.1",
                     "onboardingEmail": "wesellawesomestuff@gmail.com",
                     "tags": ["Enterprise Account", "Gold Plan"],
