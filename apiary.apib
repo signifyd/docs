@@ -1419,7 +1419,7 @@ Place the following script just before the closing `</head>` tag on all public f
 
 ```
 <script
-async
+defer
 type="text/javascript"
 id="sig-api"
 data-order-session-id="YOUR-SESSION-ID-HERE"
@@ -1428,8 +1428,8 @@ src="https://cdn-scripts.signifyd.com/api/script-tag.js"></script>
 
 ### 2. Provide a unique session id
 
-Replace `data-order-session-id` with a unique session id for the current user's browsing session. We strongly recommend you generate a session id by base64 encoding the store url and order id or checkout id to ensure uniqueness for device fingerprinting. 
-
+Replace data-order-session-id with a unique session id for the current user's checkout.
+ i
 The session id must formatted as followed:
 - Less than 128 characters long
 - Upper and lowercase English letters (a-z, A-Z)
