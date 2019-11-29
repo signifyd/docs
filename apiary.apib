@@ -1482,8 +1482,8 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + gatewayErrorCode (ErrorCode) -  If the transaction resulted in an error or failure the enumerated reason the transcaction failed as provided by the payment provider.
 + currency (string, required) - The currency type of the payment, in 3 letter ISO 4217 format.
 + amount (number, required) - A positive integer representing how much the payment method was charged.
-+ avsResponseCode (string) - The response code from the address verification system (AVS). Accepted codes: http://www.emsecommerce.net/avs_cvv2_response_codes.htm
-+ cvvResponseCode (string) - The response code from the card verification value (CVV) check. Accepted codes listed on the above link.
++ avsResponseCode (avsCodes) - The response code from the address verification system (AVS).
++ cvvResponseCode (cvvCodes) - The response code from the card verification value (CVV) check.
 + paypalPendingReasonCode (paypalPendingReasons) - The response provided in reason_code by Paypal if the payment_status is Pending. This field does not apply to capturing point-of-sale authorizations, which do not create pending payments.
 + paypalProtectionEligibility (ProtectionEligibility) - The response provided by Paypal for protection_eligibility. The merchant protection level in effect for the transaction. Supported only for PayPal payments.
 + paypalProtectionEligibilityType (ProtectionEligibilityType) - The response provided by Paypal for protection_eligibility_type. The merchant protection type in effect for the transaction. Returned only when protection_eligibility is ELIGIBLE or PARTIALLY_ELIGIBLE. Supported only for PayPal payments.
