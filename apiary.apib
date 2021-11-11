@@ -498,10 +498,9 @@ Retrieve details about an individual case by investigation id or case id.
 
             {
                 "associatedTeam": {
-                "teamId": 24,
-                "teamName": "My ecommerce store"
-            },
-            {
+                    "teamId": 24,
+                    "teamName": "My ecommerce store"
+                },
                 "guaranteeDisposition": "APPROVED",
                 "investigationId": 44,
                 "caseId": 44,
@@ -512,7 +511,7 @@ Retrieve details about an individual case by investigation id or case id.
                 "reviewDisposition": "UNSET",
                 "orderId": "19418",
                 "orderAmount": 74.99,
-                "orderOutcome": "SUCCESSFUL,
+                "orderOutcome": "SUCCESSFUL",
                 "currency": "USD",
                 "score": 776,
                 "orderDate": "2016-10-28T22:54:31+0000",
@@ -1553,11 +1552,54 @@ During testing you may want to confirm that the Signifyd device fingerprinting s
 
 Note - *we have namespaced all of the device fingerprinting methods under the `SIGNIFYD_GLOBAL` object to avoid potential naming conflicts.*
 
-
-
 # Data Structures
+
+## Case (object)
++ associatedTeam (Team) - The team associated with the case.
++ guaranteeDisposition: APPROVED (GuaranteeDisposition) - If a case has been submitted for guarantee, this field will be present and indicate the decision state of the guarantee.
++ investigationId: 9973641239 (number) - Signifyd's unique identifier for the order.
++ caseId: 9973641239 (number) - Signifyd's unique identifier for the order.
++ headline: `Order 19418` (string) - The headline (aka name) assigned to the case.
++ uuid: `709b9107-eda0-4cdd-bdac-a82f51a8a3f3` (string) - A universally unique id assigned to the case.
++ updatedAt: `2019-02-31T23:46:37+0000` (string) - The date and time when the case was last updated.
++ status: DISMISSED (CaseStatus) - The current status of the case.
++ reviewDisposition: UNSET (ReviewDisposition) - The review disposition signifies the agent's opinion after reviewing the case.
++ orderId: 19418 (number) - The unique identifier for the order that was provided when the case was created.
++ orderAmount: 365.99 (number) - The total price of the order, including shipping price and taxes.
++ orderOutcome: SUCCESSFUL (OrderOutcome) - The outcome of the order
++ currency `USD` (string) - The currency type of the order, in 3 letter ISO 4217 format.
++ adjustedScore: 776 (number) - The adjusted score.
++ score: 776 (number) - A value from 0-1000 indicating the likelihood that the order is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
++ orderDate: `2013-06-17T06:20:47-0700` (string) - The date and time when the order was placed.
++ createdAt: `2013-11-05T14:23:26-0800` (string) - The date and time when the case was created.
++ testInvestigation: false (boolean) - Indicates whether this is a test case. Test cases do not come with chargeback protection and are not billable.
++ guaranteeEligible: false (boolean) - Indicates if a guarantee can be requested for this Case.
+
+## Team (object)
++ teamName: `MyTeamName` (string) - Name of the team.
++ teamId: 26 (number) - Id of the team.
+
+## GuaranteeDisposition (enum)
++ APPROVED
++ DECLINED
++ PENDING
++ CANCELED
++ IN_REVIEW
+
+## CaseStatus (enum)
++ OPEN
++ DISMISSED
+
+## ReviewDisposition (enum)
++ GOOD
++ FRAUDULENT
++ UNSET
+
+## OrderOutcome (enum)
++ SUCCESSFUL
+
 ## Transactions (object)
-+ parentTransactionId - If there was a previous transaction for the payment like a partial AUTHORIZATION or SALE, the parent id should include the originating transaction id.
++ parentTransactionId (string) - If there was a previous transaction for the payment like a partial AUTHORIZATION or SALE, the parent id should include the originating transaction id.
 + transactionId (string) - The unique identifier provided by the payment provider for the payment. If you have provided us with credentials for your payment gateway we can obtain additional details about the order, like AVS and CVV status, from your payment provider.
 + createdAt (string) - The date and time when the transaction was processed by the payment provider. Formatted as `yyyy-MM-dd'T'HH:mm:ssZ` see the dates section of the doc for more information about date formats.
 + gateway (string) - The name of the payment gateway or financial institution that processed the transaction.
@@ -1591,23 +1633,11 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + UNAUTHORIZED_PAYMENT_ELIGIBLE
 + ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE (string)
 
-## Case (object)
-+ caseId: 9973641239 (number) - Signifyd's unique identifier for the order.
-+ customerCaseId: 19418 (string) - The unique identifier for the order that was provided when the case was created.
-+ createdAt: `2019-02-31T23:46:37+0000` (string,) - The date and time when the case was created.
-+ updatedAt: `2019-02-31T23:46:37+0000` (string) - The date and time when the case was last updated.
-+ isTest: false (boolean) - Indicates whether this is a test case. Test cases do not come with chargeback protection and are not billable. 
-+ score: 776 (number) - A value from 0-1000 indicating the likelihood that the order is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
-+ checkpointAction (recommendedAction) - The suggested action that should be taken for the order.
-+ checkpointActionReason (string) - the name of the customer policy that is triggered.  It is omitted when no customer policy is triggered.
-
 ### recommendedAction (enum)
-
 # Members
 + `ACCEPT` - Allow the order to be processed. e.g. fulfill the order, authorize the transactions, capture the transaction, etc.
 + `HOLD` - Suspend the order from being processed. The order requires additional review by Signifyd and should be temporarily held until Signifyd has completed the review. You can recieve a notification when the review is complete by registering for a webhook event. `HOLD` is only returned if it's configured by your policy.    
 + `REJECT` - Block the order from being processed further. e.g. cancel the order, do not submit for authorization, void the transaction, etc. 
-
 
 ## GuaranteeRequest (object)
 + disposition (string) - Guarantee decision result
@@ -1618,22 +1648,6 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + rereviewCount (number) - Count if there was any re-review
 + caseId (number) - The unique identifier assigned to the case when it is created.
 + guaranteeId (number) - The unique identifier assigned for this guarantee.
-
-## GuaranteeDisposition (enum)
-+ APPROVED
-+ DECLINED
-+ PENDING
-+ CANCELED
-+ IN_REVIEW
-
-## CaseStatus (enum)
-+ OPEN
-+ DISMISSED
-
-## ReviewDisposition (enum)
-+ GOOD
-+ FRAUDULENT
-+ UNSET 
 
 ## CaseCreation (object)
 + policy (Policy) - The response type and checkpoint at which the decision is being requested for. 
@@ -1652,7 +1666,6 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 
 // -- keep the space above, and ignore the error below --
 // checkpoint (CheckpointType, optional) - Type of event at which a decision is requested.  If omitted, it defaults to checkout checkpoint. 
-
 
 ## PolicyName (enum)
 + POST_AUTH - Asynchronous response
@@ -1682,7 +1695,6 @@ a
 + checkoutToken (string, required) - A unique id for a particular checkout.
 + transactions (Transactions, required)-  A list of payment instruments and associated payment details used to pay for the order.
 
-
 ## Purchase (object)
 + orderId (string, required) - The unique id of the order.
 + orderSessionId (string, required) - The unique id for the user's session. This is to be used in conjunction with the Signifyd fingerprinting javascript.
@@ -1711,7 +1723,6 @@ a
 + MARKETPLACE - Orders placed on a 3rd party ecommerce site where products are sold by multiple sellers (Amazon, Wish, Walmart, EBay, etc).
 + IN_STORE_KIOSK - Orders purchased at a physical store on a store owned device and shipped to the buyer's home.
 + SCAN_AND_GO - Orders purchased by using in-app scanning and skipping the checkout line.
-
 
 ## cvvCodes (enum)
 + M - The CVV provided matches the information on file with the cardholder's bank
@@ -1760,8 +1771,6 @@ a
 + STORE_CREDIT
 + VISA_CHECKOUT
 + VOUCHER - A voucher is a bond of the redeemable transaction type which is worth a certain monetary value. 
-
-
 
 ## Recipient (object)
 + fullName (string, required) - The full name of the person receiving the goods. If this item is being shipped, then this field is the person it is being shipping to. Don't assume this name is the same as card.cardHolderName. Only put a value here if the name will actually appear on the shipping label. If this item is digital, then this field will likely be blank.
@@ -1923,11 +1932,6 @@ a
 ## Fulfillments (object)
 + fulfillments (array[Fulfillment]) - A list of fulfillments associated with an order.
 
-## InvestigationStatus (enum)
-+ OPEN
-+ DISMISSED
-
-
 ## paypalPendingReasons (enum)
 + CHARGEBACK
 + GUARANTEE
@@ -2014,14 +2018,18 @@ a
 + event (WebhookEventType) - the type/topic of the event
 + url: `http://knickknacks.examplepartner.com/signifydWebhook.php` (string) - the URL to which the webhook data should be sent when the event is triggered
 
+## WebhookTeam (object)
++ teamId: 1234 (number) - id of the team owning this webhook
++ teamName: "Consolidated Knick-Knacks, Inc." (string) - name of the team owning this webhook
++ getAutoDismiss (boolean)
++ getTeamDismissalDays (number)
+    
 ## Webhook (object)
 + id: 1234 (number) - unique Signifyd generated integer identifying this webhook
 + eventType (WebhookEventType) - the type/topic of the event
 + eventDisplayText: `Guarantee Completion` (string) - A more human friendly version of the event type.
 + url: `http://knickknacks.examplepartner.com/signifydWebhook.php` (string) - the URL to which the webhook data should be sent when the event is triggered
-+ team
-    + teamId: 1234 (number) - id of the team owning this webhook
-    + teamName: "Consolidated Knick-Knacks, Inc." (string) - name of the team owning this webhook
++ team (WebhookTeam)
 
 ## WebhookPayload (object)
 + analysisUrl: `https://signifyd.com/v2/cases/1/analysis` (string)
@@ -2029,15 +2037,11 @@ a
 + notesUrl: `https://signifyd.com/v2/cases/1/notes` (string)
 + orderUrl: `https://signifyd.com/v2/cases/1/order` (string)
 + guaranteeEligible (boolean)
-+ status: "DISMISSED" (InvestigationStatus)
++ status: "DISMISSED" (CaseStatus)
 + uuid: `709b9107-eda0-4cdd-bdac-a82f51a8a3f3` (string)
 + headline: `John Smith` (string)
 + reviewDisposition (string)
-+ associatedTeam
-+     teamName: `MyTeamName` (string)
-+     teamId: 26 (number)
-+     getAutoDismiss (boolean)
-+     getTeamDismissalDays (number)
++ associatedTeam (WebhookTeam)
 + orderId: 19418 (number)
 + orderDate: `2013-06-17T06:20:47-0700` (string)
 + orderAmount: 365.99 (number)
