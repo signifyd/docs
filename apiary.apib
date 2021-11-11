@@ -498,10 +498,9 @@ Retrieve details about an individual case by investigation id or case id.
 
             {
                 "associatedTeam": {
-                "teamId": 24,
-                "teamName": "My ecommerce store"
-            },
-            {
+                    "teamId": 24,
+                    "teamName": "My ecommerce store"
+            	},
                 "guaranteeDisposition": "APPROVED",
                 "investigationId": 44,
                 "caseId": 44,
@@ -1591,15 +1590,30 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + UNAUTHORIZED_PAYMENT_ELIGIBLE
 + ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE (string)
 
+## Team (object)
++ teamName: `MyTeamName` (string) - Name of the team.
++ teamId: 26 (number) - Id of the team.
+
 ## Case (object)
++ associatedTeam (Team) - The team associated with the case.
++ guaranteeDisposition: "APPROVED" (GuaranteeDisposition) - If a case has been submitted for guarantee, this field will be present and indicate the decision state of the guarantee.
++ investigationId: 9973641239 (number) - Signifyd's unique identifier for the order.
 + caseId: 9973641239 (number) - Signifyd's unique identifier for the order.
-+ customerCaseId: 19418 (string) - The unique identifier for the order that was provided when the case was created.
-+ createdAt: `2019-02-31T23:46:37+0000` (string,) - The date and time when the case was created.
++ headline: `Order 19418` (string) - The headline (aka name) assigned to the case.
++ uuid: `709b9107-eda0-4cdd-bdac-a82f51a8a3f3` (string) - A universally unique id assigned to the case.
 + updatedAt: `2019-02-31T23:46:37+0000` (string) - The date and time when the case was last updated.
-+ isTest: false (boolean) - Indicates whether this is a test case. Test cases do not come with chargeback protection and are not billable. 
++ status: "DISMISSED" (InvestigationStatus) - The current status of the case.
++ reviewDisposition "UNSET" (ReviewDisposition) - The review disposition signifies the agent's opinion after reviewing the case.
++ orderId: 19418 (number) - The unique identifier for the order that was provided when the case was created.
++ orderAmount: 365.99 (number) - The total price of the order, including shipping price and taxes.
++ orderOutcome `SUCCESSFUL` (string) - The outcome of the order
++ currency `USD` (string) - The currency type of the order, in 3 letter ISO 4217 format.
++ adjustedScore: 776 (number) - The adjusted score.
 + score: 776 (number) - A value from 0-1000 indicating the likelihood that the order is fraud. 0 indicates the highest risk, 1000 inidicates the lowest risk.
-+ checkpointAction (recommendedAction) - The suggested action that should be taken for the order.
-+ checkpointActionReason (string) - the name of the customer policy that is triggered.  It is omitted when no customer policy is triggered.
++ orderDate: `2013-06-17T06:20:47-0700` (string) - The date and time when the order was placed.
++ createdAt: `2013-11-05T14:23:26-0800` (string) - The date and time when the case was created.
++ testInvestigation: false (boolean) - Indicates whether this is a test case. Test cases do not come with chargeback protection and are not billable.
++ guaranteeEligible: false (boolean) - Indicates if a guarantee can be requested for this Case.
 
 ### recommendedAction (enum)
 
@@ -2019,7 +2033,7 @@ a
 + eventType (WebhookEventType) - the type/topic of the event
 + eventDisplayText: `Guarantee Completion` (string) - A more human friendly version of the event type.
 + url: `http://knickknacks.examplepartner.com/signifydWebhook.php` (string) - the URL to which the webhook data should be sent when the event is triggered
-+ team
++ team (Team)
     + teamId: 1234 (number) - id of the team owning this webhook
     + teamName: "Consolidated Knick-Knacks, Inc." (string) - name of the team owning this webhook
 
@@ -2033,7 +2047,7 @@ a
 + uuid: `709b9107-eda0-4cdd-bdac-a82f51a8a3f3` (string)
 + headline: `John Smith` (string)
 + reviewDisposition (string)
-+ associatedTeam
++ associatedTeam (Team)
 +     teamName: `MyTeamName` (string)
 +     teamId: 26 (number)
 +     getAutoDismiss (boolean)
