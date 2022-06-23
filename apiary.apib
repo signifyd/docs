@@ -3,6 +3,15 @@ HOST: https://api.signifyd.com/v2
 
 # Signifyd API
 
+# **DEPRECATED** 
+[See V3 API Docs](https://docs.signifyd.com/)
+
+
+The docs below are for Signifyd's V2 API, which is now deprecated.  If you are a new Signifyd customer, your Implementation Manager will recommend that you deploy our V3 API, which will allow you to take advantage of new features and products.  By the end of **Q3 2022**, the V3 docs will become our default API documentation.  Legacy V2 integrations will continue to be supported.
+
+
+## Overview
+
 This document will show you how to use our REST API to authenticate, make requests, and retrieve data. All responses to and from the API will be in [JSON](http://www.tutorialspoint.com/json/json_data_types.htm).
 
 You can view a [step-by-step tutorial](https://www.youtube.com/watch?v=aUE-Othaf2c&feature=youtu.be) on how to send and fetch data using the Signifyd API. 
@@ -148,7 +157,7 @@ Submit an order for fraud review. We recommend sending as many data points as av
                             "itemWeight": 5
                         },
                         {
-                            "itemId": "2",
+                           "itemId": "2",
                             "itemName": "Summer tank top",
                             "itemIsDigital": false,
                             "itemCategory": "apparel",
@@ -157,7 +166,14 @@ Submit an order for fraud review. We recommend sending as many data points as av
                             "itemImage": "http://mydomain.com/images/summer-tank.jpeg",
                             "itemQuantity": 1,
                             "itemPrice": 19.99,
-                            "itemWeight": 2
+                            "itemWeight": 2,
+                            "itemSize": "M",
+                            "rental": {
+                                "id": "abc123",
+                                "periodUnit": "MONTH",
+                                "currentPeriod": 1,
+                                "totalPeriods": 12,
+                                "totalRetailValue": 24.99
                         },
                         {
                             "itemId": "3",
@@ -496,29 +512,15 @@ Retrieve details about an individual case by investigation id or case id.
 
     + Body
 
-            {
-                "associatedTeam": {
-                "teamId": 24,
-                "teamName": "My ecommerce store"
-            },
-            {
-                "guaranteeDisposition": "APPROVED",
-                "investigationId": 44,
+             {
                 "caseId": 44,
-                "headline": "Maxine Trycia",
-                "uuid": "97c56c86-7984-44fa-9a3e-7d5f34d1bead",
-                "updatedAt": "2017-06-09T21:03:26+0000",
-                "status": "DISMISSED",
-                "reviewDisposition": "UNSET",
-                "orderId": "19418",
-                "orderAmount": 74.99,
-                "orderOutcome": "SUCCESSFUL,
-                "currency": "USD",
-                "score": 776,
-                "orderDate": "2016-10-28T22:54:31+0000",
+                "customerCaseId": "19418",
                 "createdAt": "2016-10-31T23:46:37+0000",
-                "testInvestigation": false,
-                "guaranteeEligible": false
+                "updatedAt": "2017-06-09T21:03:26+0000",
+                "isTest": false,
+                "score": 776,
+                "checkpointAction": "ACCEPT",
+                "checkpointActionReason" : "MY_CUSTOMER_POLICY_A"
             }
 
 + Response 404 (application/json)
@@ -1567,7 +1569,7 @@ Note - *we have namespaced all of the device fingerprinting methods under the `S
 + gatewayStatusMessage - Additional information provided by the payment provider describing why the transaction succeeded or failed.
 + gatewayErrorCode (ErrorCode) -  If the transaction resulted in an error or failure the enumerated reason the transcaction failed as provided by the payment provider.
 + currency (string, required) - The currency type of the payment, in 3 letter ISO 4217 format.
-+ amount (number, required) - A positive integer representing how much the payment method was charged.
++ amount (number, required) - The amount that was charged to the payment instrument.
 + avsResponseCode (avsCodes) - The response code from the address verification system (AVS).
 + cvvResponseCode (cvvCodes) - The response code from the card verification value (CVV) check.
 + paypalPendingReasonCode (paypalPendingReasons) - The response provided in reason_code by Paypal if the payment_status is Pending. This field does not apply to capturing point-of-sale authorizations, which do not create pending payments.
@@ -1711,6 +1713,8 @@ a
 + MARKETPLACE - Orders placed on a 3rd party ecommerce site where products are sold by multiple sellers (Amazon, Wish, Walmart, EBay, etc).
 + IN_STORE_KIOSK - Orders purchased at a physical store on a store owned device and shipped to the buyer's home.
 + SCAN_AND_GO - Orders purchased by using in-app scanning and skipping the checkout line.
++ SMART_TV - Orders placed through an application installed on an internet-connected television (Vizio, Samsung, Roku, etc).
+
 
 
 ## cvvCodes (enum)
@@ -1861,7 +1865,7 @@ a
 + Include Address
 
 ## Product (object)
-+ itemId (string) - Your unique identifier for the product. 
++ itemId (string) - Your unique identifier for the product. This is a string because of hexadecimal identifiers.
 + itemName (string, required) - The name of the product.
 + itemIsDigital (boolean, required) - Indicates whether the item is electronically delivered e.g. gift cards
 + itemCategory (string) - The name of the top-level product category. e.g. Apparel
@@ -1871,7 +1875,17 @@ a
 + itemQuantity (number, required) - The number of the items purchased.
 + itemPrice (number, required) - The price paid for each item (not the aggregate).
 + itemWeight (number) - The weight of each item in grams.
++ sellerAccountNumber () - The account number of the seller that sold the product. This should match the account number provided in the seller array.
 + subscription (Subscription) - Represents a subscription object. You can use it to send recurring orders to Signifyd. Note that you can send multiple subscription products to Signifyd as part of the same order if a buyer has subscribed for more than one type of product. E.g., coffee beans and tea bags.
++ shipmentId (string) - The item's shipment id.
++ rental (Rental) - Information about this rental, if it is one.
++ itemSize (string) - The size of the product, if it is apparel. 
+
+## Rental (object)
++ periodUnit (PeriodUnit) - Frequency of the recurring order within a given subscription, e.g., week, month, quarter, year, etc.
++ currentPeriod (number) - The current rental period that the recurring order belongs to, e.g., 1st month, 4th month, etc.
++ totalPeriods (number) - Total rental term the customer has signed up for, e.g., 12 months, 36 months, etc.
++ totalRetailValue (number) - Retail value worth of rental item if the customer buys it.
 
 ## Subscription (object)
 + id (string) - A unique identifier that can be used to link different recurring orders on the same subscription.
@@ -1880,6 +1894,13 @@ a
 + currentPeriod (number) - The current subscription period that the recurring order belongs to, e.g., 1st month, 4th month, etc.
 + totalPeriods (number) - Total subscription term the customer has signed up for, e.g., 12 months, 36 months, etc.
 + totalRetailValue (number) - Approximate retail value worth of products that a buyer will receive by signing up for a subscription plan.
+
+## cardInstallments (object)
++ interval (PeriodUnit) - The period in which the installment plan will be paid.
++ count (number) - The total number of payments expected to be made on the installment plan.
++ totalValue (number) - The total value of the installment plan.
++ installmentValue (number) - The expected payment value for each installment.
+
 
 ## PeriodUnit (enum)
 + DAY
@@ -1966,6 +1987,8 @@ a
 + PENDING
 + FAILURE
 + ERROR
++ CANCELLED
++ EXPIRED
 
 ## ErrorCode (enum)
 + CARD_DECLINED
@@ -2002,6 +2025,7 @@ a
 + bankAccountNumber - The last 4 digits of the bank account as provided during checkout.
 + bankRoutingNumber - The routing number (ABA) of the bank account that was used as provided during checkout.
 + billingAddress (Address) - The full billing address as provided during checkout.
++ cardInstallments (cardInstallments)- Details about the installment plan used to make the purchase. Note: Signifyd expects to receive installment payments from Mexico, Brazil, Argentina. Chile, Colombia and Uruguay.
 
 ## WebhookEventType (enum)
 + CASE_CREATION
