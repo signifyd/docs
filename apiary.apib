@@ -1116,12 +1116,10 @@ receive pushed updates about an investigation, rather than poll SIGNIFYD for sta
 
 
 ### Webhook Events
-You can create webhooks in Signifyd for the following events. Each event has a corresponding topic identifier
-which will be sent in the `X-SIGNIFYD-TOPIC` header of the webhook.
+A Signifyd webhook for a given url will trigger on all of the following events. 
+The webhook will specify which event triggered it in the `SIGNIFYD-CHECKPOINT` header of the webhook.
 
-Currently, the following events can trigger a webhook. Only one URL may be specified per event.
-
-| Event| `X-SIGNIFYD-TOPIC` | Description | Response |
+| Event| `SIGNIFYD-CHECKPOINT` | Description | Response |
 | --- | --- | --- | --- |
 | Decision Made | `decisions/*` | Sent anytime a decision is made on a case (guarantee or recommendation) |  <a href="#decision-made">View</a> |
 | Case Creation | `cases/creation` | Sent immediately after a case is created | <a href="#case-webhook">View</a> |
